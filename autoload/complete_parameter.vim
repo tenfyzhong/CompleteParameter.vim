@@ -10,34 +10,36 @@
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_col': 0}
 let s:filetype_mapping_complete = {}
 
-function! s:init_mapping()
+function! s:init_filetype_mapping()
     let filetype = &ft
     if !<SID>filetype_func_exist(filetype)
         return
     endif
 
     let mapping_complete = get(s:filetype_mapping_complete, filetype, s:complete_parameter_mapping_complete)
-    if mapping_complete == ''
-        let mapping_complete = s:complete_parameter_mapping_complete
-    endif
     exec 'inoremap <silent><buffer> ' . mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 endfunction
 
+augroup complete_parameter_init
+    autocmd!
+    autocmd FileType * call <SID>init_filetype_mapping()
+augroup END
 
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
 
-    augroup complete_parameter_init
-        autocmd!
-        autocmd FileType * call <SID>init_mapping()
-    augroup END
-
-    let s:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '(')
-    if s:complete_parameter_mapping_complete
-        let s:complete_parameter_mapping_complete = '('
+    if exists('g:filetype_mapping_complete') && type('g:filetype_mapping_complete') == 4
+        for [k, v] in g:filetype_mapping_complete
+            let s:filetype_mapping_complete[k] = v
+        endfor
     endif
-    let s:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '<m-n>')
-    let s:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '<m-p>')
+
+    let g:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '')
+    let s:complete_parameter_mapping_complete = g:complete_parameter_mapping_complete != '' ? g:complete_parameter_mapping_complete : '('
+    let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
+    let s:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
+    let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
+    let s:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
  
     " exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 
