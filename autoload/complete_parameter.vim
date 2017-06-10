@@ -220,6 +220,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
         return
     endif
     let word_len = word_end - word_begin
+    echom 'word_begin: ' . word_begin . ' len: ' . word_len
     if word_len == 0
         if a:forward
             call cursor(lnum, word_begin)
@@ -229,7 +230,15 @@ function! complete_parameter#goto_next_param(forward) "{{{
     else
         call cursor(lnum, word_begin)
         startinsert
-        call feedkeys("\<ESC>l".word_len.'gh', 'n')
+        " BUG added by tenfyzhong 2017-06-10 20:13 
+        " when call the `gh` key, it will select more the word_len letter
+        " I don't know why.
+        " call feedkeys("\<ESC>l".word_len.'gh', 'n')
+        let keys = "\<ESC>lv"
+        let right_len = word_len - 1
+        let keys .= right_len
+        let keys .= "l\<C-G>"
+        call feedkeys(keys, 'n')
     endif
 endfunction "}}}
 
