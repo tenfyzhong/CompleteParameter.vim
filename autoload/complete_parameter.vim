@@ -169,7 +169,16 @@ function! complete_parameter#complete(insert) "{{{
     let s:complete_parameter['items'] = parseds
 
     let s:complete_parameter['complete_col'] = col('.')
-    return s:complete_parameter['items'][0]
+    let col = col('.')
+    let content = getline(line('.'))
+    
+    let parameter = s:complete_parameter['items'][0]
+    if col > 1
+        if content[col-1] ==# parameter[0]
+            let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
+        endif
+    endif
+    return parameter
 endfunction "}}}
 
 function! complete_parameter#goto_first_param() "{{{
