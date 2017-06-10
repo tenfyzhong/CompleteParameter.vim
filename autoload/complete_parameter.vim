@@ -11,6 +11,22 @@ let s:complete_parameter = {'index': 0, 'items': [], 'complete_col': 0}
 
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
+
+    let s:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '(')
+    let s:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '<m-n>')
+    let s:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '<m-p>')
+ 
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
+
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
+    exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
+    exec 'xnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
+    exec 'vnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
+
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
+    exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
+    exec 'xnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
+    exec 'vnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
