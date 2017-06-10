@@ -52,34 +52,45 @@ endfunction "}}}
 
 function! complete_parameter#filetype_func_check(ftfunc) "{{{
 
-    " let filetype_func_prefix = 'cm_parser#'.a:filetype.'#'
-    " let parameters_func_name = filetype_func_prefix.'parameters'
-    " let parameter_delim_func_name = filetype_func_prefix.'parameter_delim'
-    " let parameter_begin_func_name = filetype_func_prefix.'parameter_begin'
-    " let parameter_end_func_name = filetype_func_prefix.'parameter_end'
+    let filetype_func_prefix = s:ftfunc_prefix.a:ftfunc['ft'].'#'
+    let parameters_func_name = filetype_func_prefix.'parameters'
+    let parameter_delim_func_name = filetype_func_prefix.'parameter_delim'
+    let parameter_begin_func_name = filetype_func_prefix.'parameter_begin'
+    let parameter_end_func_name = filetype_func_prefix.'parameter_end'
     
-    " if !exists('*'.parameters_func_name) ||
-    "             \!exists('*'.parameter_delim_func_name) ||
-    "             \!exists('*'.parameter_begin_func_name) ||
-    "             \!exists('*'.parameter_end_func_name)
-    "     return 0
-    " endif
+    if !exists('*'.parameters_func_name) ||
+                \!exists('*'.parameter_delim_func_name) ||
+                \!exists('*'.parameter_begin_func_name) ||
+                \!exists('*'.parameter_end_func_name)
+        return 0
+    endif
+
+    echom 'exist: 'exists('*'.parameters_func_name)
 
     let parameters = a:ftfunc.parameters()
     if type(parameters) != 3
         return 0
     endif
 
+    if !exists('*'.string(a:ftfunc.parameter_delim))
+        return 0
+    endif
     let delim = a:ftfunc.parameter_delim()
     if type(delim) != 1 || empty(delim)
         return 0
     endif
 
+    if !exists('*'.string(a:ftfunc.parameter_begin))
+        return 0
+    endif
     let begin = a:ftfunc.parameter_begin()
     if type(begin) != 1 || empty(begin)
         return 0
     endif
 
+    if !exists('*'.string(a:ftfunc.parameter_end))
+        return 0
+    endif
     let end = a:ftfunc.parameter_end()
     if type(end) != 1 || empty(end)
         return 0
@@ -105,6 +116,9 @@ function! complete_parameter#complete(insert) "{{{
     catch
         return a:insert
     endtry
+    if !complete_parameter#filetype_func_check(ftfunc)
+        return a:insert
+    endif
 
 
     " example: the complete func like this`func Hello(param1 int, param2 string) int`
@@ -150,6 +164,9 @@ function! complete_parameter#goto_next_param(forward) "{{{
     catch
         return
     endtry
+    if !complete_parameter#filetype_func_check(ftfunc)
+        return
+    endif
 
 
     let lnum = line('.')
