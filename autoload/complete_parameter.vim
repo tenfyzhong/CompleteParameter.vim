@@ -72,7 +72,6 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
 endfunction "}}}
 
 function! complete_parameter#complete(insert) "{{{
-    call <SID>trace_log('begin complete: '.v:completed_item['menu'])
     if empty(v:completed_item)
         return a:insert 
     endif
@@ -88,7 +87,6 @@ function! complete_parameter#complete(insert) "{{{
     try
         let ftfunc = <SID>new_ftfunc(filetype)
     catch
-        call <SID>trace_log('new_ftfunc error: '.v:exception)
         return a:insert
     endtry
 
@@ -107,7 +105,6 @@ function! complete_parameter#complete(insert) "{{{
     endif
 
     if empty(parseds)
-        call <SID>trace_log('parseds is empty')
         return a:insert
     endif
 
@@ -115,7 +112,6 @@ function! complete_parameter#complete(insert) "{{{
     let s:complete_parameter['items'] = parseds
 
     let s:complete_parameter['complete_col'] = col('.')
-    call <SID>trace_log('complete: ' . s:complete_parameter['items'][0])
     return s:complete_parameter['items'][0]
 endfunction "}}}
 
@@ -124,10 +120,10 @@ function! complete_parameter#goto_first_param() "{{{
         call cursor(line('.'), s:complete_parameter['complete_col'])
         let s:complete_parameter['complete_col'] = 0
     endif
-    call complete_parameter#goto_next_param()
+    call complete_parameter#goto_next_param(1)
 endfunction "}}}
 
-function! complete_parameter#goto_next_param() "{{{
+function! complete_parameter#goto_next_param(forward) "{{{
     let filetype = &ft
     if empty(filetype)
         return
@@ -143,22 +139,27 @@ function! complete_parameter#goto_next_param() "{{{
     let lnum = line('.')
     let content = getline(lnum)
     let current_col = col('.')
+
+    let step = a:forward ? 1 : -1
+
     let delim = ftfunc.parameter_delim()
-    let border_begin = ftfunc.parameter_begin()
-    let border_end = ftfunc.parameter_end()
-    let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, 1)
-    call <SID>trace_log('word_begin: '.word_begin.' word_end:'.word_end)
+    let border_begin = a:forward ? ftfunc.parameter_begin() : ftfunc.parameter_end()
+    let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
+
+    let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
     if word_begin == 0 && word_end == 0
         return
     endif
     let word_len = word_end - word_begin
-    call cursor(lnum, word_begin)
-    startinsert
-    call <SID>trace_log('after set cursor, col: ' . col('.'))
-    call <SID>trace_log('word_len '.word_len)
     if word_len == 0
-        call feedkeys("\<RIGHT>", 'n')
+        if a:forward
+            call cursor(lnum, word_begin)
+            startinsert
+            call feedkeys("\<RIGHT>", 'n')
+        endif
     else
+        call cursor(lnum, word_begin)
+        startinsert
         call feedkeys("\<ESC>l".word_len.'gh', 'n')
     endif
 endfunction "}}}
@@ -361,9 +362,5 @@ endfunction "}}}
 
 function! s:error_log(msg) "{{{
     echohl ErrorMsg | echom a:msg | echohl None
-endfunction "}}}
-
-function! s:trace_log(msg) "{{{
-    " echom a:msg
 endfunction "}}}
 
