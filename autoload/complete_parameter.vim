@@ -8,15 +8,38 @@
 "==============================================================
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_col': 0}
+let s:filetype_mapping_complete = {}
+
+function! s:init_mapping()
+    let filetype = &ft
+    if !<SID>filetype_func_exist(filetype)
+        return
+    endif
+
+    let mapping_complete = get(s:filetype_mapping_complete, filetype, s:complete_parameter_mapping_complete)
+    if mapping_complete == ''
+        let mapping_complete = s:complete_parameter_mapping_complete
+    endif
+    exec 'inoremap <silent><buffer> ' . mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
+endfunction
+
 
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
 
+    augroup complete_parameter_init
+        autocmd!
+        autocmd FileType * call <SID>init_mapping()
+    augroup END
+
     let s:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '(')
+    if s:complete_parameter_mapping_complete
+        let s:complete_parameter_mapping_complete = '('
+    endif
     let s:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '<m-n>')
     let s:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '<m-p>')
  
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
+    " exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 
     exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
     exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
@@ -50,9 +73,8 @@ function! s:new_ftfunc(filetype) "{{{
     return ftfunc
 endfunction "}}}
 
-function! complete_parameter#filetype_func_check(ftfunc) "{{{
-
-    let filetype_func_prefix = s:ftfunc_prefix.a:ftfunc['ft'].'#'
+function! s:filetype_func_exist(filetype) "{{{
+    let filetype_func_prefix = s:ftfunc_prefix.a:filetype.'#'
     let parameters_func_name = filetype_func_prefix.'parameters'
     let parameter_delim_func_name = filetype_func_prefix.'parameter_delim'
     let parameter_begin_func_name = filetype_func_prefix.'parameter_begin'
@@ -64,13 +86,18 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
                 \!exists('*'.parameter_end_func_name)
         return 0
     endif
+    return 1
+endfunction "}}}
 
-    echom 'exist: 'exists('*'.parameters_func_name)
-
-    let parameters = a:ftfunc.parameters()
-    if type(parameters) != 3
+function! complete_parameter#filetype_func_check(ftfunc) "{{{
+    if !<SID>filetype_func_exist(a:ftfunc['ft'])
         return 0
     endif
+
+    " let parameters = a:ftfunc.parameters(v:completed_item)
+    " if type(parameters) != 3
+    "     return 0
+    " endif
 
     if !exists('*'.string(a:ftfunc.parameter_delim))
         return 0
