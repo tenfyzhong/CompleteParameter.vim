@@ -1,0 +1,31 @@
+Execute (error menu):
+  let completed_item = {'menu': 'number'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (fn()):
+  let completed_item = {'menu': 'fn()'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (fn(other: [?])):
+  let completed_item = {'menu': 'fn(other: [?])'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(other)'], result
+
+Execute (fn(other?: string) -> string):
+  let completed_item = {'menu': 'fn(other?: string) -> string'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(other)'], result
+
+Execute (fn(other: ?) -> string):
+  let completed_item = {'menu': 'fn(other: ?) -> string'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(other)'], result
+
+
+Execute (fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool):
+  let completed_item = {'menu': 'fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(test, context)'], result
+
