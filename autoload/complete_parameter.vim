@@ -126,6 +126,7 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
 endfunction "}}}
 
 function! complete_parameter#complete(insert) "{{{
+    " call <SID>log_completed_item()
     if empty(v:completed_item)
         return a:insert 
     endif
@@ -451,3 +452,10 @@ function! s:error_log(msg) "{{{
     echohl ErrorMsg | echom a:msg | echohl None
 endfunction "}}}
 
+function! s:log_completed_item() "{{{
+    let word = get(v:completed_item, 'word', '')
+    let menu = get(v:completed_item, 'menu', '')
+    let info = get(v:completed_item, 'info', '')
+    let kind = get(v:completed_item, 'k', '')
+    echom '[word:'.word.'] [kind:'.kind.'] [menu:'.menu.'] [info:'.info.']'
+endfunction "}}}
