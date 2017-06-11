@@ -186,8 +186,10 @@ function! complete_parameter#goto_first_param() "{{{
     if s:complete_parameter['complete_col'] > 0
         call cursor(line('.'), s:complete_parameter['complete_col'])
         let s:complete_parameter['complete_col'] = 0
+        call complete_parameter#goto_next_param(1)
+    else
+        startinsert
     endif
-    call complete_parameter#goto_next_param(1)
 endfunction "}}}
 
 function! complete_parameter#goto_next_param(forward) "{{{
