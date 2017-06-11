@@ -9,6 +9,7 @@ script: |
   set rtp+=vader.vim
   set rtp+=.
   set rtp+=after
+  runtime! cm_parser/*.vim
   filetype plugin indent on
   syntax enable
   VIMRC) -c 'Vader! vader/*' > /dev/null
