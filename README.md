@@ -1,4 +1,4 @@
-# CompleteParameter.vim
+# CompleteParameter.vim [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=develop)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
 
