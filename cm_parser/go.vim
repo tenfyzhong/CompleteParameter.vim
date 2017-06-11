@@ -8,7 +8,11 @@
 "==============================================================
 
 function! cm_parser#go#parameters(completed_item) "{{{
-    let menu = a:completed_item['menu']
+    let kind = get(a:completed_item, 'kind', '')
+    let menu = get(a:completed_item, 'menu', '')
+    if kind !=# 'f' || empty(menu)
+        return []
+    endif
     let param = substitute(menu, '\mfunc\(([^(]*)\).*', '\1', '')
     let param = substitute(param, '\m\(\w\+\)\s*[^,)]*', '\1', 'g')
     return [param]

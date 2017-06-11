@@ -39,7 +39,7 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
     let s:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
  
-    " exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 
     exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
     exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
@@ -129,9 +129,9 @@ function! complete_parameter#complete(insert) "{{{
     if empty(v:completed_item)
         return a:insert 
     endif
-    if v:completed_item['kind'] != 'f'
-        return a:insert
-    endif
+    " if v:completed_item['kind'] != 'f'
+    "     return a:insert
+    " endif
 
     let filetype = &ft
     if empty(filetype)
