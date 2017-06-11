@@ -222,7 +222,6 @@ function! complete_parameter#goto_next_param(forward) "{{{
         return
     endif
     let word_len = word_end - word_begin
-    echom 'word_begin: ' . word_begin . ' len: ' . word_len
     if word_len == 0
         if a:forward
             call cursor(lnum, word_begin)
@@ -288,7 +287,7 @@ endfunction "}}}
 " content: string, the content to parse
 " current_col: int, current col
 " delim:  string, split the paramter letter
-" return: [int, int] begin_pos, end_pos
+" return: [int, int] begin_col, end_col
 function! complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step) "{{{
     "{{{2
     if empty(a:content) || 
@@ -333,6 +332,13 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endfor
 
     while pos != end "{{{2
+        if step < 0
+            if pos + step != end && a:content[pos+step] == '\'
+                let pos += 2*step 
+                continue
+            endif
+        endif
+
         " if top of stack is quote and current letter is not a quote
         " the letter should be ignore
         if !stack.empty() && stack.top() =~# '\m["`'']' && a:content[pos] !~# '\m["`''\\]'
@@ -415,7 +421,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif
 
     let end_pos = pos
-    if begin_pos == end_pos && a:content[pos] ==# a:border_end
+    if begin_pos == end_pos && (a:content[end_pos] ==# a:border_end)
         return [begin_pos+1, end_pos+1]
     endif
 

@@ -43,17 +43,33 @@ Execute (hello(), 1):
   let result = complete_parameter#parameter_position('hello()', 1, ',', '(', ')', 1)
   AssertEqual [7, 7], result
 
+Execute (hello(), 1, -1):
+  let result = complete_parameter#parameter_position('hello()', 5, ',', ')', '(', -1)
+  AssertEqual [0, 0], result
+
 Execute (hello(), 6):
   let result = complete_parameter#parameter_position('hello()', 6, ',', '(', ')', 1)
   AssertEqual [7, 7], result
+
+Execute (hello(), 6, -1):
+  let result = complete_parameter#parameter_position('hello()', 6, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
 
 Execute (hello(), 7):
   let result = complete_parameter#parameter_position('hello()', 7, ',', '(', ')', 1)
   AssertEqual [7, 7], result
 
+Execute (hello(), 7, -1):
+  let result = complete_parameter#parameter_position('hello()', 7, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
+
 Execute (hello( ), 5):
   let result = complete_parameter#parameter_position('hello( )', 5, ',', '(', ')', 1)
   AssertEqual [8, 8], result
+
+Execute (hello() , 8, -1):
+  let result = complete_parameter#parameter_position('hello() ', 8, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
 
 Execute (hello( ), 6):
   let result = complete_parameter#parameter_position('hello( )', 6, ',', '(', ')', 1)
@@ -72,9 +88,17 @@ Execute (hello( ), 8):
 Execute (hello(a), 5):
   let result = complete_parameter#parameter_position('hello(a)', 5, ',', '(', ')', 1)
   AssertEqual [7, 8], result
+  
+Execute (hello(a), 8, -1):
+  let result = complete_parameter#parameter_position('hello(a)', 8, ',', ')', '(', -1)
+  AssertEqual [7, 8], result
 
 Execute (hello(a), 6):
   let result = complete_parameter#parameter_position('hello(a)', 6, ',', '(', ')', 1)
+  AssertEqual [7, 8], result
+
+Execute (hello(a) , 9, -1):
+  let result = complete_parameter#parameter_position('hello(a) ', 9, ',', ')', '(', -1)
   AssertEqual [7, 8], result
 
 Execute (hello(a), 7):
@@ -83,6 +107,10 @@ Execute (hello(a), 7):
 
 Execute (hello( a), 5):
   let result = complete_parameter#parameter_position('hello( a)', 5, ',', '(', ')', 1)
+  AssertEqual [8, 9], result
+
+Execute (hello( a) , 9, -1):
+  let result = complete_parameter#parameter_position('hello( a) ', 9, ',', ')', '(', -1)
   AssertEqual [8, 9], result
 
 Execute (hello( a), 6):
@@ -105,9 +133,17 @@ Execute (hello( a ), 5):
   let result = complete_parameter#parameter_position('hello( a )', 5, ',', '(', ')', 1)
   AssertEqual [8, 9], result
 
+Execute (hello( a ) , 10, -1):
+  let result = complete_parameter#parameter_position('hello( a ) ', 10, ',', ')', '(', -1)
+  AssertEqual [8, 9], result
+
 Execute (hello( a ), 6):
   let result = complete_parameter#parameter_position('hello( a )', 6, ',', '(', ')', 1)
   AssertEqual [8, 9], result
+
+Execute (hello( a ) , 9, -1):
+  let result = complete_parameter#parameter_position('hello( a ) ', 9, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
 
 Execute (hello( a ), 7):
   let result = complete_parameter#parameter_position('hello( a )', 7, ',', '(', ')', 1)
@@ -115,6 +151,10 @@ Execute (hello( a ), 7):
 
 Execute (hello(aa), 5):
   let result = complete_parameter#parameter_position('hello(aa)', 5, ',', '(', ')', 1)
+  AssertEqual [7, 9], result
+
+Execute (hello(aa) , 9, -1):
+  let result = complete_parameter#parameter_position('hello(aa) ', 9, ',', ')', '(', -1)
   AssertEqual [7, 9], result
 
 Execute (hello(aa), 6):
@@ -131,8 +171,16 @@ Execute (hello(aa, bb), 5):
   let result = complete_parameter#parameter_position('hello(aa, bb)', 5, ',', '(', ')', 1)
   AssertEqual [7, 9], result
 
+Execute (hello(aa, bb), 13, -1):
+  let result = complete_parameter#parameter_position('hello(aa, bb)', 13, ',', ')', '(', -1)
+  AssertEqual [11, 13], result
+
 Execute (hello(aa, bb), 6):
   let result = complete_parameter#parameter_position('hello(aa, bb)', 6, ',', '(', ')', 1)
+  AssertEqual [7, 9], result
+
+Execute (hello(aa, bb), 11, -1):
+  let result = complete_parameter#parameter_position('hello(aa, bb)', 11, ',', ')', '(', -1)
   AssertEqual [7, 9], result
 
 Execute (hello(aa, bb), 7):
@@ -153,9 +201,17 @@ Execute (hello(aa, bb, cccc), 7):
   let result = complete_parameter#parameter_position('hello(aa, bb, cccc)', 7, ',', '(', ')', 1)
   AssertEqual [11, 13], result
 
+Execute (hello(aa, bb, cccc), 19, -1):
+  let result = complete_parameter#parameter_position('hello(aa, bb, cccc)', 19, ',', ')', '(', -1)
+  AssertEqual [15, 19], result
+
 Execute (hello(aa, bb, cccc), 11):
   let result = complete_parameter#parameter_position('hello(aa, bb, cccc)', 11, ',', '(', ')', 1)
   AssertEqual [15, 19], result
+
+Execute (hello(aa, bb, cccc), 15, -1):
+  let result = complete_parameter#parameter_position('hello(aa, bb, cccc)', 15, ',', ')', '(', -1)
+  AssertEqual [11, 13], result
 
 Execute (hello(aa, bb, cccc), 15):
   let result = complete_parameter#parameter_position('hello(aa, bb, cccc)', 15, ',', '(', ')', 1)
@@ -167,13 +223,25 @@ Execute (hello(foo()), 1):
   let result = complete_parameter#parameter_position('hello(foo())', 1, ',', '(', ')', 1)
   AssertEqual [7, 12], result
 
+Execute (hello(foo()), 12, -1):
+  let result = complete_parameter#parameter_position('hello(foo())', 12, ',', ')', '(', -1)
+  AssertEqual [7, 12], result
+
 Execute (hello(foo()), 6):
   let result = complete_parameter#parameter_position('hello(foo())', 6, ',', '(', ')', 1)
   AssertEqual [7, 12], result
 
+Execute (hello(foo()), 11, -1):
+  let result = complete_parameter#parameter_position('hello(foo())', 11, ',', ')', '(', -1)
+  AssertEqual [10, 10], result
+
 Execute (hello(foo()), 7):
   let result = complete_parameter#parameter_position('hello(foo())', 7, ',', '(', ')', 1)
   AssertEqual [11, 11], result
+
+Execute (hello(foo()), 10, -1):
+  let result = complete_parameter#parameter_position('hello(foo())', 10, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
 
 Execute (hello(foo()), 11):
   let result = complete_parameter#parameter_position('hello(foo())', 11, ',', '(', ')', 1)
@@ -183,9 +251,17 @@ Execute (hello(foo(bar)), 6):
   let result = complete_parameter#parameter_position('hello(foo(bar))', 6, ',', '(', ')', 1)
   AssertEqual [7, 15], result
 
+Execute (hello(foo(bar)), 15, -1):
+  let result = complete_parameter#parameter_position('hello(foo(bar))', 15, ',', ')', '(', -1)
+  AssertEqual [7, 15], result
+
 Execute (hello(foo(bar)), 7):
   let result = complete_parameter#parameter_position('hello(foo(bar))', 7, ',', '(', ')', 1)
   AssertEqual [11, 14], result
+
+Execute (hello(foo(bar)), 13, -1):
+  let result = complete_parameter#parameter_position('hello(foo(bar))', 13, ',', ')', '(', -1)
+  AssertEqual [6, 6], result
 
 Execute (hello(foo(bar)), 11):
   let result = complete_parameter#parameter_position('hello(foo(bar))', 11, ',', '(', ')', 1)
@@ -194,6 +270,10 @@ Execute (hello(foo(bar)), 11):
 Execute (hello(a, foo(bar)), 7):
   let result = complete_parameter#parameter_position('hello(a, foo(bar))', 7, ',', '(', ')', 1)
   AssertEqual [10, 18], result
+
+Execute (hello(a, foo(bar)), 13, -1):
+  let result = complete_parameter#parameter_position('hello(a, foo(bar))', 13, ',', ')', '(', -1)
+  AssertEqual [7, 8], result
 
 Execute (hello(a, foo(bar)), 8):
   let result = complete_parameter#parameter_position('hello(a, foo(bar))', 8, ',', '(', ')', 1)
@@ -214,9 +294,17 @@ Execute (hello(aa, "(", ccc), 7):
   let result = complete_parameter#parameter_position('hello(aa, "(", ccc)', 7, ',', '(', ')', 1)
   AssertEqual [11, 14], result
 
+Execute (hello(aa, "(", ccc), 16, -1):
+  let result = complete_parameter#parameter_position('hello(aa, "(", ccc)', 16, ',', ')', '(', -1)
+  AssertEqual [11, 14], result
+
 Execute (hello(aa, "(", ccc), 10):
   let result = complete_parameter#parameter_position('hello(aa, "(", ccc)', 10, ',', '(', ')', 1)
   AssertEqual [16, 19], result
+
+Execute (hello(aa, "(", ccc), 10, -1):
+  let result = complete_parameter#parameter_position('hello(aa, "(", ccc)', 10, ',', ')', '(', -1)
+  AssertEqual [7, 9], result
 
 Execute (hello(aa, "(", ccc), 11):
   let result = complete_parameter#parameter_position('hello(aa, "(", ccc)', 11, ',', '(', ')', 1)
@@ -232,6 +320,10 @@ Execute (hello(aa, "(", ccc), 13):
 
 Execute (hello(aa, "(\"", ccc)):
   let result = complete_parameter#parameter_position('hello(aa, "(\"", ccc)', 7, ',', '(', ')', 1)
+  AssertEqual [11, 16], result
+
+Execute (hello(aa, "(\"", ccc), 18, -1):
+  let result = complete_parameter#parameter_position('hello(aa, "(\"", ccc)', 18, ',', ')', '(', -1)
   AssertEqual [11, 16], result
 
 Execute (hello(`a""a`, "(\"", "ccc", d), 24):
