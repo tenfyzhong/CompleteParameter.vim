@@ -163,7 +163,7 @@ function! complete_parameter#complete(insert) "{{{
         return a:insert
     endif
 
-    if empty(parseds)
+    if empty(parseds) || parseds[0] == ''
         return a:insert
     endif
 
