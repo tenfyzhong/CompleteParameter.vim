@@ -237,8 +237,11 @@ function! complete_parameter#goto_next_param(forward) "{{{
         " call feedkeys("\<ESC>l".word_len.'gh', 'n')
         let keys = "\<ESC>lv"
         let right_len = word_len - 1
-        let keys .= right_len
-        let keys .= "l\<C-G>"
+        if right_len > 0
+            let keys .= right_len
+            let keys .= "l"
+        endif
+        let keys .= "\<C-G>"
         call feedkeys(keys, 'n')
     endif
 endfunction "}}}
