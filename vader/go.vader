@@ -1,0 +1,39 @@
+Execute (func()):
+  let completed_item = {'menu': 'func()'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (func(a)):
+  let completed_item = {'menu': 'func(a)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a int)):
+  let completed_item = {'menu': 'func(a int)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a net.Conn)):
+  let completed_item = {'menu': 'func(a net.Conn)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a net.Conn, b, c int)):
+  let completed_item = {'menu': 'func(a net.Conn, b, c int)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+  
+Execute (func(a net.Conn, b, c int) error):
+  let completed_item = {'menu': 'func(a net.Conn, b, c int) error'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+
+Execute (func(a net.Conn, b, c int) (int, error)):
+  let completed_item = {'menu': 'func(a net.Conn, b, c int) (int, error)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+
+Execute (func(a net.Conn, b, c int) (a int, err error)):
+  let completed_item = {'menu': 'func(a net.Conn, b, c int) (a int, err error)'}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
