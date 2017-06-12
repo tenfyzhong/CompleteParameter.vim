@@ -8,7 +8,7 @@
 "==============================================================
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_col': 0}
-let s:filetype_mapping_complete = {}
+let s:filetype_mapping_complete = {'cpp': {'(': '()', '<': '<'}}
 
 function! s:init_filetype_mapping() "{{{
     let filetype = &ft
@@ -31,6 +31,15 @@ augroup END "}}}
 
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
+
+    if exists('g:filetype_mapping_complete') && type('g:filetype_mapping_complete') == 3
+        let s:filetype_mapping_complete = extend(s:filetype_mapping_complete, g:filetype_mapping_complete, 'force')
+    endif
+
+    " 4 error
+    " 2 error + debug
+    " 1 erro + debug + trace
+    let g:complete_parameter_log_level = get(g:, 'complete_parameter_log_level', 4)
 
     let g:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '')
     let s:complete_parameter_mapping_complete = g:complete_parameter_mapping_complete != '' ? g:complete_parameter_mapping_complete : '('
@@ -126,7 +135,7 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
 endfunction "}}}
 
 function! complete_parameter#complete(insert) "{{{
-    call <SID>log_completed_item()
+    call <SID>trace_log(string(v:completed_item))
     if empty(v:completed_item)
         return a:insert 
     endif
@@ -451,9 +460,21 @@ function! s:find_first_not_space(content, pos, end, step) "{{{
 endfunction "}}}
 
 function! s:error_log(msg) "{{{
-    echohl ErrorMsg | echom a:msg | echohl None
+    if g:complete_parameter_log_level <= 4
+        echohl ErrorMsg | echom a:msg | echohl None
+    endif
 endfunction "}}}
 
-function! s:log_completed_item() "{{{
-    echom string(v:completed_item)
+function! s:debug_log(msg) "{{{
+    if g:complete_parameter_log_level <= 2
+        echom a:msg
+    endif
 endfunction "}}}
+
+function! s:trace_log(msg) "{{{
+    if g:complete_parameter_log_level <= 1
+        echom a:msg
+    endif
+endfunction "}}}
+
+

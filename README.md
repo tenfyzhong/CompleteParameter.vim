@@ -86,6 +86,17 @@ let g:complete_parameter_mapping_goto_previous = '<m-p>'
 ```
 
 
+## The `g:complete_parameter_log_level` option
+This option set the log level.  
+4: only print **error** log. 
+2: print **error** and **debug** log.
+1: print **error**, **debug**, **trace**
+Default: 4
+```viml
+let g:complete_parameter_log_level = 4
+```
+
+
 # Supported
 ## Supported Complete Engine
 - [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
