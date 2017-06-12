@@ -15,15 +15,15 @@ a function.
 
 ================================================================================
 Contents:
-1. Install
-2. Usage
-3. Mapping
-4. Options
-5. Supported
-6. Writing Extensions
-7. Contributions
-8. Thanks
-9. LICENSE
+1. Install -------------------------------------- |complete-parameter-install|
+2. Usage ---------------------------------------- |complete-parameter-usage|
+3. Mapping -------------------------------------- |complete-parameter-mapping|
+4. Options -------------------------------------- |complete-parameter-options|
+5. Supported ------------------------------------ |complete-parameter-supported|
+6. Writing Extensions --------------------------- |complete-parameter-extensions|
+7. Contributions -------------------------------- |complete-parameter-contributes|
+8. Thanks --------------------------------------- |complete-parameter-thanks|
+9. LICENSE -------------------------------------- |complete-parameter-license|
 
 ================================================================================
 1. Install                                            *complete-parameter-install*
