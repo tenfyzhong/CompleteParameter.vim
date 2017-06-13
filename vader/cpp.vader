@@ -1,0 +1,39 @@
+Execute (error completed_item):
+  let completed_item = {}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error completed_item, kind: t):
+  let completed_item = {'kind': 't'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error completed_item, word empty):
+  let completed_item = {'kind': 'f', 'word': ''}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error completed_item, word info):
+  let completed_item = {'kind': 'f', 'word': 'empty'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (vector::empty()):
+  let completed_item = {'kind': 'f', 'word': 'empty', 'info': "bool empty() const\n"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (vector::operator=):
+  let completed_item = {'kind': 'f', 'word': 'operator=', 'info': "std::vector<int, std::allocator<int> > & operator=( const std::vector<int, std::allocator<int> > &__x )"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(__x)'], result
+
+Execute (vector::vector):
+  let completed_item = {'kind': 'f', 'word': 'vector', 'info': "void vector( _InputIterator __first, typename enable_if<__is_input_iterator<_InputIterator>::value && !__is_forward_iterator<_InputIterator>::value && is_constructible<value_type, typename iterator_traits<_InputIterator>::reference>::value, _InputIterator>::type __last )\nvoid vector( _InputIterator __first, _InputIterator __last, const allocator_type &__a, typename enable_if<__is_input_iterator<_InputIterator>::value && !__is_forward_iterator<_InputIterator>::value && is_constructible<value_type, typename iterator_traits<_InputIterator>::reference>::value>::type * )"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(__first, __last)', '(__first, __last, __a, *)'], result
+
+Execute (ctime::time):
+  let completed_item = {'kind':'f', 'word': 'time', 'info': 'time_t time( time_t * )'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(*)'], result

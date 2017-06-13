@@ -287,6 +287,21 @@ Execute (hello(a, foo(bar), b), 14):
   let result = complete_parameter#parameter_position('hello(a, foo(bar), b)', 14, ',', '(', ')', 1)
   AssertEqual [20, 21], result
 
+Execute (hello(a, foo(bar), b), 7):
+  let result = complete_parameter#parameter_position('hello(a, foo(bar), b)', 7, ',', '(', ')', 1)
+  AssertEqual [10, 18], result
+
+Execute (hello(a, foo(bar, world), b), 7):
+  let result = complete_parameter#parameter_position('hello(a, foo(bar, world), b)', 7, ',', '(', ')', 1)
+  AssertEqual [10, 25], result
+
+Execute (hello(a, foo(bar, world)(g, h), b), 7):
+  let result = complete_parameter#parameter_position('hello(a, foo(bar, world)(g, h), b)', 7, ',', '(', ')', 1)
+  AssertEqual [10, 31], result
+
+Execute (hello(a, foo(bar, world)(g, h)(i, j), b), 7):
+  let result = complete_parameter#parameter_position('hello(a, foo(bar, world)(g, h)(i, j), b)', 7, ',', '(', ')', 1)
+  AssertEqual [10, 37], result
 " }}}
 
 " param has quote {{{
@@ -335,3 +350,24 @@ Execute (hello(`a"'a`, "(\"", "ccc", d), 24):
   AssertEqual [29, 30], result
 
 "}}}
+
+" param has <>
+Execute (hello<a, b>, 1):
+  let result = complete_parameter#parameter_position('hello<a, b>', 1, ',', "(<", ")>", 1)
+  AssertEqual [7, 8], result
+
+Execute (hello<a, b>, 7):
+  let result = complete_parameter#parameter_position('hello<a, b>', 7, ',', "(<", ")>", 1)
+  AssertEqual [10, 11], result
+
+Execute (hello<a, b>, 7):
+  let result = complete_parameter#parameter_position('hello<a, b>', 7, ',', "(<", ")>", 1)
+  AssertEqual [10, 11], result
+
+Execute (hello<a, b>(c, d), 10):
+  let result = complete_parameter#parameter_position('hello<a, b>(c, d)', 10, ',', "(<", ")>", 1)
+  AssertEqual [13, 14], result
+
+Execute (hello<a, b>(c, d, func<e, f>(g, h, i))), 16):
+  let result = complete_parameter#parameter_position('hello<a, b>(c, d, func<e, f>(g, h, i)))', 16, ',', "(<", ")>", 1)
+  AssertEqual [19, 38], result

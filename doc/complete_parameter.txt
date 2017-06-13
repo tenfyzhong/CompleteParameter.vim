@@ -110,6 +110,7 @@ Default: 4 >
 5.2 Supported Language
 - golang
 - erlang
+- c++
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*
@@ -144,11 +145,17 @@ Follow the next steps. All commands below was work in this plugin directory.
 
 4) Create function `cm_parser#filetype#parameter_begin()`
    This function return the border begin of the parameters. For example, the go 
-   and c++ will return '('
+   will return '('. C++ will return '(<', the '<' is the beginning of 
+   template parameters.
 
 5) Create function `cm_parser#filetype#parameter_end()`
    This function return the border end of the parameters. For example, the go 
-   and c++ will return ')'
+   will return ')'. C++ will return ')>', the '>' is ending of 
+   template parameters.
+   The length of `cm_parser#filetype#parameter_begin()` and 
+   `cm_parser#filetype#parameter_end()` must be equal. Each char of them must 
+   be match. For example, the the first char of begin is '(', the first of end
+   must be ')'. 
    
 6) Please write unittest for your function `cm_parser#filetype#parameters` 
    use [vader](https://github.com/junegunn/vader.vim) test framework. And put 

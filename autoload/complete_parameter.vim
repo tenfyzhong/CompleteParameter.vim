@@ -228,6 +228,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
     let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
+    call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
         return
     endif
@@ -308,6 +309,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 \empty(a:delim) ||
                 \empty(a:border_begin) ||
                 \empty(a:border_end) ||
+                \len(a:border_begin) != len(a:border_end) ||
                 \a:step==0
         return [0, 0]
     endif "}}}2
@@ -323,7 +325,15 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     let pos = current_pos
 
     let border_matcher = {}
-    let border_matcher[a:border_begin] = '\m['.a:delim.a:border_end.']'
+    let border_begin_chars = split(a:border_begin, '\zs')
+    let border_end_chars = split(a:border_end, '\zs')
+    let i = 0
+    while i < len(border_end_chars)
+        let border_matcher[border_begin_chars[i]] = '\m['.a:delim.border_end_chars[i].']'
+        let i += 1
+    endwhile
+
+    " let border_matcher[a:border_begin] = '\m['.a:delim.a:border_end.']'
     let border_matcher[a:delim] = '\m['.a:delim.a:border_end.']'
     let border_matcher['"'] = '"'
     let border_matcher["'"] = "'"
@@ -367,7 +377,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
             endif
         elseif a:content[pos] ==# '\'
             let pos += step
-        elseif a:content[pos] ==# a:border_begin
+        elseif stridx(a:border_begin, a:content[pos]) != -1
             call stack.push(a:content[pos])
             if stack.len() == 1
                 " begin
@@ -393,14 +403,14 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 " no need to step forward
                 " goto the beginning of the loop
                 continue
-            elseif a:content[pos] =~# border_matcher[stack.top()]
+            elseif stack.len() == 1 && a:content[pos] =~# border_matcher[stack.top()]
                 call stack.pop()
                 if stack.empty()
                     " match delim
                     break
                 endif
             endif
-        elseif a:content[pos] ==# a:border_end 
+        elseif stridx(a:border_end, a:content[pos]) != -1
             if stack.empty()
                 let begin_pos = pos
                 let end_pos = pos
@@ -434,7 +444,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif
 
     let end_pos = pos
-    if begin_pos == end_pos && (a:content[end_pos] ==# a:border_end)
+    if begin_pos == end_pos && stridx(a:border_end, a:content[end_pos]) != -1
         return [begin_pos+1, end_pos+1]
     endif
 

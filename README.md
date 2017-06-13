@@ -104,10 +104,10 @@ let g:complete_parameter_log_level = 4
 ## Supported Language
 - golang
 - erlang
+- c++
 
 # Todo
 - support language: c
-- support language: c++
 - support language: python
 - support language: objc
 - support language: c#
