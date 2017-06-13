@@ -110,6 +110,7 @@ Default: 4 >
 5.2 Supported Language
 - golang
 - erlang
+- c
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*

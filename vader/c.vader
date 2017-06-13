@@ -1,0 +1,44 @@
+Execute (error param):
+  let completed_item = {}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error param, kind != f):
+  let completed_item = {'kind': 't'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error param, abbr == ''):
+  let completed_item = {'kind': 'f', 'abbr': ''}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (fun()):
+  let completed_item = {'kind': 'f', 'abbr': 'fun()'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (fun(int)):
+  let completed_item = {'kind': 'f', 'abbr': 'fun(int)'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(int)'], result
+
+Execute (fun(struct tm *const)):
+  let completed_item = {'kind': 'f', 'abbr': 'fun(struct tm *const)'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*const)'], result
+
+Execute (fun(const char *)):
+  let completed_item = {'kind': 'f', 'abbr': 'fun(const char *)'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*char)'], result
+
+Execute (fun(const char **)):
+  let completed_item = {'kind': 'f', 'abbr': 'fun(const char **)'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(**char)'], result
+
+Execute (fun( const struct tm *restrict, char *restrict  )):
+  let completed_item = {'kind': 'f', 'abbr': 'fun( const struct tm *restrict, char *restrict  )'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*restrict, *restrict)'], result
