@@ -23,7 +23,8 @@ Contents:
 6. Writing Extensions --------------------------- |complete-parameter-extensions|
 7. Contributions -------------------------------- |complete-parameter-contributes|
 8. Thanks --------------------------------------- |complete-parameter-thanks|
-9. LICENSE -------------------------------------- |complete-parameter-license|
+9. Changlog ------------------------------------- |complete-parameter-changelog|
+10. LICENSE ------------------------------------- |complete-parameter-license|
 
 ================================================================================
 1. Install                                            *complete-parameter-install*
@@ -47,11 +48,11 @@ to the next/previous parameter and select it.
 
 ================================================================================
 3. Mapping                                            *complete-parameter-mapping*
-* `(`                                                                            *(*
+* (                                                                            *(*
 Mapping type: inoremap
 Call the parameter completor. 
 
-* `<m-n>`                                                                    *<m-n>*
+* <m-n>                                                                    *<m-n>*
 Mapping type: inoremap,nnoremap,xnoremap,vnoremap
 Goto the next parameter and select it.
 
@@ -68,15 +69,22 @@ complete menu, type this mapping, it'll complete the parameters.
 Default: '('  >
   let g:complete_parameter_mapping_complete = '('
 <
-                                           *b:complete_parameter_mapping_complete*
-* b:complete_parameter_mapping_complete`
-This option can set different mapping fo defferent filetype. If this option set 
-for a filetype, it'll use this mapping to over the 
-|g:complete_parameter_mapping_complete| value when you are edit this file.  >
-  augroup complete_parameter_setting
-      autocmd!
-      autocmd FileType go let b:complete_parameter_mapping_complete = '('
-  augroup END
+                                              *g:complete_parameter_failed_insert*
+* g:complete_parameter_failed_insert
+This option set the complete text when the parameter complete failed. 
+Default: '()'  >
+  let g:complete_parameter_failed_insert = '()'
+<
+                                    *g:complete_parameter_mapping_complete_for_ft*
+* g:complete_parameter_mapping_complete_for_ft
+This option set the complete mapping for special typefile. By default, the 
+complete mapping is the `g:complete_parameter_mapping_complete` value. But 
+you can define other key for a special. For example, you can set the cpp 
+complete mapping to `(` and `<`. This option is a map, the key of the map
+is filetype, the value is a map too.  The key of the value map is the 
+complete mapping key, the value is a string when fail to call the complete. 
+Default: {'cpp': {'(': '()', '<': '<'} }  >
+  let g:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': '<'}}
 <
                                           *g:complete_parameter_mapping_goto_next*
 * g:complete_parameter_mapping_goto_next
@@ -198,7 +206,22 @@ Contributions and pull requests are welcome.
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-9. LICENSE                                            *complete-parameter-license*
+9. Changlog                                         *complete-parameter-changelog*
+0.0.3: 
+Support multi called for a file. 
+Support cpp class template. 
+
+0.0.2: 2017-06-18
+Support c, cpp, rust, javascript, python.
+Support overload functions.
+Update screenshot.
+Add shields. 
+
+0.0.1: 2017-06-12
+Init version. Support golang, erlang paramater.
+
+================================================================================
+10. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#
