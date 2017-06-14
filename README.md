@@ -48,13 +48,13 @@ to the next/previous parameter and select it.
 
 
 # Mapping
-## `(`
+### `(`
 Call the parameter completor.
 
-## `<m-n>`
+### `<m-n>`
 Goto the next parameter and select it.
 
-## `<m-p>`
+### `<m-p>`
 Goto the previous parameter and select it.
 
 
