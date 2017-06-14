@@ -92,6 +92,26 @@ it'll goto to the previous parameter.
 Default: '<m-p>'  >
   let g:complete_parameter_mapping_goto_previous = '<m-p>'
 <
+                                      *g:complete_parameter_mapping_overload_down*
+* g:complete_parameter_mapping_overload_down
+This option set the select next overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the next overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-d>' >
+  let g:complete_parameter_mapping_overload_down = '<m-d>'
+<
+                                        *g:complete_parameter_mapping_overload_up*
+* g:complete_parameter_mapping_overload_up
+This option set the select previous overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the previous overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-u>' >
+  let g:complete_parameter_mapping_overload_up = '<m-u>'
+<
                                                   *g:complete_parameter_log_level*
 * g:complete_parameter_log_level
 This option set the log level.  
