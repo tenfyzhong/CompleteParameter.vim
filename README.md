@@ -53,7 +53,7 @@ Goto the previous parameter and select it.
 ## The `g:complete_parameter_mapping_complete` option
 This option set the complete mapping. When you are in a complete item of the 
 complete menu, type this mapping, it'll complete the parameters.   
-Default: '('  
+Default: `(`  
 ```viml
 let g:complete_parameter_mapping_complete = '('
 ```
@@ -72,7 +72,7 @@ augroup END
 ## The `g:complete_parameter_mapping_goto_next` option
 This option set the goto to next paramater mapping. When this mapping was called,
 it'll goto to the next parameter.  
-Default: '<m-n>'  
+Default: `<m-n>`  
 ```viml
 let g:complete_parameter_mapping_goto_next = '<m-n>'
 ```
@@ -80,11 +80,32 @@ let g:complete_parameter_mapping_goto_next = '<m-n>'
 ## The `g:complete_parameter_mapping_goto_previous` option
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
-Default: '<m-p>'  
+Default: `<m-p>`  
 ```viml
 let g:complete_parameter_mapping_goto_previous = '<m-p>'
 ```
 
+## The `g:complete_parameter_mapping_overload_down` option
+This option set the select next overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the next overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: `<m-d>`
+```viml
+let g:complete_parameter_mapping_overload_down = '<m-d>'
+```
+
+## The `g:complete_parameter_mapping_overload_up` option
+This option set the select previous overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the previous overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: `<m-u>`
+```viml
+let g:complete_parameter_mapping_overload_up = '<m-u>'
+```
 
 ## The `g:complete_parameter_log_level` option
 This option set the log level.  
@@ -105,9 +126,9 @@ let g:complete_parameter_log_level = 4
 - golang
 - erlang
 - c
+- c++
 
 # Todo
-- support language: c++
 - support language: python
 - support language: objc
 - support language: c#

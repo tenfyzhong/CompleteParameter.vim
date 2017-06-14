@@ -92,6 +92,26 @@ it'll goto to the previous parameter.
 Default: '<m-p>'  >
   let g:complete_parameter_mapping_goto_previous = '<m-p>'
 <
+                                      *g:complete_parameter_mapping_overload_down*
+* g:complete_parameter_mapping_overload_down
+This option set the select next overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the next overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-d>' >
+  let g:complete_parameter_mapping_overload_down = '<m-d>'
+<
+                                        *g:complete_parameter_mapping_overload_up*
+* g:complete_parameter_mapping_overload_up
+This option set the select previous overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the previous overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-u>' >
+  let g:complete_parameter_mapping_overload_up = '<m-u>'
+<
                                                   *g:complete_parameter_log_level*
 * g:complete_parameter_log_level
 This option set the log level.  
@@ -111,6 +131,7 @@ Default: 4 >
 - golang
 - erlang
 - c
+- c++
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*
@@ -145,11 +166,17 @@ Follow the next steps. All commands below was work in this plugin directory.
 
 4) Create function `cm_parser#filetype#parameter_begin()`
    This function return the border begin of the parameters. For example, the go 
-   and c++ will return '('
+   will return '('. C++ will return '(<', the '<' is the beginning of 
+   template parameters.
 
 5) Create function `cm_parser#filetype#parameter_end()`
    This function return the border end of the parameters. For example, the go 
-   and c++ will return ')'
+   will return ')'. C++ will return ')>', the '>' is ending of 
+   template parameters.
+   The length of `cm_parser#filetype#parameter_begin()` and 
+   `cm_parser#filetype#parameter_end()` must be equal. Each char of them must 
+   be match. For example, the the first char of begin is '(', the first of end
+   must be ')'. 
    
 6) Please write unittest for your function `cm_parser#filetype#parameters` 
    use [vader](https://github.com/junegunn/vader.vim) test framework. And put 

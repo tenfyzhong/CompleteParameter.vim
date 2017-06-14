@@ -7,7 +7,7 @@
 " created: 2017-06-07 20:29:10
 "==============================================================
 
-let s:complete_parameter = {'index': 0, 'items': [], 'complete_col': 0}
+let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
 let s:filetype_mapping_complete = {'cpp': {'(': '()', '<': '<'}}
 
 function! s:init_filetype_mapping() "{{{
@@ -47,6 +47,11 @@ function! complete_parameter#init() "{{{
     let s:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
     let s:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
+
+    let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
+    let s:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
+    let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
+    let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
  
     exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 
@@ -59,6 +64,16 @@ function! complete_parameter#init() "{{{
     exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
     exec 'xnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
     exec 'vnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
+
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
+    exec 'nnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
+    exec 'xnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
+    exec 'vnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
+
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
+    exec 'nnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
+    exec 'xnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
+    exec 'vnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
@@ -178,9 +193,10 @@ function! complete_parameter#complete(insert) "{{{
     let s:complete_parameter['index'] = 0
     let s:complete_parameter['items'] = parseds
 
-    let s:complete_parameter['complete_col'] = col('.')
-    let col = col('.')
+    let s:complete_parameter['complete_pos'] = [line('.'), col('.')]
+    let col = s:complete_parameter['complete_pos'][1]
     let content = getline(line('.'))
+    let s:complete_parameter['success'] = 1
     
     let parameter = s:complete_parameter['items'][0]
     if col > 1
@@ -192,9 +208,10 @@ function! complete_parameter#complete(insert) "{{{
 endfunction "}}}
 
 function! complete_parameter#goto_first_param() "{{{
-    if s:complete_parameter['complete_col'] > 0
-        call cursor(line('.'), s:complete_parameter['complete_col'])
-        let s:complete_parameter['complete_col'] = 0
+    if s:complete_parameter['success']
+        let complete_pos = s:complete_parameter['complete_pos']
+        call cursor(complete_pos[0], complete_pos[1])
+        let s:complete_parameter['success'] = 0
         call complete_parameter#goto_next_param(1)
     else
         startinsert
@@ -228,10 +245,12 @@ function! complete_parameter#goto_next_param(forward) "{{{
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
     let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
+    call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
         return
     endif
     let word_len = word_end - word_begin
+    call <SID>trace_log('word_len:'.word_len)
     if word_len == 0
         if a:forward
             call cursor(lnum, word_begin)
@@ -254,6 +273,77 @@ function! complete_parameter#goto_next_param(forward) "{{{
         let keys .= "\<C-G>"
         call feedkeys(keys, 'n')
     endif
+endfunction "}}}
+
+" items: all overload complete function parameters
+" current_line: current line content
+" complete_pos: the pos where called complete
+" forward: down or up
+" [success, item, next_index, old_item_len]
+function! complete_parameter#next_overload_content(items, current_index, current_line, complete_pos, forward) "{{{
+    if len(a:items) <= 1 || 
+                \a:current_index >= len(a:items) || 
+                \empty(a:current_line) || 
+                \len(a:current_line) < a:complete_pos[1]
+        return [0]
+    endif
+
+    let current_overload_len = len(a:items[a:current_index])
+
+    let pos = a:complete_pos[1] - 1
+    let pos_end = pos+current_overload_len-1
+    let content = a:current_line[ pos : pos_end ]
+    if content !=# a:items[a:current_index]
+        return [0]
+    endif
+    let overload_len = len(a:items)
+    if a:forward
+        let next_index = (a:current_index + 1) % overload_len
+    else
+        let next_index = (a:current_index+overload_len-1)%overload_len
+    endif
+    return [1, a:items[next_index], next_index, len(a:items[a:current_index])]
+endfunction "}}}
+
+function! complete_parameter#overload_next(forward) "{{{
+    let overload_len = len(s:complete_parameter['items'])
+    if overload_len <= 1
+        return
+    endif
+    let complete_pos = s:complete_parameter['complete_pos']
+    let current_line = line('.')
+    let current_col = col('.')
+    " if no in the complete content
+    " then return
+    if current_line != complete_pos[0] || current_col < complete_pos[1]
+        return
+    endif
+
+    let current_index = s:complete_parameter['index']
+    let current_line = getline(current_line)
+    let result = complete_parameter#next_overload_content(
+                \s:complete_parameter['items'], 
+                \current_index, 
+                \current_line, 
+                \s:complete_parameter['complete_pos'], 
+                \a:forward)
+    if result[0] == 0
+        return
+    endif
+
+    let current_overload_len = result[3]
+
+    call cursor(complete_pos[0], complete_pos[1])
+
+    exec 'normal! d'.current_overload_len.'l'
+
+    let next_content = result[1]
+
+    let s:complete_parameter['index'] = result[2]
+    let s:complete_parameter['success'] = 1
+    exec 'normal! a'.next_content
+    stopinsert
+    call complete_parameter#goto_first_param()
 endfunction "}}}
 
 let s:stack = {'data':[]}
@@ -308,6 +398,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 \empty(a:delim) ||
                 \empty(a:border_begin) ||
                 \empty(a:border_end) ||
+                \len(a:border_begin) != len(a:border_end) ||
                 \a:step==0
         return [0, 0]
     endif "}}}2
@@ -323,7 +414,15 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     let pos = current_pos
 
     let border_matcher = {}
-    let border_matcher[a:border_begin] = '\m['.a:delim.a:border_end.']'
+    let border_begin_chars = split(a:border_begin, '\zs')
+    let border_end_chars = split(a:border_end, '\zs')
+    let i = 0
+    while i < len(border_end_chars)
+        let border_matcher[border_begin_chars[i]] = '\m['.a:delim.border_end_chars[i].']'
+        let i += 1
+    endwhile
+
+    " let border_matcher[a:border_begin] = '\m['.a:delim.a:border_end.']'
     let border_matcher[a:delim] = '\m['.a:delim.a:border_end.']'
     let border_matcher['"'] = '"'
     let border_matcher["'"] = "'"
@@ -367,7 +466,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
             endif
         elseif a:content[pos] ==# '\'
             let pos += step
-        elseif a:content[pos] ==# a:border_begin
+        elseif stridx(a:border_begin, a:content[pos]) != -1
             call stack.push(a:content[pos])
             if stack.len() == 1
                 " begin
@@ -393,14 +492,14 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 " no need to step forward
                 " goto the beginning of the loop
                 continue
-            elseif a:content[pos] =~# border_matcher[stack.top()]
+            elseif stack.len() == 1 && a:content[pos] =~# border_matcher[stack.top()]
                 call stack.pop()
                 if stack.empty()
                     " match delim
                     break
                 endif
             endif
-        elseif a:content[pos] ==# a:border_end 
+        elseif stridx(a:border_end, a:content[pos]) != -1
             if stack.empty()
                 let begin_pos = pos
                 let end_pos = pos
@@ -434,7 +533,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif
 
     let end_pos = pos
-    if begin_pos == end_pos && (a:content[end_pos] ==# a:border_end)
+    if begin_pos == end_pos && stridx(a:border_end, a:content[end_pos]) != -1
         return [begin_pos+1, end_pos+1]
     endif
 
