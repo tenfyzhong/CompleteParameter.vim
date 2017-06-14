@@ -132,6 +132,9 @@ Default: 4 >
 - erlang
 - c
 - c++
+- python
+- javascript
+- rust
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*
