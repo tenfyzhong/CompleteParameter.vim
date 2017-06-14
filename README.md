@@ -1,4 +1,4 @@
-# CompleteParameter.vim [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=develop)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
+# CompleteParameter.vim [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=master)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
 
@@ -127,15 +127,19 @@ let g:complete_parameter_log_level = 4
 - erlang
 - c
 - c++
+- python
+- javascript
+- rust
 
 # Todo
-- support language: python
 - support language: objc
 - support language: c#
-- support language: javascript
-- support language: rust
 - support language: typescript
 - support engine: [completor.vim](https://github.com/maralla/completor.vim)
+- support engine: [neocomplete.vim](https://github.com/Shougo/neocomplete.vim)
+- support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)
+- support engine: [clang_complete](https://github.com/Rip-Rip/clang_complete)
+- support nvim
 
 
 # Contributions 
