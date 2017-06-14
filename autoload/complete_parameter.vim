@@ -291,7 +291,8 @@ function! complete_parameter#next_overload_content(items, current_index, current
     let current_overload_len = len(a:items[a:current_index])
 
     let pos = a:complete_pos[1] - 1
-    let content = a:current_line[pos:pos+current_overload_len-1]
+    let pos_end = pos+current_overload_len-1
+    let content = a:current_line[ pos : pos_end ]
     if content !=# a:items[a:current_index]
         return [0]
     endif
