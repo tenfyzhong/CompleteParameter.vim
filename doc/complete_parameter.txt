@@ -10,8 +10,10 @@ a function.
 
 - Complete parameters after select a complete item from the complete menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
-- type `<m-n>`(default mapping) to jump to the next parameter in any position. 
-- type `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+- `<m-n>`(default mapping) to jump to the next parameter in any position. 
+- `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+- `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
+- `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
 ================================================================================
 Contents:

@@ -19,8 +19,10 @@ If you like this plugin, please star it.
 # Features
 - Complete parameters after select a complete item from the complete menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
-- type `<m-n>`(default mapping) to jump to the next parameter in any position. 
-- type `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+- `<m-n>`(default mapping) to jump to the next parameter in any position. 
+- `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+- `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
+- `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
 
 # Install
@@ -46,18 +48,18 @@ to the next/previous parameter and select it.
 
 
 # Mapping
-## `(`
+### `(`
 Call the parameter completor.
 
-## `<m-n>`
+### `<m-n>`
 Goto the next parameter and select it.
 
-## `<m-p>`
+### `<m-p>`
 Goto the previous parameter and select it.
 
 
 # Options
-## The `g:complete_parameter_mapping_complete` option
+### The `g:complete_parameter_mapping_complete` option
 This option set the complete mapping. When you are in a complete item of the 
 complete menu, type this mapping, it'll complete the parameters.   
 Default: `(`  
@@ -65,14 +67,14 @@ Default: `(`
 let g:complete_parameter_mapping_complete = '('
 ```
 
-## The `g:complete_parameter_failed_insert` option
+### The `g:complete_parameter_failed_insert` option
 This option set the complete text when the parameter complete failed. 
 Default: `()`
 ```viml
 let g:complete_parameter_failed_insert = '()'
 ```
 
-## The `g:complete_parameter_mapping_complete_for_ft` option
+### The `g:complete_parameter_mapping_complete_for_ft` option
 This option set the complete mapping for special typefile. By default, the 
 complete mapping is the `g:complete_parameter_mapping_complete` value. But 
 you can define other key for a special. For example, you can set the cpp 
@@ -84,7 +86,7 @@ Default: `{'cpp': {'(': '()', '<': '<'}}`
 let g:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': '<'}}
 ```
 
-## The `g:complete_parameter_mapping_goto_next` option
+### The `g:complete_parameter_mapping_goto_next` option
 This option set the goto to next paramater mapping. When this mapping was called,
 it'll goto to the next parameter.  
 Default: `<m-n>`  
@@ -92,7 +94,7 @@ Default: `<m-n>`
 let g:complete_parameter_mapping_goto_next = '<m-n>'
 ```
 
-## The `g:complete_parameter_mapping_goto_previous` option
+### The `g:complete_parameter_mapping_goto_previous` option
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
 Default: `<m-p>`  
@@ -100,7 +102,7 @@ Default: `<m-p>`
 let g:complete_parameter_mapping_goto_previous = '<m-p>'
 ```
 
-## The `g:complete_parameter_mapping_overload_down` option
+### The `g:complete_parameter_mapping_overload_down` option
 This option set the select next overload parameters mapping. When this 
 mapping was called, it'll delete the current completed paramaters and insert
 the next overload parameters. It works only the cursor in the current 
@@ -111,7 +113,7 @@ Default: `<m-d>`
 let g:complete_parameter_mapping_overload_down = '<m-d>'
 ```
 
-## The `g:complete_parameter_mapping_overload_up` option
+### The `g:complete_parameter_mapping_overload_up` option
 This option set the select previous overload parameters mapping. When this 
 mapping was called, it'll delete the current completed paramaters and insert
 the previous overload parameters. It works only the cursor in the current 
@@ -122,7 +124,7 @@ Default: `<m-u>`
 let g:complete_parameter_mapping_overload_up = '<m-u>'
 ```
 
-## The `g:complete_parameter_log_level` option
+### The `g:complete_parameter_log_level` option
 This option set the log level.  
 4: only print **error** log. 
 2: print **error** and **debug** log.
@@ -155,6 +157,17 @@ let g:complete_parameter_log_level = 4
 - support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)
 - support engine: [clang_complete](https://github.com/Rip-Rip/clang_complete)
 - support nvim
+
+
+# FAQ
+### Can't work with plugin auto-pairs use the default mapping `(`
+Because the auto-pairs use `inoremap` to mapping the keys. It can't call this
+plugin after the auto-pairs process. You can add the following setting to you
+.vimrc, and it'll work well. 
+```viml
+let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
+```
 
 
 # Contributions 
