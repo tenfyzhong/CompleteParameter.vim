@@ -7,18 +7,14 @@
 " created: 2017-06-13 08:58:09
 "==============================================================
 
-function! cm_parser#cpp#parameters(completed_item) "{{{
-    let kind = get(a:completed_item, 'kind', '')
-    let word = get(a:completed_item, 'word', '')
-    let info = get(a:completed_item, 'info', '')
-    if kind !=# 'f' || empty(word) || empty(info)
-        return []
-    endif
-
+function! s:parse_function(word, info) "{{{
     let result = []
-    let decls = split(info, '\n')
+    let decls = split(a:info, "\n")
     for decl in decls
-        let param = substitute(decl, '\m^.*\<'.word.'\((.*)\).*', '\1', '')
+        if empty(decl) || decl =~# '^\s*'.a:word.'\s*$'
+            continue
+        endif
+        let param = substitute(decl, '\m^.*\<'.a:word.'\((.*)\).*', '\1', '')
         " remove <.*>
         while param =~# '<.*>'
             let param = substitute(param, '\m<[^<>]*>', '', 'g')
@@ -28,6 +24,36 @@ function! cm_parser#cpp#parameters(completed_item) "{{{
         call add(result, param)
     endfor
     return result
+endfunction "}}}
+
+function! s:parse_class(word, info) "{{{
+    let result = []
+    let decls = split(a:info, "\n")
+    for decl in decls
+        if empty(decl) || decl =~# '^\s*'.a:word.'\s*$'
+            continue
+        endif
+        let param = substitute(decl, '\m^.*\<'.a:word.'\(<.*>\).*', '\1', '')
+        let param = substitute(param, '\m\%(\w\+\)\?\s*\(\w\+\s*[,>]\)', '\1', 'g')
+        call add(result, param)
+    endfor
+    return result
+endfunction "}}}
+
+function! cm_parser#cpp#parameters(completed_item) "{{{
+    let kind = get(a:completed_item, 'kind', '')
+    let word = get(a:completed_item, 'word', '')
+    let info = get(a:completed_item, 'info', '')
+    if (kind !=# 'f' && kind != 'c') || empty(word) || empty(info)
+        return []
+    endif
+    if kind ==# 'f'
+        return <SID>parse_function(word, info)
+    elseif kind ==# 'c'
+        return <SID>parse_class(word, info)
+    else
+        return []
+    endif
 endfunction "}}}
 
 function! cm_parser#cpp#parameter_delim() "{{{

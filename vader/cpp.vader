@@ -37,3 +37,18 @@ Execute (ctime::time):
   let completed_item = {'kind':'f', 'word': 'time', 'info': 'time_t time( time_t * )'}
   let result = cm_parser#cpp#parameters(completed_item)
   AssertEqual ['(*)'], result
+
+Execute (vector<class _Tp, class _Alloc>, kind: c):
+  let completed_item = {'kind': 'c', 'word': 'vector', 'info': "vector<class _Tp, class _Alloc>\n"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['<_Tp, _Alloc>'], result
+
+Execute (std::error_code, kind: c):
+  let completed_item = {'kind': 'c', 'word': 'error_code', 'info': "error_code"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (std:: error_code, kind: c):
+  let completed_item = {'kind': 'c', 'word': 'error_code', 'info': " error_code"}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual [], result
