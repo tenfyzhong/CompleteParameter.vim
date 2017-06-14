@@ -357,7 +357,7 @@ function! complete_parameter#overload_next(forward) "{{{
     let s:complete_parameter['success'] = 1
     exec 'normal! a'.next_content
     stopinsert
-    call complete_parameter#goto_first_param('(')
+    call complete_parameter#goto_first_param('')
 endfunction "}}}
 
 let s:stack = {'data':[]}
