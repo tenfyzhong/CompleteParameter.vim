@@ -1,0 +1,204 @@
+*complete_parameter* *CompleteParameter* *completeparameter* author: tenfyzhong
+
+This help file explains the CompleteParameter Vim Plugin. 
+
+================================================================================
+Introduction
+
+CompletEparameter is a plugin for complete function's parameters after complete
+a function.  
+
+- Complete parameters after select a complete item from the complete menu. 
+- After complete the parameters, jump to the first parameter and the select it. 
+- type `<m-n>`(default mapping) to jump to the next parameter in any position. 
+- type `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+
+================================================================================
+Contents:
+1. Install -------------------------------------- |complete-parameter-install|
+2. Usage ---------------------------------------- |complete-parameter-usage|
+3. Mapping -------------------------------------- |complete-parameter-mapping|
+4. Options -------------------------------------- |complete-parameter-options|
+5. Supported ------------------------------------ |complete-parameter-supported|
+6. Writing Extensions --------------------------- |complete-parameter-extensions|
+7. Contributions -------------------------------- |complete-parameter-contributes|
+8. Thanks --------------------------------------- |complete-parameter-thanks|
+9. LICENSE -------------------------------------- |complete-parameter-license|
+
+================================================================================
+1. Install                                            *complete-parameter-install*
+I suggest you to use a plugin manager, such vim-plug or other.
+- [vim-plug](https://github.com/junegunn/vim-plug) >
+  Plug 'tenfyzhong/CompleteParameter.vim' 
+<
+
+- Manual >
+  git clone https://github.com/tenfyzhong/CompleteParameter.vim.git ~/.vim/bundle/CompleteParameter.vim
+  echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim'
+  vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
+<
+================================================================================
+2. Usage                                                *complete-parameter-usage*
+Install a complete engine we have supported. Goto the complete item of the
+complete menu you want to select, and then type `(`(default mapping), the 
+parameters will be completed and jump the the first parameter. 
+`<m-n>`/`<m-p>`(default mapping) will jump 
+to the next/previous parameter and select it. 
+
+================================================================================
+3. Mapping                                            *complete-parameter-mapping*
+* `(`                                                                            *(*
+Mapping type: inoremap
+Call the parameter completor. 
+
+* `<m-n>`                                                                    *<m-n>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Goto the next parameter and select it.
+
+* <m-p>                                                                    *<m-p>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Goto the previous parameter and select it.
+
+================================================================================
+4. Options                                            *complete-parameter-options*
+                                           *g:complete_parameter_mapping_complete*
+* `g:complete_parameter_mapping_complete`
+This option set the complete mapping. When you are in a complete item of the 
+complete menu, type this mapping, it'll complete the parameters.   
+Default: '('  >
+  let g:complete_parameter_mapping_complete = '('
+<
+                                           *b:complete_parameter_mapping_complete*
+* b:complete_parameter_mapping_complete`
+This option can set different mapping fo defferent filetype. If this option set 
+for a filetype, it'll use this mapping to over the 
+|g:complete_parameter_mapping_complete| value when you are edit this file.  >
+  augroup complete_parameter_setting
+      autocmd!
+      autocmd FileType go let b:complete_parameter_mapping_complete = '('
+  augroup END
+<
+                                          *g:complete_parameter_mapping_goto_next*
+* g:complete_parameter_mapping_goto_next
+This option set the goto to next paramater mapping. When this mapping was called,
+it'll goto to the next parameter.  
+Default: '<m-n>'  >
+  let g:complete_parameter_mapping_goto_next = '<m-n>'
+<
+                                      *g:complete_parameter_mapping_goto_previous*
+* g:complete_parameter_mapping_goto_previous
+This option set the goto to previous paramater mapping. When this mapping was called,
+it'll goto to the previous parameter.  
+Default: '<m-p>'  >
+  let g:complete_parameter_mapping_goto_previous = '<m-p>'
+<
+                                      *g:complete_parameter_mapping_overload_down*
+* g:complete_parameter_mapping_overload_down
+This option set the select next overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the next overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-d>' >
+  let g:complete_parameter_mapping_overload_down = '<m-d>'
+<
+                                        *g:complete_parameter_mapping_overload_up*
+* g:complete_parameter_mapping_overload_up
+This option set the select previous overload parameters mapping. When this 
+mapping was called, it'll delete the current completed paramaters and insert
+the previous overload parameters. It works only the cursor in the current 
+completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
+in the `(` and `)`, it can be work. 
+Default: '<m-u>' >
+  let g:complete_parameter_mapping_overload_up = '<m-u>'
+<
+                                                  *g:complete_parameter_log_level*
+* g:complete_parameter_log_level
+This option set the log level.  
+4: only print **error** log. 
+2: print **error** and **debug** log.
+1: print **error**, **debug**, **trace**
+Default: 4 >
+  let g:complete_parameter_log_level = 4
+<
+
+================================================================================
+5. Supported                                        *complete-parameter-supported*
+5.1 Supported Complete Engine
+- [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
+
+5.2 Supported Language
+- golang
+- erlang
+- c
+- c++
+- python
+- javascript
+- rust
+
+================================================================================
+6. Writing Extensions                              *complete-parameter-extensions*
+It's easy to writing extensions for languages. 
+Follow the next steps. All commands below was work in this plugin directory. 
+1) Create a file named `filetype.vim` in path `cm_parser`. For example,
+   write extension for golang. >
+   touch cm_parser/go.vim
+<
+2) Create function: `cm_parser#filetype#parameters(completed_item)`
+   This is the most important function.
+   The parameter `completed_item` is a copy of |v:completed_item|.
+   This function will parse the complete info from the `completed_item` and
+   return the parameters you need to completed.  
+   The return must be a list of strings. So the overwrite functions can be returned.
+
+   For example, a go function like 
+   `func Dial(network string, address string) (net.Conn, error)`
+   The function message was stored in the `menu` field of `completed_item`
+   The go no support overwrite. So the result is `['(network, address)']`
+
+   For another example, the std::vector::erase functor of c++, there are two
+   overwrite functions. The message was stored in the `info` field of
+   `completed_item`
+   `iterator erase( const_iterator __position )`
+   `iterator erase( const_iterator __first, const_iterator __last )`
+   This function will return: `['(__position)', '(__first, __last)']`
+
+3) Create function `cm_parser#filetype#parameter_delim()`
+   This function return the delim of parameters. For example, the go and c++
+   will return ','
+
+4) Create function `cm_parser#filetype#parameter_begin()`
+   This function return the border begin of the parameters. For example, the go 
+   will return '('. C++ will return '(<', the '<' is the beginning of 
+   template parameters.
+
+5) Create function `cm_parser#filetype#parameter_end()`
+   This function return the border end of the parameters. For example, the go 
+   will return ')'. C++ will return ')>', the '>' is ending of 
+   template parameters.
+   The length of `cm_parser#filetype#parameter_begin()` and 
+   `cm_parser#filetype#parameter_end()` must be equal. Each char of them must 
+   be match. For example, the the first char of begin is '(', the first of end
+   must be ')'. 
+   
+6) Please write unittest for your function `cm_parser#filetype#parameters` 
+   use [vader](https://github.com/junegunn/vader.vim) test framework. And put 
+   the unittest in the `vader` directory. This is optional. But if you would
+   send a pull request, this is required. 
+
+Finally, please send a pull request for me if you would like to share you
+extension.
+
+================================================================================
+7. Contributions                                  *complete-parameter-contributes*
+Contributions and pull requests are welcome.
+
+================================================================================
+8. Thanks                                              *complete-parameter-thanks*
+- [johnzeng](https://github.com/johnzeng), support erlang
+
+================================================================================
+9. LICENSE                                            *complete-parameter-license*
+MIT License Copyright (c) 2017 tenfyzhong
+
+" vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

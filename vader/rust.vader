@@ -1,0 +1,25 @@
+Execute (error param):
+  let completed_item = {}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (fn hello()):
+  let completed_item = {'word': 'hello', 'menu': 'fn hello()'}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (fn hello() -> Self):
+  let completed_item = {'word': 'hello', 'menu': 'fn hello()'}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (fn hello(capacity: usize) -> Vec<T>):
+  let completed_item = {'word': 'hello', 'menu': 'fn hello(capacity: usize) -> Vec<T>'}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['(capacity)'], result
+
+Execute (fn hello(s: Cow<'a, [T]>) -> Vec<T>):
+  let completed_item = {'word': 'hello', 'menu': 'fn hello(s: Cow<''a, [T]>) -> Vec<T>'}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['(s)'], result
+
