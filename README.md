@@ -6,7 +6,7 @@ If you like this plugin, please star it.
 
 
 # Screenshots
-![cp_screenshorts](https://ws1.sinaimg.cn/large/006tNbRwly1fgh66depc4g30hs0dcnpf.gif)
+![cp_screenshorts](https://ooo.0o0.ooo/2017/06/14/5940c34725a1a.gif)
 
 
 # Features
