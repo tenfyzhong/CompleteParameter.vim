@@ -65,15 +65,23 @@ Default: `(`
 let g:complete_parameter_mapping_complete = '('
 ```
 
-## The `b:complete_parameter_mapping_complete` option
-This option can set different mapping fo defferent filetype. If this option set 
-for a filetype, it'll use this mapping to over the 
-`g:complete_parameter_mapping_complete` value when you are edit this file.  
+## The `g:complete_parameter_failed_insert` option
+This option set the complete text when the parameter complete failed. 
+Default: `()`
 ```viml
-augroup complete_parameter_setting
-    autocmd!
-    autocmd FileType go let b:complete_parameter_mapping_complete = '('
-augroup END
+let g:complete_parameter_failed_insert = '()'
+```
+
+## The `g:complete_parameter_mapping_complete_for_ft` option
+This option set the complete mapping for special typefile. By default, the 
+complete mapping is the `g:complete_parameter_mapping_complete` value. But 
+you can define other key for a special. For example, you can set the cpp 
+complete mapping to `(` and `<`. This option is a map, the key of the map
+is filetype, the value is a map too.  The key of the value map is the 
+complete mapping key, the value is a string when fail to call the complete. 
+Default: `{'cpp': {'(': '()', '<': '<'}}`
+```viml
+let g:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': '<'}}
 ```
 
 ## The `g:complete_parameter_mapping_goto_next` option
