@@ -8,7 +8,7 @@
 "==============================================================
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
-let s:filetype_mapping_complete = {'cpp': {'(': '()', '<': '<'}}
+let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
 function! s:init_filetype_mapping() "{{{
     let filetype = &ft
@@ -16,12 +16,15 @@ function! s:init_filetype_mapping() "{{{
         return
     endif
 
-    let mapping_complete = get(s:filetype_mapping_complete, filetype, s:complete_parameter_mapping_complete)
-    let mapping_complete = s:complete_parameter_mapping_complete
-    if exists('b:complete_parameter_mapping_complete') && !empty(b:complete_parameter_mapping_complete)
-        let mapping_complete = b:complete_parameter_mapping_complete
+    let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, filetype, {})
+    if empty(mapping_complete)
+        let mapping = s:complete_parameter_mapping_complete
+        exec 'inoremap <silent><buffer> ' . mapping . ' <C-R>=complete_parameter#complete("'.s:complete_parameter_failed_insert.'")<cr><ESC>:call complete_parameter#goto_first_param("'.mapping.'")<cr>'
+    else
+        for [k, v] in items(mapping_complete)
+            exec 'inoremap <silent><buffer> ' . k . ' <C-R>=complete_parameter#complete("'.v.'")<cr><ESC>:call complete_parameter#goto_first_param("'.k.'")<cr>'
+        endfor
     endif
-    exec 'inoremap <silent><buffer> ' . mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
 endfunction "}}}
 
 augroup complete_parameter_init "{{{
@@ -32,8 +35,8 @@ augroup END "}}}
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
 
-    if exists('g:filetype_mapping_complete') && type('g:filetype_mapping_complete') == 3
-        let s:filetype_mapping_complete = extend(s:filetype_mapping_complete, g:filetype_mapping_complete, 'force')
+    if exists('g:complete_parameter_mapping_complete_for_ft') && type('g:complete_parameter_mapping_complete_for_ft') == 3
+        let s:complete_parameter_mapping_complete_for_ft = extend(s:complete_parameter_mapping_complete_for_ft, g:complete_parameter_mapping_complete_for_ft, 'force')
     endif
 
     " 4 error
@@ -43,6 +46,9 @@ function! complete_parameter#init() "{{{
 
     let g:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '')
     let s:complete_parameter_mapping_complete = g:complete_parameter_mapping_complete != '' ? g:complete_parameter_mapping_complete : '('
+
+    let s:complete_parameter_failed_insert = get(g:, 'complete_parameter_failed_insert', '()')
+
     let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
     let s:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
@@ -53,7 +59,7 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
     let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
  
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param()<cr>'
+    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param("'.s:complete_parameter_mapping_complete.'")<cr>'
 
     exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
     exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
@@ -181,7 +187,8 @@ function! complete_parameter#complete(insert) "{{{
     " prefix: the begin of text -> `(`
     " suffix: the end of the text -> `)`
     let parseds = ftfunc.parameters(v:completed_item)
-    if type(parseds) != 3 
+    call <SID>debug_log(string(parseds))
+    if type(parseds) != 3
         call <SID>error_log('return type error')
         return a:insert
     endif
@@ -207,7 +214,7 @@ function! complete_parameter#complete(insert) "{{{
     return parameter
 endfunction "}}}
 
-function! complete_parameter#goto_first_param() "{{{
+function! complete_parameter#goto_first_param(key) "{{{
     if s:complete_parameter['success']
         let complete_pos = s:complete_parameter['complete_pos']
         call cursor(complete_pos[0], complete_pos[1])
@@ -215,6 +222,13 @@ function! complete_parameter#goto_first_param() "{{{
         call complete_parameter#goto_next_param(1)
     else
         startinsert
+        " if insert one char, go right
+        let ft = &filetype
+        let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, ft, {})
+        let inserted = get(mapping_complete, a:key, '')
+        if len(inserted) == 1
+            call feedkeys("\<RIGHT>", 'n')
+        endif
     endif
 endfunction "}}}
 
@@ -343,7 +357,7 @@ function! complete_parameter#overload_next(forward) "{{{
     let s:complete_parameter['success'] = 1
     exec 'normal! a'.next_content
     stopinsert
-    call complete_parameter#goto_first_param()
+    call complete_parameter#goto_first_param('')
 endfunction "}}}
 
 let s:stack = {'data':[]}
@@ -566,13 +580,13 @@ endfunction "}}}
 
 function! s:debug_log(msg) "{{{
     if g:complete_parameter_log_level <= 2
-        echom a:msg
+        silent echom a:msg
     endif
 endfunction "}}}
 
 function! s:trace_log(msg) "{{{
     if g:complete_parameter_log_level <= 1
-        echom a:msg
+        silent echom a:msg
     endif
 endfunction "}}}
 
