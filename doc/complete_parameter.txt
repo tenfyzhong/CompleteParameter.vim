@@ -23,16 +23,13 @@ Introduction                                     *complete-parameter-introductio
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
 
-- Complete parameters after select a complete item from the complete menu. 
+- Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
 - `<m-n>`(default mapping) to jump to the next parameter in any position. 
 - `<m-p>`(default mapping) to jump to the previous parameter in any position. 
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
-# Attention
-**It only work when the cursor in the complete menu, and then type the mapping. **
-Like the screenshot, First select the `Dial` item, and then type `(`. 
 
 ================================================================================
 1. Install                                            *complete-parameter-install*
@@ -49,10 +46,11 @@ I suggest you to use a plugin manager, such vim-plug or other.
 ================================================================================
 2. Usage                                                *complete-parameter-usage*
 Install a complete engine we have supported. Goto the complete item of the
-complete menu you want to select, and then type `(`(default mapping), the 
-parameters will be completed and jump the the first parameter. 
-`<m-n>`/`<m-p>`(default mapping) will jump 
-to the next/previous parameter and select it. 
+completion popup menu you want to select, and then type `(`(default mapping), 
+the parameters will be completed and jump the the first parameter. The first 
+completion item will be seleted if no one selected after you type `(`. 
+`<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
+and select it. 
 
 ================================================================================
 3. Mapping                                            *complete-parameter-mapping*
@@ -80,7 +78,7 @@ Mapping type: inoremap,nnoremap,xnoremap,vnoremap
                                            *g:complete_parameter_mapping_complete*
 * `g:complete_parameter_mapping_complete`
 This option set the complete mapping. When you are in a complete item of the 
-complete menu, type this mapping, it'll complete the parameters.   
+completion popup menu, type this mapping, it'll complete the parameters.   
 Default: '('  >
   let g:complete_parameter_mapping_complete = '('
 <
@@ -222,6 +220,9 @@ Contributions and pull requests are welcome.
 
 ================================================================================
 9. Changlog                                         *complete-parameter-changelog*
+0.1.0: 2017-06-15
+Support `(` select the first completion item.
+
 0.0.3: 2017-06-15
 Support multi called for a file. 
 Support cpp class template. 

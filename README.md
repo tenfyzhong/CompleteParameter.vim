@@ -23,11 +23,9 @@ If you like this plugin, please star it.
 - `<m-p>`(default mapping) to jump to the previous parameter in any position. 
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
+- Select the first item in the completion popup menu if you no select one and 
+  type `(`(default mapping).
 
-
-# Attention
-**It only work when the cursor in the completion popup menu, and then type the mapping.**  
-Like the screenshot, First select the `Dial` item, and then type `(`. 
 
 # Install
 I suggest you to use a plugin manager, such vim-plug or other.
@@ -44,11 +42,12 @@ vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 
 
 # Usage
-Install a complete engine we have supported. Goto the complete item of the
+Install a complete engine we have supported. Goto the completion item of the
 completion popup menu you want to select, and then type `(`(default mapping), 
-the parameters will be completed and jump the the first parameter. 
-`<m-n>`/`<m-p>`(default mapping) will jump 
-to the next/previous parameter and select it. 
+the parameters will be completed and jump the the first parameter. The first 
+completion item will be seleted if no one selected after you type `(`. 
+`<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
+and select it. 
 
 
 # Mapping
