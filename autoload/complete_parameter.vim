@@ -580,13 +580,13 @@ endfunction "}}}
 
 function! s:debug_log(msg) "{{{
     if g:complete_parameter_log_level <= 2
-        silent echom a:msg
+        echom a:msg
     endif
 endfunction "}}}
 
 function! s:trace_log(msg) "{{{
     if g:complete_parameter_log_level <= 1
-        silent echom a:msg
+        echom a:msg
     endif
 endfunction "}}}
 
