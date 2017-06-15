@@ -26,7 +26,7 @@ If you like this plugin, please star it.
 
 
 # Attention
-**It only work when the cursor in the complete menu, and then type the mapping. **
+**It only work when the cursor in the complete menu, and then type the mapping.**
 Like the screenshot, First select the `Dial` item, and then type `(`. 
 
 # Install
