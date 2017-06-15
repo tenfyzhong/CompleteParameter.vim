@@ -222,11 +222,13 @@ Contributions and pull requests are welcome.
 
 ================================================================================
 9. Changlog                                         *complete-parameter-changelog*
-0.0.3: 
+0.0.3: 2017-06-15
 Support multi called for a file. 
 Support cpp class template. 
+Fix python parser.
+Add github templates.
 
-0.0.2: 2017-06-18
+0.0.2: 2017-06-14
 Support c, cpp, rust, javascript, python.
 Support overload functions.
 Update screenshot.

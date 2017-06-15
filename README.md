@@ -6,7 +6,7 @@
 [![Vim Version](https://img.shields.io/badge/support-Vim%207.4%20or%20above-yellowgreen.svg?style=flat)]()
 
 
-CompletEparameter is a plugin for complete function's parameters after complete
+CompleteParameter is a plugin for complete function's parameters after complete
 a function.  
 
 If you like this plugin, please star it. 
