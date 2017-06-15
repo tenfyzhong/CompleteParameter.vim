@@ -6,7 +6,7 @@
 [![Vim Version](https://img.shields.io/badge/support-Vim%207.4%20or%20above-yellowgreen.svg?style=flat)]()
 
 
-CompletEparameter is a plugin for complete function's parameters after complete
+CompleteParameter is a plugin for complete function's parameters after complete
 a function.  
 
 If you like this plugin, please star it. 
@@ -17,12 +17,14 @@ If you like this plugin, please star it.
 
 
 # Features
-- Complete parameters after select a complete item from the complete menu. 
+- Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
 - `<m-n>`(default mapping) to jump to the next parameter in any position. 
 - `<m-p>`(default mapping) to jump to the previous parameter in any position. 
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
+- Select the first item in the completion popup menu if you no select one and 
+  type `(`(default mapping).
 
 
 # Install
@@ -40,11 +42,13 @@ vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 
 
 # Usage
-Install a complete engine we have supported. Goto the complete item of the
-complete menu you want to select, and then type `(`(default mapping), the 
-parameters will be completed and jump the the first parameter. 
-`<m-n>`/`<m-p>`(default mapping) will jump 
-to the next/previous parameter and select it. 
+Install a complete engine we have supported. Goto the completion item of the
+completion popup menu you want to select, and then type `(`(default mapping), 
+the parameters will be completed and jump the the first parameter. The first 
+completion item will be seleted if no one selected and the input is equal to 
+the first popup item after you type `(`. 
+`<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
+and select it. 
 
 
 # Mapping
@@ -57,11 +61,16 @@ Goto the next parameter and select it.
 ### `<m-p>`
 Goto the previous parameter and select it.
 
+### `<m-d>`
+Select the next overload function. 
+
+### `<m-u>`
+Select the previous overload function. 
 
 # Options
 ### The `g:complete_parameter_mapping_complete` option
 This option set the complete mapping. When you are in a complete item of the 
-complete menu, type this mapping, it'll complete the parameters.   
+completion popup menu, type this mapping, it'll complete the parameters.   
 Default: `(`  
 ```viml
 let g:complete_parameter_mapping_complete = '('
