@@ -25,6 +25,10 @@ If you like this plugin, please star it.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
 
+# Attention
+**It only work when the cursor in the complete menu, and then type the mapping. **
+Like the screenshot, First select the `Dial` item, and then type `(`. 
+
 # Install
 I suggest you to use a plugin manager, such vim-plug or other.
 - [vim-plug](https://github.com/junegunn/vim-plug)
@@ -57,6 +61,11 @@ Goto the next parameter and select it.
 ### `<m-p>`
 Goto the previous parameter and select it.
 
+### `<m-d>`
+Select the next overload function. 
+
+### `<m-u>`
+Select the previous overload function. 
 
 # Options
 ### The `g:complete_parameter_mapping_complete` option
