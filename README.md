@@ -17,7 +17,7 @@ If you like this plugin, please star it.
 
 
 # Features
-- Complete parameters after select a complete item from the complete menu. 
+- Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
 - `<m-n>`(default mapping) to jump to the next parameter in any position. 
 - `<m-p>`(default mapping) to jump to the previous parameter in any position. 
@@ -26,7 +26,7 @@ If you like this plugin, please star it.
 
 
 # Attention
-**It only work when the cursor in the complete menu, and then type the mapping.**
+**It only work when the cursor in the completion popup menu, and then type the mapping.**  
 Like the screenshot, First select the `Dial` item, and then type `(`. 
 
 # Install
@@ -45,8 +45,8 @@ vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 
 # Usage
 Install a complete engine we have supported. Goto the complete item of the
-complete menu you want to select, and then type `(`(default mapping), the 
-parameters will be completed and jump the the first parameter. 
+completion popup menu you want to select, and then type `(`(default mapping), 
+the parameters will be completed and jump the the first parameter. 
 `<m-n>`/`<m-p>`(default mapping) will jump 
 to the next/previous parameter and select it. 
 
@@ -70,7 +70,7 @@ Select the previous overload function.
 # Options
 ### The `g:complete_parameter_mapping_complete` option
 This option set the complete mapping. When you are in a complete item of the 
-complete menu, type this mapping, it'll complete the parameters.   
+completion popup menu, type this mapping, it'll complete the parameters.   
 Default: `(`  
 ```viml
 let g:complete_parameter_mapping_complete = '('
