@@ -1,3 +1,6 @@
+Before:
+  let g:complete_parameter_log_level = 5
+
 " {{{ parameter checker
 Execute (empty content):
   let result = complete_parameter#parameter_position('', 0, ',', '(', ')', 1)
