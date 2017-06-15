@@ -10,6 +10,23 @@
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
+let s:log_index = 0
+let s:completed_word = ''
+" let s:need_select = 0
+
+" mapping complete key
+function! s:mapping_complete(key, failed_insert) "{{{
+    exec 'imap <silent><expr><buffer> ' . a:key . ' complete_parameter#need_select_item() ? complete_parameter#select_item("'.a:key.'") : complete_parameter#complete("'.a:failed_insert.'")'
+endfunction "}}}
+
+" mapping goto parameter and select overload function
+function! s:mapping_action(key, action) "{{{
+    exec 'inoremap <silent>' . a:key . ' ' . a:action
+    exec 'nnoremap <silent>' . a:key . ' ' . a:action
+    exec 'xnoremap <silent>' . a:key . ' ' . a:action
+    exec 'vnoremap <silent>' . a:key . ' ' . a:action
+endfunction "}}}
+
 function! s:init_filetype_mapping() "{{{
     let filetype = &ft
     if !<SID>filetype_func_exist(filetype)
@@ -19,10 +36,10 @@ function! s:init_filetype_mapping() "{{{
     let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, filetype, {})
     if empty(mapping_complete)
         let mapping = s:complete_parameter_mapping_complete
-        exec 'inoremap <silent><buffer> ' . mapping . ' <C-R>=complete_parameter#complete("'.s:complete_parameter_failed_insert.'")<cr><ESC>:call complete_parameter#goto_first_param("'.mapping.'")<cr>'
+        call <SID>mapping_complete(mapping, s:complete_parameter_failed_insert)
     else
         for [k, v] in items(mapping_complete)
-            exec 'inoremap <silent><buffer> ' . k . ' <C-R>=complete_parameter#complete("'.v.'")<cr><ESC>:call complete_parameter#goto_first_param("'.k.'")<cr>'
+            call <SID>mapping_complete(k, v)
         endfor
     endif
 endfunction "}}}
@@ -59,27 +76,11 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
     let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
  
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param("'.s:complete_parameter_mapping_complete.'")<cr>'
-
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
-    exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
-    exec 'xnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
-    exec 'vnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
-
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
-    exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
-    exec 'xnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
-    exec 'vnoremap <silent>' . s:complete_parameter_mapping_goto_previous . ' <ESC>:call complete_parameter#goto_next_param(0)<cr>'
-
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
-    exec 'nnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
-    exec 'xnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
-    exec 'vnoremap <silent>' . s:complete_parameter_mapping_overload_down . ' <ESC>:call complete_parameter#overload_next(1)<cr>'
-
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
-    exec 'nnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
-    exec 'xnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
-    exec 'vnoremap <silent>' . s:complete_parameter_mapping_overload_up . ' <ESC>:call complete_parameter#overload_next(0)<cr>'
+    call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
+    call <SID>mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>')
+    call <SID>mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>')
+    call <SID>mapping_action(s:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>')
+    call <SID>mapping_action(s:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>')
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
@@ -155,27 +156,85 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
     return 1
 endfunction "}}}
 
-function! complete_parameter#complete(insert) "{{{
-    call <SID>trace_log(string(v:completed_item))
-    if empty(v:completed_item)
-        return a:insert 
+" check v:completed_item is empty or not
+function! s:empty_completed_item() "{{{
+    let completed_item = v:completed_item
+    if empty(completed_item)
+        return 1
     endif
-    " if v:completed_item['kind'] != 'f'
-    "     return a:insert
-    " endif
+    let menu = get(completed_item, 'menu', '')
+    let info = get(completed_item, 'info', '')
+    let kind = get(completed_item, 'kind', '')
+    let abbr = get(completed_item, 'abbr', '')
+    return empty(menu) && empty(info) && empty(kind) && empty(abbr)
+endfunction "}}}
+
+let s:needed_check_called_by_script = 0
+
+" every parameter complete called 
+" this function will called 2 times
+" the first time is called by user, the s:needed_check_called_by_script should be 0 
+" the second time is called by script, the s:needed_check_called_by_script should be 1
+function! complete_parameter#need_select_item() "{{{
+    if s:needed_check_called_by_script == 0
+        let s:log_index += 1
+        let s:completed_word = get(v:completed_item, 'word', '')
+    else
+        let s:needed_check_called_by_script = 0
+        " this called no need to check
+        " it must be 0, because complete_parameter#select_item was called
+        return 0
+    endif
+
+    let s:need_select = <SID>empty_completed_item() && pumvisible()
+    call <SID>trace_log('need_select: ' . s:need_select)
+    if s:need_select == 1
+        let s:needed_check_called_by_script = 1
+    endif
+    return s:need_select
+endfunction "}}}
+
+function! complete_parameter#select_item(key) "{{{
+    if <SID>empty_completed_item() && pumvisible()
+        call feedkeys(a:key, 'm')
+        return "\<C-n>"
+    endif
+endfunction "}}}"
+
+function! complete_parameter#complete(failed_insert) "{{{
+    call <SID>trace_log(string(v:completed_item))
+    if <SID>empty_completed_item()
+        call <SID>debug_log('v:completed_item is empty')
+        return a:failed_insert 
+    endif
+
+    call <SID>trace_log('need_select: ' . s:need_select)
+
+    if s:need_select
+        let select_complete_word = get(v:completed_item, 'word', '')
+        call <SID>trace_log('s:completed_word: ' . s:completed_word)
+        call <SID>trace_log('select_complete_word: ' . select_complete_word)
+        if select_complete_word !=? s:completed_word
+            call feedkeys(a:failed_insert, 'n')
+            return "\<C-p>"
+        endif
+    endif
 
     let filetype = &ft
     if empty(filetype)
-        return a:insert
+        call <SID>debug_log('filetype is empty')
+        return a:failed_insert
     endif
 
     try
         let ftfunc = <SID>new_ftfunc(filetype)
     catch
-        return a:insert
+        call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
+        return a:failed_insert
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
-        return a:insert
+        call <SID>error_log('ftfunc check failed')
+        return a:failed_insert
     endif
 
 
@@ -190,11 +249,11 @@ function! complete_parameter#complete(insert) "{{{
     call <SID>debug_log(string(parseds))
     if type(parseds) != 3
         call <SID>error_log('return type error')
-        return a:insert
+        return a:failed_insert
     endif
 
     if empty(parseds) || parseds[0] == ''
-        return a:insert
+        return a:failed_insert
     endif
 
     let s:complete_parameter['index'] = 0
@@ -211,10 +270,12 @@ function! complete_parameter#complete(insert) "{{{
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
         endif
     endif
+    let keys = "\<ESC>".':call complete_parameter#goto_first_param("'.a:failed_insert.'")'."\<ENTER>"
+    call feedkeys(keys, 'n')
     return parameter
 endfunction "}}}
 
-function! complete_parameter#goto_first_param(key) "{{{
+function! complete_parameter#goto_first_param(failed_insert) "{{{
     if s:complete_parameter['success']
         let complete_pos = s:complete_parameter['complete_pos']
         call cursor(complete_pos[0], complete_pos[1])
@@ -223,10 +284,7 @@ function! complete_parameter#goto_first_param(key) "{{{
     else
         startinsert
         " if insert one char, go right
-        let ft = &filetype
-        let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, ft, {})
-        let inserted = get(mapping_complete, a:key, '')
-        if len(inserted) == 1
+        if len(a:failed_insert) == 1
             call feedkeys("\<RIGHT>", 'n')
         endif
     endif
@@ -235,12 +293,14 @@ endfunction "}}}
 function! complete_parameter#goto_next_param(forward) "{{{
     let filetype = &ft
     if empty(filetype)
+        call <SID>debug_log('filetype is empty')
         return
     endif
 
     try
         let ftfunc = <SID>new_ftfunc(filetype)
     catch
+        call <SID>debug_log('new ftfunc failed')
         return
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
@@ -261,6 +321,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
     let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
     call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
+        call <SID>debug_log('word_begin and word_end is 0')
         return
     endif
     let word_len = word_end - word_begin
@@ -330,6 +391,7 @@ function! complete_parameter#overload_next(forward) "{{{
     " if no in the complete content
     " then return
     if current_line != complete_pos[0] || current_col < complete_pos[1]
+        call <SID>trace_log('no more overload')
         return
     endif
 
@@ -342,6 +404,7 @@ function! complete_parameter#overload_next(forward) "{{{
                 \s:complete_parameter['complete_pos'], 
                 \a:forward)
     if result[0] == 0
+        call <SID>debug_log('get overload content failed')
         return
     endif
 
@@ -414,6 +477,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 \empty(a:border_end) ||
                 \len(a:border_begin) != len(a:border_end) ||
                 \a:step==0
+        call <SID>debug_log('parameter_position param error')
         return [0, 0]
     endif "}}}2
     let step = a:step > 0 ? 1 : -1
@@ -421,6 +485,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     let content_len = len(a:content)
     let end = a:step > 0 ? content_len : -1
     if current_pos >= content_len
+        call <SID>error_log('current_pos is large than content_len')
         return [0, 0]
     endif
 
@@ -572,21 +637,27 @@ function! s:find_first_not_space(content, pos, end, step) "{{{
     return pos
 endfunction "}}}
 
+function! s:log(level, msg)
+    echom a:level . ':' . s:log_index . ':' a:msg
+endfunction
+
 function! s:error_log(msg) "{{{
     if g:complete_parameter_log_level <= 4
-        echohl ErrorMsg | echom a:msg | echohl None
+        echohl ErrorMsg 
+        call <SID>log('ERROR', a:msg)
+        echohl None
     endif
 endfunction "}}}
 
 function! s:debug_log(msg) "{{{
     if g:complete_parameter_log_level <= 2
-        silent echom a:msg
+        call <SID>log('DEBUG', a:msg)
     endif
 endfunction "}}}
 
 function! s:trace_log(msg) "{{{
     if g:complete_parameter_log_level <= 1
-        silent echom a:msg
+        call <SID>log('TRACE', a:msg)
     endif
 endfunction "}}}
 

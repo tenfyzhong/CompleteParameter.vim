@@ -10,7 +10,7 @@
 function! cm_parser#python#parameters(completed_item) "{{{
     let menu = get(a:completed_item, 'menu', '')
     let info = get(a:completed_item, 'info', '')
-    if menu !~# '^function:' || empty(info)
+    if menu !~# '\m^\%(function:\|def \)' || empty(info)
         return []
     endif
 

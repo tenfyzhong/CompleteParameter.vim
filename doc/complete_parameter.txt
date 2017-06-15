@@ -3,30 +3,33 @@
 This help file explains the CompleteParameter Vim Plugin. 
 
 ================================================================================
-Introduction
+Contents:
+0. Introduction -------------------------------- |complete-parameter-introduction|
+1. Install ------------------------------------- |complete-parameter-install|
+2. Usage --------------------------------------- |complete-parameter-usage|
+3. Mapping ------------------------------------- |complete-parameter-mapping|
+4. Options ------------------------------------- |complete-parameter-options|
+5. Supported ----------------------------------- |complete-parameter-supported|
+6. Writing Extensions -------------------------- |complete-parameter-extensions|
+7. Contributions ------------------------------- |complete-parameter-contributes|
+8. Thanks -------------------------------------- |complete-parameter-thanks|
+9. Changlog ------------------------------------ |complete-parameter-changelog|
+10. LICENSE ------------------------------------ |complete-parameter-license|
+
+
+================================================================================
+Introduction                                     *complete-parameter-introduction*
 
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
 
-- Complete parameters after select a complete item from the complete menu. 
+- Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
 - `<m-n>`(default mapping) to jump to the next parameter in any position. 
 - `<m-p>`(default mapping) to jump to the previous parameter in any position. 
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
-================================================================================
-Contents:
-1. Install -------------------------------------- |complete-parameter-install|
-2. Usage ---------------------------------------- |complete-parameter-usage|
-3. Mapping -------------------------------------- |complete-parameter-mapping|
-4. Options -------------------------------------- |complete-parameter-options|
-5. Supported ------------------------------------ |complete-parameter-supported|
-6. Writing Extensions --------------------------- |complete-parameter-extensions|
-7. Contributions -------------------------------- |complete-parameter-contributes|
-8. Thanks --------------------------------------- |complete-parameter-thanks|
-9. Changlog ------------------------------------- |complete-parameter-changelog|
-10. LICENSE ------------------------------------- |complete-parameter-license|
 
 ================================================================================
 1. Install                                            *complete-parameter-install*
@@ -43,10 +46,12 @@ I suggest you to use a plugin manager, such vim-plug or other.
 ================================================================================
 2. Usage                                                *complete-parameter-usage*
 Install a complete engine we have supported. Goto the complete item of the
-complete menu you want to select, and then type `(`(default mapping), the 
-parameters will be completed and jump the the first parameter. 
-`<m-n>`/`<m-p>`(default mapping) will jump 
-to the next/previous parameter and select it. 
+completion popup menu you want to select, and then type `(`(default mapping), 
+the parameters will be completed and jump the the first parameter. The first 
+completion item will be seleted if no one selected and the input is equal to 
+the first popup item after you type `(`. 
+`<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
+and select it. 
 
 ================================================================================
 3. Mapping                                            *complete-parameter-mapping*
@@ -62,12 +67,19 @@ Goto the next parameter and select it.
 Mapping type: inoremap,nnoremap,xnoremap,vnoremap
 Goto the previous parameter and select it.
 
+* <m-d>                                                                    *<m-d>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Select the next overload function. 
+
+* <m-u>                                                                    *<m-u>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+
 ================================================================================
 4. Options                                            *complete-parameter-options*
                                            *g:complete_parameter_mapping_complete*
 * `g:complete_parameter_mapping_complete`
 This option set the complete mapping. When you are in a complete item of the 
-complete menu, type this mapping, it'll complete the parameters.   
+completion popup menu, type this mapping, it'll complete the parameters.   
 Default: '('  >
   let g:complete_parameter_mapping_complete = '('
 <
@@ -209,11 +221,16 @@ Contributions and pull requests are welcome.
 
 ================================================================================
 9. Changlog                                         *complete-parameter-changelog*
-0.0.3: 
+0.1.0: 2017-06-15
+Support `(` select the first completion item if inserted word is equal to the first popup item.
+
+0.0.3: 2017-06-15
 Support multi called for a file. 
 Support cpp class template. 
+Fix python parser.
+Add github templates.
 
-0.0.2: 2017-06-18
+0.0.2: 2017-06-14
 Support c, cpp, rust, javascript, python.
 Support overload functions.
 Update screenshot.
