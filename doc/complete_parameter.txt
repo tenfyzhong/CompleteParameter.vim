@@ -48,7 +48,8 @@ I suggest you to use a plugin manager, such vim-plug or other.
 Install a complete engine we have supported. Goto the complete item of the
 completion popup menu you want to select, and then type `(`(default mapping), 
 the parameters will be completed and jump the the first parameter. The first 
-completion item will be seleted if no one selected after you type `(`. 
+completion item will be seleted if no one selected and the input is equal to 
+the first popup item after you type `(`. 
 `<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
 and select it. 
 
@@ -221,7 +222,7 @@ Contributions and pull requests are welcome.
 ================================================================================
 9. Changlog                                         *complete-parameter-changelog*
 0.1.0: 2017-06-15
-Support `(` select the first completion item.
+Support `(` select the first completion item if inserted word is equal to the first popup item.
 
 0.0.3: 2017-06-15
 Support multi called for a file. 

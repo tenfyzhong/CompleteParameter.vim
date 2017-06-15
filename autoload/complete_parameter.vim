@@ -11,6 +11,8 @@ let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'succes
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
 let s:log_index = 0
+let s:completed_word = ''
+" let s:need_select = 0
 
 " mapping complete key
 function! s:mapping_complete(key, failed_insert) "{{{
@@ -167,8 +169,29 @@ function! s:empty_completed_item() "{{{
     return empty(menu) && empty(info) && empty(kind) && empty(abbr)
 endfunction "}}}
 
+let s:needed_check_called_by_script = 0
+
+" every parameter complete called 
+" this function will called 2 times
+" the first time is called by user, the s:needed_check_called_by_script should be 0 
+" the second time is called by script, the s:needed_check_called_by_script should be 1
 function! complete_parameter#need_select_item() "{{{
-    return <SID>empty_completed_item() && pumvisible()
+    if s:needed_check_called_by_script == 0
+        let s:log_index += 1
+        let s:completed_word = get(v:completed_item, 'word', '')
+    else
+        let s:needed_check_called_by_script = 0
+        " this called no need to check
+        " it must be 0, because complete_parameter#select_item was called
+        return 0
+    endif
+
+    let s:need_select = <SID>empty_completed_item() && pumvisible()
+    call <SID>trace_log('need_select: ' . s:need_select)
+    if s:need_select == 1
+        let s:needed_check_called_by_script = 1
+    endif
+    return s:need_select
 endfunction "}}}
 
 function! complete_parameter#select_item(key) "{{{
@@ -179,11 +202,22 @@ function! complete_parameter#select_item(key) "{{{
 endfunction "}}}"
 
 function! complete_parameter#complete(failed_insert) "{{{
-    let s:log_index += 1
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
         return a:failed_insert 
+    endif
+
+    call <SID>trace_log('need_select: ' . s:need_select)
+
+    if s:need_select
+        let select_complete_word = get(v:completed_item, 'word', '')
+        call <SID>trace_log('s:completed_word: ' . s:completed_word)
+        call <SID>trace_log('select_complete_word: ' . select_complete_word)
+        if select_complete_word !=? s:completed_word
+            call feedkeys(a:failed_insert, 'n')
+            return "\<C-p>"
+        endif
     endif
 
     let filetype = &ft

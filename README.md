@@ -45,7 +45,8 @@ vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 Install a complete engine we have supported. Goto the completion item of the
 completion popup menu you want to select, and then type `(`(default mapping), 
 the parameters will be completed and jump the the first parameter. The first 
-completion item will be seleted if no one selected after you type `(`. 
+completion item will be seleted if no one selected and the input is equal to 
+the first popup item after you type `(`. 
 `<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
 and select it. 
 
