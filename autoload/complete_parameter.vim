@@ -10,6 +10,8 @@
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
+let s:log_index = 0
+
 " mapping complete key
 function! s:mapping_complete(key, failed_insert) "{{{
     exec 'imap <silent><expr><buffer> ' . a:key . ' complete_parameter#need_select_item() ? complete_parameter#select_item("'.a:key.'") : complete_parameter#complete("'.a:failed_insert.'")'
@@ -177,22 +179,27 @@ function! complete_parameter#select_item(key) "{{{
 endfunction "}}}"
 
 function! complete_parameter#complete(failed_insert) "{{{
+    let s:log_index += 1
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
+        call <SID>debug_log('v:completed_item is empty')
         return a:failed_insert 
     endif
 
     let filetype = &ft
     if empty(filetype)
+        call <SID>debug_log('filetype is empty')
         return a:failed_insert
     endif
 
     try
         let ftfunc = <SID>new_ftfunc(filetype)
     catch
+        call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
         return a:failed_insert
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
+        call <SID>error_log('ftfunc check failed')
         return a:failed_insert
     endif
 
@@ -252,12 +259,14 @@ endfunction "}}}
 function! complete_parameter#goto_next_param(forward) "{{{
     let filetype = &ft
     if empty(filetype)
+        call <SID>debug_log('filetype is empty')
         return
     endif
 
     try
         let ftfunc = <SID>new_ftfunc(filetype)
     catch
+        call <SID>debug_log('new ftfunc failed')
         return
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
@@ -278,6 +287,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
     let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
     call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
+        call <SID>debug_log('word_begin and word_end is 0')
         return
     endif
     let word_len = word_end - word_begin
@@ -347,6 +357,7 @@ function! complete_parameter#overload_next(forward) "{{{
     " if no in the complete content
     " then return
     if current_line != complete_pos[0] || current_col < complete_pos[1]
+        call <SID>trace_log('no more overload')
         return
     endif
 
@@ -359,6 +370,7 @@ function! complete_parameter#overload_next(forward) "{{{
                 \s:complete_parameter['complete_pos'], 
                 \a:forward)
     if result[0] == 0
+        call <SID>debug_log('get overload content failed')
         return
     endif
 
@@ -431,6 +443,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
                 \empty(a:border_end) ||
                 \len(a:border_begin) != len(a:border_end) ||
                 \a:step==0
+        call <SID>debug_log('parameter_position param error')
         return [0, 0]
     endif "}}}2
     let step = a:step > 0 ? 1 : -1
@@ -438,6 +451,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     let content_len = len(a:content)
     let end = a:step > 0 ? content_len : -1
     if current_pos >= content_len
+        call <SID>error_log('current_pos is large than content_len')
         return [0, 0]
     endif
 
@@ -589,21 +603,27 @@ function! s:find_first_not_space(content, pos, end, step) "{{{
     return pos
 endfunction "}}}
 
+function! s:log(level, msg)
+    echom a:level . ':' . s:log_index . ':' a:msg
+endfunction
+
 function! s:error_log(msg) "{{{
     if g:complete_parameter_log_level <= 4
-        echohl ErrorMsg | echom a:msg | echohl None
+        echohl ErrorMsg 
+        call <SID>log('ERROR', a:msg)
+        echohl None
     endif
 endfunction "}}}
 
 function! s:debug_log(msg) "{{{
     if g:complete_parameter_log_level <= 2
-        echom a:msg
+        call <SID>log('DEBUG', a:msg)
     endif
 endfunction "}}}
 
 function! s:trace_log(msg) "{{{
     if g:complete_parameter_log_level <= 1
-        echom a:msg
+        call <SID>log('TRACE', a:msg)
     endif
 endfunction "}}}
 
