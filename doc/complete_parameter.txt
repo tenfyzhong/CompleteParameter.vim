@@ -3,7 +3,22 @@
 This help file explains the CompleteParameter Vim Plugin. 
 
 ================================================================================
-Introduction
+Contents:
+0. Introduction -------------------------------- |complete-parameter-introduction|
+1. Install ------------------------------------- |complete-parameter-install|
+2. Usage --------------------------------------- |complete-parameter-usage|
+3. Mapping ------------------------------------- |complete-parameter-mapping|
+4. Options ------------------------------------- |complete-parameter-options|
+5. Supported ----------------------------------- |complete-parameter-supported|
+6. Writing Extensions -------------------------- |complete-parameter-extensions|
+7. Contributions ------------------------------- |complete-parameter-contributes|
+8. Thanks -------------------------------------- |complete-parameter-thanks|
+9. Changlog ------------------------------------ |complete-parameter-changelog|
+10. LICENSE ------------------------------------ |complete-parameter-license|
+
+
+================================================================================
+Introduction                                     *complete-parameter-introduction*
 
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
@@ -15,18 +30,9 @@ a function.
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
-================================================================================
-Contents:
-1. Install -------------------------------------- |complete-parameter-install|
-2. Usage ---------------------------------------- |complete-parameter-usage|
-3. Mapping -------------------------------------- |complete-parameter-mapping|
-4. Options -------------------------------------- |complete-parameter-options|
-5. Supported ------------------------------------ |complete-parameter-supported|
-6. Writing Extensions --------------------------- |complete-parameter-extensions|
-7. Contributions -------------------------------- |complete-parameter-contributes|
-8. Thanks --------------------------------------- |complete-parameter-thanks|
-9. Changlog ------------------------------------- |complete-parameter-changelog|
-10. LICENSE ------------------------------------- |complete-parameter-license|
+# Attention
+**It only work when the cursor in the complete menu, and then type the mapping. **
+Like the screenshot, First select the `Dial` item, and then type `(`. 
 
 ================================================================================
 1. Install                                            *complete-parameter-install*
@@ -61,6 +67,13 @@ Goto the next parameter and select it.
 * <m-p>                                                                    *<m-p>*
 Mapping type: inoremap,nnoremap,xnoremap,vnoremap
 Goto the previous parameter and select it.
+
+* <m-d>                                                                    *<m-d>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Select the next overload function. 
+
+* <m-u>                                                                    *<m-u>*
+Mapping type: inoremap,nnoremap,xnoremap,vnoremap
 
 ================================================================================
 4. Options                                            *complete-parameter-options*
