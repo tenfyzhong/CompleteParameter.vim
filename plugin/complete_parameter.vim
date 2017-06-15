@@ -7,9 +7,11 @@
 " created: 2017-06-07 20:27:49
 "==============================================================
 
-if version < 704
+if version < 704 || &compatible || exists('g:load_complete_parameter') 
     finish
 endif
+
+let g:load_complete_parameter = 1
 
 call complete_parameter#init()
 
