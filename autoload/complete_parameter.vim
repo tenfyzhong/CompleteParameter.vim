@@ -10,6 +10,11 @@
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
+function! s:mapping_complete(key, failed_insert)
+    " exec 'imap <silent><buffer> ' . a:key . ' <C-R>=complete_parameter#complete("'.a:failed_insert.'")<cr><ESC>:call complete_parameter#goto_first_param("'.a:key.'")<cr>'
+    exec 'imap <silent><expr><buffer> ' . a:key . ' complete_parameter#need_pre_complete() ? complete_parameter#pre_complete("'.a:key.'") : complete_parameter#complete("'.a:failed_insert.'")'
+endfunction
+
 function! s:init_filetype_mapping() "{{{
     let filetype = &ft
     if !<SID>filetype_func_exist(filetype)
@@ -19,10 +24,12 @@ function! s:init_filetype_mapping() "{{{
     let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, filetype, {})
     if empty(mapping_complete)
         let mapping = s:complete_parameter_mapping_complete
-        exec 'inoremap <silent><buffer> ' . mapping . ' <C-R>=complete_parameter#complete("'.s:complete_parameter_failed_insert.'")<cr><ESC>:call complete_parameter#goto_first_param("'.mapping.'")<cr>'
+        " exec 'inoremap <silent><buffer> ' . mapping . ' <C-R>=complete_parameter#complete("'.s:complete_parameter_failed_insert.'")<cr><ESC>:call complete_parameter#goto_first_param("'.mapping.'")<cr>'
+        call <SID>mapping_complete(mapping, s:complete_parameter_failed_insert)
     else
         for [k, v] in items(mapping_complete)
-            exec 'inoremap <silent><buffer> ' . k . ' <C-R>=complete_parameter#complete("'.v.'")<cr><ESC>:call complete_parameter#goto_first_param("'.k.'")<cr>'
+            " exec 'inoremap <silent><buffer> ' . k . ' <C-R>=complete_parameter#complete("'.v.'")<cr><ESC>:call complete_parameter#goto_first_param("'.k.'")<cr>'
+            call <SID>mapping_complete(k, v)
         endfor
     endif
 endfunction "}}}
@@ -59,7 +66,8 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
     let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
  
-    exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param("'.s:complete_parameter_mapping_complete.'")<cr>'
+    " exec 'inoremap <silent>' . s:complete_parameter_mapping_complete . ' <C-R>=complete_parameter#complete(''()'')<cr><ESC>:call complete_parameter#goto_first_param("'.s:complete_parameter_mapping_complete.'")<cr>'
+    call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
 
     exec 'inoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
     exec 'nnoremap <silent>' . s:complete_parameter_mapping_goto_next . ' <ESC>:call complete_parameter#goto_next_param(1)<cr>'
@@ -155,11 +163,36 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
     return 1
 endfunction "}}}
 
+" {'word': 'err', 'menu': '', 'info': '', 'kind': '', 'abbr': ''}
+function! s:empty_completed_item()
+    let completed_item = v:completed_item
+    if empty(completed_item)
+        return true
+    endif
+    let menu = get(completed_item, 'menu', '')
+    let info = get(completed_item, 'info', '')
+    let kind = get(completed_item, 'kind', '')
+    let abbr = get(completed_item, 'abbr', '')
+    return empty(menu) && empty(info) && empty(kind) && empty(abbr)
+endfunction
+
+function! complete_parameter#need_pre_complete()
+    return <SID>empty_completed_item() && pumvisible()
+endfunction
+
+function! complete_parameter#pre_complete(key)
+    if <SID>empty_completed_item() && pumvisible()
+        call feedkeys(a:key, 'm')
+        return "\<C-n>"
+    endif
+endfunction
+
 function! complete_parameter#complete(insert) "{{{
     call <SID>trace_log(string(v:completed_item))
-    if empty(v:completed_item)
+    if <SID>empty_completed_item()
         return a:insert 
     endif
+
     " if v:completed_item['kind'] != 'f'
     "     return a:insert
     " endif
@@ -211,6 +244,8 @@ function! complete_parameter#complete(insert) "{{{
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
         endif
     endif
+    let keys = "\<ESC>".':call complete_parameter#goto_first_param("'.'('.'")'."\<ENTER>"
+    call feedkeys(keys, 'n')
     return parameter
 endfunction "}}}
 
