@@ -158,7 +158,7 @@ endfunction "}}}
 function! s:empty_completed_item() "{{{
     let completed_item = v:completed_item
     if empty(completed_item)
-        return true
+        return 1
     endif
     let menu = get(completed_item, 'menu', '')
     let info = get(completed_item, 'info', '')
