@@ -1,0 +1,12 @@
+Execute:
+  let parser_str = globpath(&rtp, 'cm_parser/*.vim')
+  let parsers = split(parser_str, '\n')
+  for parser in parsers
+      let ft = fnamemodify(parser, ':t:r')
+      try
+          let ftfunc = complete_parameter#new_ftfunc(ft)
+          Assert complete_parameter#filetype_func_check(ftfunc)
+      catch
+          Assert 0
+      endtry
+  endfor

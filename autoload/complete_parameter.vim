@@ -84,7 +84,7 @@ endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
 let s:ftfunc = {'ft': ''}
-function! s:new_ftfunc(filetype) "{{{
+function! complete_parameter#new_ftfunc(filetype) "{{{
     if empty(a:filetype)
         throw 'filetype is empty'
     endif
@@ -219,7 +219,7 @@ function! complete_parameter#complete(failed_insert) "{{{
     endif
 
     try
-        let ftfunc = <SID>new_ftfunc(filetype)
+        let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
         return a:failed_insert
@@ -290,7 +290,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
     endif
 
     try
-        let ftfunc = <SID>new_ftfunc(filetype)
+        let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new ftfunc failed')
         return

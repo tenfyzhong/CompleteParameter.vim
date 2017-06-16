@@ -13,8 +13,7 @@ Contents:
 6. Writing Extensions -------------------------- |complete-parameter-extensions|
 7. Contributions ------------------------------- |complete-parameter-contributes|
 8. Thanks -------------------------------------- |complete-parameter-thanks|
-9. Changlog ------------------------------------ |complete-parameter-changelog|
-10. LICENSE ------------------------------------ |complete-parameter-license|
+9. LICENSE ------------------------------------- |complete-parameter-license|
 
 
 ================================================================================
@@ -220,27 +219,7 @@ Contributions and pull requests are welcome.
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-9. Changlog                                         *complete-parameter-changelog*
-0.1.0: 2017-06-15
-Support `(` select the first completion item if inserted word is equal to the first popup item.
-
-0.0.3: 2017-06-15
-Support multi called for a file. 
-Support cpp class template. 
-Fix python parser.
-Add github templates.
-
-0.0.2: 2017-06-14
-Support c, cpp, rust, javascript, python.
-Support overload functions.
-Update screenshot.
-Add shields. 
-
-0.0.1: 2017-06-12
-Init version. Support golang, erlang paramater.
-
-================================================================================
-10. LICENSE                                           *complete-parameter-license*
+9. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

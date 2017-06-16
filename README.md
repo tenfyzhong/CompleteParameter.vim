@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=master)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
 [![GitHub tag](https://img.shields.io/github/tag/tenfyzhong/CompleteParameter.vim.svg)]()
 [![Vim Version](https://img.shields.io/badge/support-Vim%207.4.2367%E2%86%91%20or%20NVIM-yellowgreen.svg?style=flat)]()
+[![doc](https://img.shields.io/badge/doc-%3Ah%20CompleteParameter-yellow.svg?style=flat)](https://github.com/tenfyzhong/CompleteParameter.vim/blob/develop/doc/complete_parameter.txt)
 
 
 CompleteParameter is a plugin for complete function's parameters after complete
