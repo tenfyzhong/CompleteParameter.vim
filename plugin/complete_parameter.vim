@@ -10,8 +10,11 @@
 if version < 704 || &compatible || exists('g:load_complete_parameter') 
     finish
 endif
-
 let g:load_complete_parameter = 1
+
+let save_cpo = &cpo
+set cpo&vim
 
 call complete_parameter#init()
 
+let &cpo = save_cpo
