@@ -1,13 +1,14 @@
 #!/bin/bash -
 set -e
 
-# if [[ $TRAVIS_OS_NAME == 'osx'  ]]; then
-#     brew update
-#     brew install lua
-#     export CFLAGS=/usr/local/opt/lua/include
-#     export CPPFLAGS=/usr/local/opt/lua/include
-#     export LDFLAGS=-L/usr/local/opt/lua/include
-# fi
+if [[ $TRAVIS_OS_NAME == 'osx'  ]]; then
+    brew update
+    brew install neovim/neovim/neovim
+else
+    sudo add-apt-repository ppa:neovim-ppa/unstable -y
+    sudo apt-get update -y
+    sudo apt-get install neovim -y
+fi
 
 wget https://codeload.github.com/vim/vim/tar.gz/v7.4.774
 tar xzf v7.4.774
