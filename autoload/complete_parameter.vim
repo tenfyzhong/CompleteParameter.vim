@@ -11,12 +11,11 @@ let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'succes
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 
 let s:log_index = 0
-let s:completed_word = ''
-" let s:need_select = 0
 
 " mapping complete key
 function! s:mapping_complete(key, failed_insert) "{{{
-    exec 'imap <silent><expr><buffer> ' . a:key . ' complete_parameter#need_select_item() ? complete_parameter#select_item("'.a:key.'") : complete_parameter#complete("'.a:failed_insert.'")'
+    let mapping = printf('imap <silent><expr><buffer> %s complete_parameter#pre_complete("%s")', a:key, a:failed_insert)
+    exec mapping
 endfunction "}}}
 
 " mapping goto parameter and select overload function
@@ -169,55 +168,48 @@ function! s:empty_completed_item() "{{{
     return empty(menu) && empty(info) && empty(kind) && empty(abbr)
 endfunction "}}}
 
-let s:needed_check_called_by_script = 0
-
-" every parameter complete called 
-" this function will called 2 times
-" the first time is called by user, the s:needed_check_called_by_script should be 0 
-" the second time is called by script, the s:needed_check_called_by_script should be 1
-function! complete_parameter#need_select_item() "{{{
-    if s:needed_check_called_by_script == 0
-        let s:log_index += 1
-        let s:completed_word = get(v:completed_item, 'word', '')
-    else
-        let s:needed_check_called_by_script = 0
-        " this called no need to check
-        " it must be 0, because complete_parameter#select_item was called
-        return 0
-    endif
-
-    let s:need_select = <SID>empty_completed_item() && pumvisible()
-    call <SID>trace_log('need_select: ' . s:need_select)
-    if s:need_select == 1
-        let s:needed_check_called_by_script = 1
-    endif
-    return s:need_select
+function! s:insert_mode_call_complete_func(failed_insert) "{{{
+    return printf("\<C-r>=complete_parameter#complete('%s')\<ENTER>", a:failed_insert)
 endfunction "}}}
 
-function! complete_parameter#select_item(key) "{{{
+" select an item if need, and the check need to revert or not
+" else call the complete function
+function! complete_parameter#pre_complete(failed_insert) "{{{
+    let s:log_index += 1
+    let completed_word = get(v:completed_item, 'word', '')
+
     if <SID>empty_completed_item() && pumvisible()
-        call feedkeys(a:key, 'm')
+        let feed = printf("\<C-r>=complete_parameter#check_revert_select('%s', '%s')\<ENTER>", a:failed_insert, completed_word)
+        call feedkeys(feed, 'n')
         return "\<C-n>"
+    else
+        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
+        call feedkeys(feed, 'n')
+        return ''
     endif
-endfunction "}}}"
+endfunction "}}}
+
+" if the select item is not match with completed_word, the revert
+" else call the complete function
+function! complete_parameter#check_revert_select(failed_insert, completed_word) "{{{
+    let select_complete_word = get(v:completed_item, 'word', '')
+    call <SID>trace_log('s:completed_word: ' . a:completed_word)
+    call <SID>trace_log('select_complete_word: ' . select_complete_word)
+    if select_complete_word !=? a:completed_word
+        call feedkeys(a:failed_insert, 'n')
+        return "\<C-p>"
+    else
+        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
+        call feedkeys(feed, 'n')
+        return ''
+    endif
+endfunction "}}}
 
 function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
         return a:failed_insert 
-    endif
-
-    call <SID>trace_log('need_select: ' . s:need_select)
-
-    if s:need_select
-        let select_complete_word = get(v:completed_item, 'word', '')
-        call <SID>trace_log('s:completed_word: ' . s:completed_word)
-        call <SID>trace_log('select_complete_word: ' . select_complete_word)
-        if select_complete_word !=? s:completed_word
-            call feedkeys(a:failed_insert, 'n')
-            return "\<C-p>"
-        endif
     endif
 
     let filetype = &ft
