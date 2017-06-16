@@ -1,7 +1,18 @@
 language: vim
 
+sudo: required
+dist: trusty
+
+os: 
+  - linux
+  - osx
+
+install:
+  - bash ./ci/travis_install.sh
+  - export PATH="$HOME/vim/bin:$PATH"
+
 before_script: |
-  git clone https://github.com/junegunn/vader.vim.git
+  git clone --depth 1  https://github.com/junegunn/vader.vim.git
 
 script: |
   vim -Nu <(cat << VIMRC
@@ -9,6 +20,7 @@ script: |
   set rtp+=vader.vim
   set rtp+=.
   set rtp+=after
+  source plugin/complete_parameter.vim
   runtime! cm_parser/*.vim
   filetype plugin indent on
   syntax enable

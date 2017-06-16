@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/tenfyzhong/CompleteParameter.vim](https://badges.gitter.im/tenfyzhong/CompleteParameter.vim.svg)](https://gitter.im/tenfyzhong/CompleteParameter.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=master)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
 [![GitHub tag](https://img.shields.io/github/tag/tenfyzhong/CompleteParameter.vim.svg)]()
-[![Vim Version](https://img.shields.io/badge/support-Vim%207.4%20or%20above-yellowgreen.svg?style=flat)]()
+[![Vim Version](https://img.shields.io/badge/support-Vim%207.4.2367%20or%20above-yellowgreen.svg?style=flat)]()
 
 
 CompleteParameter is a plugin for complete function's parameters after complete
