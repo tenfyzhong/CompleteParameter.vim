@@ -1,0 +1,21 @@
+0.1.1: 2017-06-15
+Fix travis-ci test. 
+
+0.1.0: 2017-06-15
+Support `(` select the first completion item if inserted word is equal to the first popup item.
+
+0.0.3: 2017-06-15
+Support multi called for a file. 
+Support cpp class template. 
+Fix python parser.
+Add github templates.
+
+0.0.2: 2017-06-14
+Support c, cpp, rust, javascript, python.
+Support overload functions.
+Update screenshot.
+Add shields. 
+
+0.0.1: 2017-06-12
+Init version. Support golang, erlang paramater.
+
