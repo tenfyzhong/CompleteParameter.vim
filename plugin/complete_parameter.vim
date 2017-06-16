@@ -7,7 +7,7 @@
 " created: 2017-06-07 20:27:49
 "==============================================================
 
-if version < 704 || (version == 704 && !has('patch2367')) || &compatible || exists('g:load_complete_parameter') 
+if version < 704 || (version == 704 && !has('patch774')) || &compatible || exists('g:load_complete_parameter') 
     finish
 endif
 let g:load_complete_parameter = 1

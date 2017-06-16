@@ -9,9 +9,9 @@ set -e
 #     export LDFLAGS=-L/usr/local/opt/lua/include
 # fi
 
-wget https://codeload.github.com/vim/vim/tar.gz/v7.4.2367
-tar xzf v7.4.2367
-cd vim-7.4.2367
+wget https://codeload.github.com/vim/vim/tar.gz/v7.4.774
+tar xzf v7.4.774
+cd vim-7.4.774
 ./configure --prefix="$HOME/vim" \
     --enable-fail-if-missing \
     --with-features=huge
