@@ -1,5 +1,9 @@
 0.1.2:
 Support typescript. 
+Add g:complete_parameter_goto_next_mode option. 
+Add g:complete_parameter_goto_previous_mode option. 
+Add g:complete_parameter_mapping_overload_down_mode option.
+Add g:complete_parameter_mapping_overload_up_mode option. 
 
 0.1.1: 2017-06-15
 Fix travis-ci test. 

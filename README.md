@@ -54,19 +54,24 @@ and select it.
 
 # Mapping
 ### `(`
-Call the parameter completor.
+Mapping type: inoremap  
+Call the parameter completor.  
 
 ### `<m-n>`
-Goto the next parameter and select it.
+Mapping type: inoremap,nnoremap,vnoremap  
+Goto the next parameter and select it.  
 
 ### `<m-p>`
+Mapping type: inoremap,nnoremap,vnoremap  
 Goto the previous parameter and select it.
 
 ### `<m-d>`
-Select the next overload function. 
+Mapping type: inoremap,nnoremap,vnoremap  
+Select the next overload function.   
 
 ### `<m-u>`
-Select the previous overload function. 
+Mapping type: inoremap,nnoremap,vnoremap  
+Select the previous overload function.  
 
 # Options
 ### The `g:complete_parameter_mapping_complete` option
@@ -104,12 +109,30 @@ Default: `<m-n>`
 let g:complete_parameter_mapping_goto_next = '<m-n>'
 ```
 
+### The `g:complete_parameter_goto_next_mode` option
+This option set the mapping `g:complete_parameter_mapping_goto_next` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_goto_next` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_goto_next_mode = 'ivn'
+```
+
 ### The `g:complete_parameter_mapping_goto_previous` option
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
 Default: `<m-p>`  
 ```viml
 let g:complete_parameter_mapping_goto_previous = '<m-p>'
+```
+
+### The `g:complete_parameter_goto_previous_mode` option
+This option set the mapping `g:complete_parameter_mapping_goto_previous` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_goto_previous` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_goto_previous_mode = 'ivn'
 ```
 
 ### The `g:complete_parameter_mapping_overload_down` option
@@ -123,6 +146,15 @@ Default: `<m-d>`
 let g:complete_parameter_mapping_overload_down = '<m-d>'
 ```
 
+### The `g:complete_parameter_mapping_overload_down_mode` option
+This option set the mapping `g:complete_parameter_mapping_overload_down` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_overload_down` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_mapping_overload_down_mode = 'ivn'
+```
+
 ### The `g:complete_parameter_mapping_overload_up` option
 This option set the select previous overload parameters mapping. When this 
 mapping was called, it'll delete the current completed paramaters and insert
@@ -132,6 +164,15 @@ in the `(` and `)`, it can be work.
 Default: `<m-u>`
 ```viml
 let g:complete_parameter_mapping_overload_up = '<m-u>'
+```
+
+### The `g:complete_parameter_mapping_overload_up_mode` option
+This option set the mapping `g:complete_parameter_mapping_overload_up` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_overload_up` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 ```
 
 ### The `g:complete_parameter_log_level` option

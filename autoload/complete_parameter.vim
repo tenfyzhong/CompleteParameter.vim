@@ -19,11 +19,18 @@ function! s:mapping_complete(key, failed_insert) "{{{
 endfunction "}}}
 
 " mapping goto parameter and select overload function
-function! s:mapping_action(key, action) "{{{
-    exec 'inoremap <silent>' . a:key . ' ' . a:action
-    exec 'nnoremap <silent>' . a:key . ' ' . a:action
-    exec 'xnoremap <silent>' . a:key . ' ' . a:action
-    exec 'vnoremap <silent>' . a:key . ' ' . a:action
+function! complete_parameter#mapping_action(key, action, mode) "{{{
+    let l:mode = a:mode
+    if empty(l:mode)
+        return
+    endif
+    let mode_list = split(l:mode, '\zs')
+    for m in mode_list
+        if m !~# '[inv]'
+            continue
+        endif
+        exec m.'noremap <silent>' . a:key . ' ' . a:action
+    endfor
 endfunction "}}}
 
 function! s:init_filetype_mapping() "{{{
@@ -67,19 +74,30 @@ function! complete_parameter#init() "{{{
 
     let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
     let s:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
+    let g:complete_parameter_goto_next_mode = get(g:, 'complete_parameter_goto_next_mode', '')
+    let s:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'inv'
+
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
     let s:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
+    let g:complete_parameter_goto_previous_mode = get(g:, 'complete_parameter_goto_previous_mode', '')
+    let s:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'inv'
 
     let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
     let s:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
+    let g:complete_parameter_mapping_overload_up_mode = get(g:, 'complete_parameter_mapping_overload_up_mode', '')
+    let s:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'inv'
+
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
     let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
+    let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
+    let s:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
+
  
     call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
-    call <SID>mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>')
-    call <SID>mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>')
-    call <SID>mapping_action(s:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>')
-    call <SID>mapping_action(s:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>')
+    call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', s:complete_parameter_goto_next_mode)
+    call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', s:complete_parameter_goto_previous_mode)
+    call complete_parameter#mapping_action(s:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>', s:complete_parameter_mapping_overload_up_mode)
+    call complete_parameter#mapping_action(s:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>', s:complete_parameter_mapping_overload_down_mode)
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
