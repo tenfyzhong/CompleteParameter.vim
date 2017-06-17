@@ -1,3 +1,4 @@
+" {{{ function
 Execute (error menu):
   let completed_item = {'menu': 'module:func', 'info': 'func()'}
   let result = cm_parser#python#parameters(completed_item)
@@ -42,3 +43,51 @@ Execute (foo(a, b = []) -> (int, True):
   let completed_item = {'menu': 'function:foo', 'info': "foo(a, b = []) -> (int, True) \nfoo function"}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(a, b)'], result
+"}}}
+
+" {{{ function
+Execute (error menu):
+  let completed_item = {'menu': 'module:func', 'info': 'func()'}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error info):
+  let completed_item = {'menu': 'def func', 'info': ''}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (foo()):
+  let completed_item = {'menu': 'def foo', 'info': "foo()\nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (foo() -> int):
+  let completed_item = {'menu': 'def foo', 'info': "foo() -> int \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (foo(a) -> int):
+  let completed_item = {'menu': 'def foo', 'info': "foo(a) -> int \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (foo(a, b) -> int):
+  let completed_item = {'menu': 'def foo', 'info': "foo(a, b) -> int \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (foo(a, b = 1) -> int):
+  let completed_item = {'menu': 'def foo', 'info': "foo(a, b = 1) -> int \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (foo(a, b = []) -> int):
+  let completed_item = {'menu': 'def foo', 'info': "foo(a, b = []) -> int \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (foo(a, b = []) -> (int, True):
+  let completed_item = {'menu': 'def foo', 'info': "foo(a, b = []) -> (int, True) \nfoo function"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+"}}}
