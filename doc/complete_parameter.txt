@@ -13,8 +13,7 @@ Contents:
 6. Writing Extensions -------------------------- |complete-parameter-extensions|
 7. Contributions ------------------------------- |complete-parameter-contributes|
 8. Thanks -------------------------------------- |complete-parameter-thanks|
-9. Changlog ------------------------------------ |complete-parameter-changelog|
-10. LICENSE ------------------------------------ |complete-parameter-license|
+9. LICENSE ------------------------------------- |complete-parameter-license|
 
 
 ================================================================================
@@ -60,19 +59,20 @@ Mapping type: inoremap
 Call the parameter completor. 
 
 * <m-n>                                                                    *<m-n>*
-Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Mapping type: inoremap,nnoremap,vnoremap
 Goto the next parameter and select it.
 
 * <m-p>                                                                    *<m-p>*
-Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Mapping type: inoremap,nnoremap,vnoremap
 Goto the previous parameter and select it.
 
 * <m-d>                                                                    *<m-d>*
-Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Mapping type: inoremap,nnoremap,vnoremap
 Select the next overload function. 
 
 * <m-u>                                                                    *<m-u>*
-Mapping type: inoremap,nnoremap,xnoremap,vnoremap
+Mapping type: inoremap,nnoremap,vnoremap
+Select the previous overload function. 
 
 ================================================================================
 4. Options                                            *complete-parameter-options*
@@ -107,12 +107,28 @@ it'll goto to the next parameter.
 Default: '<m-n>'  >
   let g:complete_parameter_mapping_goto_next = '<m-n>'
 <
+                                             *g:complete_parameter_goto_next_mode*
+* g:complete_parameter_goto_next_mode
+This option set the mapping |g:complete_parameter_mapping_goto_next| mode. 
+For example, the value is 'iv', it'll only map 
+|g:complete_parameter_mapping_goto_next| in the mode of insert and visual(select).
+Default: 'ivn' >
+  let g:complete_parameter_goto_next_mode = 'ivn'
+<
                                       *g:complete_parameter_mapping_goto_previous*
 * g:complete_parameter_mapping_goto_previous
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
 Default: '<m-p>'  >
   let g:complete_parameter_mapping_goto_previous = '<m-p>'
+<
+                                         *g:complete_parameter_goto_previous_mode*
+* g:complete_parameter_goto_previous_mode
+This option set the mapping |g:complete_parameter_mapping_goto_previous| mode. 
+For example, the value is 'iv', it'll only map 
+|g:complete_parameter_mapping_goto_previous| in the mode of insert and visual(select).
+Default: 'ivn' >
+  let g:complete_parameter_goto_previous_mode = 'ivn'
 <
                                       *g:complete_parameter_mapping_overload_down*
 * g:complete_parameter_mapping_overload_down
@@ -124,6 +140,14 @@ in the `(` and `)`, it can be work.
 Default: '<m-d>' >
   let g:complete_parameter_mapping_overload_down = '<m-d>'
 <
+                                 *g:complete_parameter_mapping_overload_down_mode*
+* g:complete_parameter_mapping_overload_down_mode
+This option set the mapping |g:complete_parameter_mapping_overload_down| mode. 
+For example, the value is 'iv', it'll only map 
+|g:complete_parameter_mapping_overload_down| in the mode of insert and visual(select).
+Default: 'ivn' >
+  let g:complete_parameter_mapping_overload_down_mode = 'ivn'
+<
                                         *g:complete_parameter_mapping_overload_up*
 * g:complete_parameter_mapping_overload_up
 This option set the select previous overload parameters mapping. When this 
@@ -133,6 +157,14 @@ completed parameters. For example, `v.erase(__first, __last)`, only the cursor
 in the `(` and `)`, it can be work. 
 Default: '<m-u>' >
   let g:complete_parameter_mapping_overload_up = '<m-u>'
+<
+                                   *g:complete_parameter_mapping_overload_up_mode*
+* g:complete_parameter_mapping_overload_up_mode
+This option set the mapping |g:complete_parameter_mapping_overload_up| mode. 
+For example, the value is 'iv', it'll only map 
+|g:complete_parameter_mapping_overload_up| in the mode of insert and visual(select).
+Default: 'ivn' >
+  let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 <
                                                   *g:complete_parameter_log_level*
 * g:complete_parameter_log_level
@@ -157,6 +189,7 @@ Default: 4 >
 - python
 - javascript
 - rust
+- typescript
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*
@@ -220,27 +253,7 @@ Contributions and pull requests are welcome.
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-9. Changlog                                         *complete-parameter-changelog*
-0.1.0: 2017-06-15
-Support `(` select the first completion item if inserted word is equal to the first popup item.
-
-0.0.3: 2017-06-15
-Support multi called for a file. 
-Support cpp class template. 
-Fix python parser.
-Add github templates.
-
-0.0.2: 2017-06-14
-Support c, cpp, rust, javascript, python.
-Support overload functions.
-Update screenshot.
-Add shields. 
-
-0.0.1: 2017-06-12
-Init version. Support golang, erlang paramater.
-
-================================================================================
-10. LICENSE                                           *complete-parameter-license*
+9. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

@@ -1,0 +1,46 @@
+Before:
+  try
+      unmap <m-n>
+      iunmap <m-n>
+  catch
+  endtry
+
+After:
+  try
+      unmap <m-n>
+      iunmap <m-n>
+  catch
+  endtry
+
+Execute:
+  let expect = '<Esc>:echo "foo"<CR>'
+  call complete_parameter#mapping_action('<m-n>', expect, 'inv')
+  redir => mapping_result
+  silent imap <m-n>
+  redir END
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+  
+  redir => mapping_result
+  silent nmap <m-n>
+  redir END
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+  
+  redir => mapping_result
+  silent vmap <m-n>
+  redir END
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+  
+  redir => mapping_result
+  silent smap <m-n>
+  redir END
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+  redir => mapping_result
+  silent xmap <m-n>
+  redir END
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs

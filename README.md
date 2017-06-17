@@ -2,8 +2,9 @@
 
 [![Join the chat at https://gitter.im/tenfyzhong/CompleteParameter.vim](https://badges.gitter.im/tenfyzhong/CompleteParameter.vim.svg)](https://gitter.im/tenfyzhong/CompleteParameter.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/tenfyzhong/CompleteParameter.vim.svg?branch=master)](https://travis-ci.org/tenfyzhong/CompleteParameter.vim)
-[![GitHub tag](https://img.shields.io/github/tag/tenfyzhong/CompleteParameter.vim.svg)]()
-[![Vim Version](https://img.shields.io/badge/support-Vim%207.4%20or%20above-yellowgreen.svg?style=flat)]()
+[![GitHub tag](https://img.shields.io/github/tag/tenfyzhong/CompleteParameter.vim.svg)](https://github.com/tenfyzhong/CompleteParameter.vim/tags)
+![Vim Version](https://img.shields.io/badge/support-Vim%207.4.774%E2%86%91or%20NVIM-yellowgreen.svg?style=flat)
+[![doc](https://img.shields.io/badge/doc-%3Ah%20CompleteParameter-yellow.svg?style=flat)](https://github.com/tenfyzhong/CompleteParameter.vim/blob/develop/doc/complete_parameter.txt)
 
 
 CompleteParameter is a plugin for complete function's parameters after complete
@@ -53,19 +54,24 @@ and select it.
 
 # Mapping
 ### `(`
-Call the parameter completor.
+Mapping type: inoremap  
+Call the parameter completor.  
 
 ### `<m-n>`
-Goto the next parameter and select it.
+Mapping type: inoremap,nnoremap,vnoremap  
+Goto the next parameter and select it.  
 
 ### `<m-p>`
+Mapping type: inoremap,nnoremap,vnoremap  
 Goto the previous parameter and select it.
 
 ### `<m-d>`
-Select the next overload function. 
+Mapping type: inoremap,nnoremap,vnoremap  
+Select the next overload function.   
 
 ### `<m-u>`
-Select the previous overload function. 
+Mapping type: inoremap,nnoremap,vnoremap  
+Select the previous overload function.  
 
 # Options
 ### The `g:complete_parameter_mapping_complete` option
@@ -103,12 +109,30 @@ Default: `<m-n>`
 let g:complete_parameter_mapping_goto_next = '<m-n>'
 ```
 
+### The `g:complete_parameter_goto_next_mode` option
+This option set the mapping `g:complete_parameter_mapping_goto_next` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_goto_next` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_goto_next_mode = 'ivn'
+```
+
 ### The `g:complete_parameter_mapping_goto_previous` option
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
 Default: `<m-p>`  
 ```viml
 let g:complete_parameter_mapping_goto_previous = '<m-p>'
+```
+
+### The `g:complete_parameter_goto_previous_mode` option
+This option set the mapping `g:complete_parameter_mapping_goto_previous` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_goto_previous` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_goto_previous_mode = 'ivn'
 ```
 
 ### The `g:complete_parameter_mapping_overload_down` option
@@ -122,6 +146,15 @@ Default: `<m-d>`
 let g:complete_parameter_mapping_overload_down = '<m-d>'
 ```
 
+### The `g:complete_parameter_mapping_overload_down_mode` option
+This option set the mapping `g:complete_parameter_mapping_overload_down` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_overload_down` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_mapping_overload_down_mode = 'ivn'
+```
+
 ### The `g:complete_parameter_mapping_overload_up` option
 This option set the select previous overload parameters mapping. When this 
 mapping was called, it'll delete the current completed paramaters and insert
@@ -131,6 +164,15 @@ in the `(` and `)`, it can be work.
 Default: `<m-u>`
 ```viml
 let g:complete_parameter_mapping_overload_up = '<m-u>'
+```
+
+### The `g:complete_parameter_mapping_overload_up_mode` option
+This option set the mapping `g:complete_parameter_mapping_overload_up` mode. 
+For example, the value is `iv`, it'll only map 
+`g:complete_parameter_mapping_overload_up` in the mode of insert and visual(select).
+Default: `ivn`
+```viml
+let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 ```
 
 ### The `g:complete_parameter_log_level` option
@@ -156,11 +198,11 @@ let g:complete_parameter_log_level = 4
 - python
 - javascript
 - rust
+- typescript
 
 # Todo
 - support language: objc
 - support language: c#
-- support language: typescript
 - support engine: [completor.vim](https://github.com/maralla/completor.vim)
 - support engine: [neocomplete.vim](https://github.com/Shougo/neocomplete.vim)
 - support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)

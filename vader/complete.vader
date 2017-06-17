@@ -1,0 +1,8 @@
+Given go (func haha):
+  func haha
+
+Do:
+  9|a(
+
+Expect go ():
+  func haha()

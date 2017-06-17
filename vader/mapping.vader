@@ -1,0 +1,168 @@
+" {{{ test mapping <m-n>
+Execute (test nmap <m-n>):
+  redir => mapping_result
+  silent nmap <m-n>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test imap <m-n>):
+  redir => mapping_result
+  silent imap <m-n>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-n>):
+  redir => mapping_result
+  silent vmap <m-n>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-n>):
+  redir => mapping_result
+  silent smap <m-n>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-n>):
+  redir => mapping_result
+  silent xmap <m-n>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+"}}}
+
+" {{{ test mapping <m-p>
+Execute (test nmap <m-p>):
+  redir => mapping_result
+  silent nmap <m-p>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test imap <m-p>):
+  redir => mapping_result
+  silent imap <m-p>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-p>):
+  redir => mapping_result
+  silent vmap <m-p>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-p>):
+  redir => mapping_result
+  silent smap <m-p>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-p>):
+  redir => mapping_result
+  silent xmap <m-p>
+  redir END
+  let expect = '<Esc>:call complete_parameter#goto_next_param(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+" }}}
+
+" {{{ test mapping <m-u>
+Execute (test nmap <m-u>):
+  redir => mapping_result
+  silent nmap <m-u>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test imap <m-u>):
+  redir => mapping_result
+  silent imap <m-u>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-u>):
+  redir => mapping_result
+  silent vmap <m-u>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-u>):
+  redir => mapping_result
+  silent smap <m-u>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-u>):
+  redir => mapping_result
+  silent xmap <m-u>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(0)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+" }}}
+
+" {{{ test mapping <m-d>
+Execute (test nmap <m-d>):
+  redir => mapping_result
+  silent nmap <m-d>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test imap <m-d>):
+  redir => mapping_result
+  silent imap <m-d>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-d>):
+  redir => mapping_result
+  silent vmap <m-d>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-d>):
+  redir => mapping_result
+  silent smap <m-d>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+
+Execute (test vmap <m-d>):
+  redir => mapping_result
+  silent xmap <m-d>
+  redir END
+  let expect = '<Esc>:call complete_parameter#overload_next(1)<CR>'
+  let rhs = substitute(mapping_result, '.*\('.expect.'\).*', '\1', '')
+  AssertEqual expect, rhs
+" }}}
+

@@ -7,9 +7,14 @@
 " created: 2017-06-07 20:27:49
 "==============================================================
 
-if version < 704
+if (!has('nvim')&&version < 704) || (!has('nvim')&&version==704&&!has('patch774')) || &compatible || exists('g:load_complete_parameter') 
     finish
 endif
+let g:load_complete_parameter = 1
+
+let save_cpo = &cpo
+set cpo&vim
 
 call complete_parameter#init()
 
+let &cpo = save_cpo
