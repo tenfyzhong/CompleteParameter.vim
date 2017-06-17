@@ -156,6 +156,7 @@ Default: 4 >
 - python
 - javascript
 - rust
+- typescript
 
 ================================================================================
 6. Writing Extensions                              *complete-parameter-extensions*

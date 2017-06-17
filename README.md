@@ -157,11 +157,11 @@ let g:complete_parameter_log_level = 4
 - python
 - javascript
 - rust
+- typescript
 
 # Todo
 - support language: objc
 - support language: c#
-- support language: typescript
 - support engine: [completor.vim](https://github.com/maralla/completor.vim)
 - support engine: [neocomplete.vim](https://github.com/Shougo/neocomplete.vim)
 - support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)

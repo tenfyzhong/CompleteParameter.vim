@@ -1,0 +1,40 @@
+Execute (error kind):
+  let completed_item = {}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (error abbr):
+  let completed_item = {'kind': 'm'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual [], result
+
+Execute (empty parameter):
+  let completed_item = {'kind': 'm', 'word': 'fun', 'abbr': 'fun      (method) A.fun()'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (empty parameter 2):
+  let completed_item = {'kind': 'm', 'word': 'fun', 'abbr': 'fun      (method) fun()'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (array.concat):
+  let completed_item = {'word': 'concat', 'menu': '', 'info': '', 'kind': 'm', 'abbr': 'concat         (method) Array<number>.concat(...items: number[][]): number[] (+1 overload)'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['(...items)'], result
+
+Execute (array.every):
+  let completed_item = {'word': 'every', 'menu': '', 'info': '', 'kind': 'm', 'abbr': 'every          (method) Array<number>.every(callbackfn: (this: void, value: number, index: number, array: number[]) => boolean): boolean (+2 overloads)'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['(callbackfn)'], result
+
+Execute (array.indexOf):
+  let completed_item = {'word': 'indexOf', 'menu': '', 'info': '', 'kind': 'm', 'abbr': 'indexOf        (method) Array<number>.indexOf(searchElement: number, fromIndex?: number): number'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['(searchElement, fromIndex?)'], result
+
+Execute (array.map):
+  let completed_item = {'word': 'map', 'menu': '', 'info': '', 'kind': 'm', 'abbr': 'map            (method) Array<number>.map<U>(this: [number, number, number, number, number], callbackfn: (this: void, value: number, index: number, array: number[]) => U): [U, U, U, U, U] (+14 overloads)'}
+  let result = cm_parser#typescript#parameters(completed_item)
+  AssertEqual ['(this, callbackfn)'], result
+
