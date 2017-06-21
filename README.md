@@ -37,7 +37,7 @@ Plug 'tenfyzhong/CompleteParameter.vim'
 - Manual
 ```
 git clone https://github.com/tenfyzhong/CompleteParameter.vim.git ~/.vim/bundle/CompleteParameter.vim
-echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim'
+echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim' >> ~/.vimrc
 vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 ```
 
