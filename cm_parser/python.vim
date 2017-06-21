@@ -15,9 +15,25 @@ function! cm_parser#python#parameters(completed_item) "{{{
     endif
 
     let info = a:completed_item['info']
-    let func = split(info, '\n')[0]
+    let info_lines = split(info, '\n')
+    let func = ''
+    for line in info_lines
+        if func =~# ')'
+            break
+        endif
+        let func .= line
+    endfor
+
     let param = substitute(func, '\m[^(]*\(([^)]*)\).*', '\1', '')
-    let param = substitute(param, '\s*=\s*[^,()]*', '', 'g')
+    let param = substitute(param, '\m\s*=\s*[^,()]*', '', 'g')
+    " remove self,cls
+    let param = substitute(param, '\m(\s*\<self\>\s*,', '(', '')
+    let param = substitute(param, '\m(\s*\<cls\>\s*,', '(', '')
+    " remove space
+    let param = substitute(param, '\m\s\+', ' ', 'g')
+    let param = substitute(param, '\m(\s', '(', '')
+    let param = substitute(param, '\m,\s*)', ')', '')
+    let param = substitute(param, '\m,\(\S\)', ', \1', 'g')
     return [param]
 endfunction "}}}
 
