@@ -6,3 +6,6 @@ Do:
 
 Expect go ():
   func haha()
+
+Then:
+  AssertEqual 10, col('.')

@@ -186,6 +186,16 @@ let g:complete_parameter_log_level = 4
 ```
 
 
+# Event
+### The `User CompleteParameterFailed` event
+When complete failed, this event will be toggle. And the variable 
+`g:complete_parameter_last_failed_insert` was assigned the inserted value. 
+Eg: 
+```viml
+autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
+```
+
+
 # Supported
 ## Supported Complete Engine
 - [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
