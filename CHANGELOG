@@ -1,6 +1,7 @@
 0.1.4:
 Toggle an event CompleteParameterFailed if complete failed. 
 Add a variable `g:complete_parameter_last_failed_insert` to set the failed_insert. 
+Fixed bug, delete select text when call the jump mapping. 
 
 0.1.3: 2017-06-20
 Fix the info for python function has multi lines.
