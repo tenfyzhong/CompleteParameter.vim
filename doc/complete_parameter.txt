@@ -9,11 +9,13 @@ Contents:
 2. Usage --------------------------------------- |complete-parameter-usage|
 3. Mapping ------------------------------------- |complete-parameter-mapping|
 4. Options ------------------------------------- |complete-parameter-options|
-5. Supported ----------------------------------- |complete-parameter-supported|
-6. Writing Extensions -------------------------- |complete-parameter-extensions|
-7. Contributions ------------------------------- |complete-parameter-contributes|
-8. Thanks -------------------------------------- |complete-parameter-thanks|
-9. LICENSE ------------------------------------- |complete-parameter-license|
+5. Event --------------------------------------- |complete-parameter-event|
+6. Supported ----------------------------------- |complete-parameter-supported|
+7. Writing Extensions -------------------------- |complete-parameter-extensions|
+8. FAQ ----------------------------------------- |complete-parameter-faq|
+9. Contributions ------------------------------- |complete-parameter-contributes|
+10. Thanks ------------------------------------- |complete-parameter-thanks|
+11. LICENSE ------------------------------------ |complete-parameter-license|
 
 
 ================================================================================
@@ -39,7 +41,7 @@ I suggest you to use a plugin manager, such vim-plug or other.
 
 - Manual >
   git clone https://github.com/tenfyzhong/CompleteParameter.vim.git ~/.vim/bundle/CompleteParameter.vim
-  echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim'
+  echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim' >> ~/.vimrc
   vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 <
 ================================================================================
@@ -177,11 +179,22 @@ Default: 4 >
 <
 
 ================================================================================
-5. Supported                                        *complete-parameter-supported*
-5.1 Supported Complete Engine
+5. Event                                                *complete-parameter-event*
+                                                         *CompleteParameterFailed*
+* User CompleteParameterFailed
+When complete failed, this event will be toggle. And the variable 
+`g:complete_parameter_last_failed_insert` was assigned the inserted value. 
+Eg: >
+  autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
+<
+
+
+================================================================================
+6. Supported                                        *complete-parameter-supported*
+6.1 Supported Complete Engine
 - [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 
-5.2 Supported Language
+6.2 Supported Language
 - golang
 - erlang
 - c
@@ -192,7 +205,7 @@ Default: 4 >
 - typescript
 
 ================================================================================
-6. Writing Extensions                              *complete-parameter-extensions*
+7. Writing Extensions                              *complete-parameter-extensions*
 It's easy to writing extensions for languages. 
 Follow the next steps. All commands below was work in this plugin directory. 
 1) Create a file named `filetype.vim` in path `cm_parser`. For example,
@@ -245,15 +258,31 @@ Finally, please send a pull request for me if you would like to share you
 extension.
 
 ================================================================================
-7. Contributions                                  *complete-parameter-contributes*
+8. FAQ                                                    *complete-parameter-faq*
+1) Can't work with plugin auto-pairs use the default mapping `(`
+Because the auto-pairs use `inoremap` to mapping the keys. It can't call this
+plugin after the auto-pairs process. You can add the following setting to you
+.vimrc, and it'll work well.  >
+  let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+  inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
+<
+
+2) How to accept the selected function but not parameters
+You can type `<c-y>` key to accept the selected function and stop completion.
+When the popup menu is disappeared, the parameters will not be insert. 
+
+
+
+================================================================================
+9. Contributions                                  *complete-parameter-contributes*
 Contributions and pull requests are welcome.
 
 ================================================================================
-8. Thanks                                              *complete-parameter-thanks*
+10. Thanks                                              *complete-parameter-thanks*
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-9. LICENSE                                           *complete-parameter-license*
+11. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

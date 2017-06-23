@@ -9,6 +9,7 @@
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
 let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
+let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
 
@@ -53,10 +54,16 @@ endfunction "}}}
 augroup complete_parameter_init "{{{
     autocmd!
     autocmd FileType * call <SID>init_filetype_mapping()
+    autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
 augroup END "}}}
 
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
+
+    " BUG with ultisnips
+    " without this statement, the <m-n>,<m-p> mapping in select mode will
+    " delete the selected text, but I won't it the jump to the next parameter. 
+    let g:UltiSnipsMappingsToIgnore = get(g:, 'UltiSnipsMappingsToIgnore', []) + ["complete_parameter"]
 
     if exists('g:complete_parameter_mapping_complete_for_ft') && type('g:complete_parameter_mapping_complete_for_ft') == 3
         let s:complete_parameter_mapping_complete_for_ft = extend(s:complete_parameter_mapping_complete_for_ft, g:complete_parameter_mapping_complete_for_ft, 'force')
@@ -207,6 +214,12 @@ function! complete_parameter#pre_complete(failed_insert) "{{{
     endif
 endfunction "}}}
 
+function! s:failed_event(return_text, failed_insert) "{{{ return the text to insert and toggle event
+    let g:complete_parameter_last_failed_insert = a:failed_insert
+    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
+    return a:return_text
+endfunction "}}}
+
 " if the select item is not match with completed_word, the revert
 " else call the complete function
 function! complete_parameter#check_revert_select(failed_insert, completed_word) "{{{
@@ -215,7 +228,7 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     call <SID>trace_log('select_complete_word: ' . select_complete_word)
     if select_complete_word !=? a:completed_word
         call feedkeys(a:failed_insert, 'n')
-        return "\<C-p>"
+        return <SID>failed_event("\<C-p>", a:failed_insert)
     else
         let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
         call feedkeys(feed, 'n')
@@ -227,24 +240,24 @@ function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
-        return a:failed_insert 
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
-        return a:failed_insert
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
     try
         let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
-        return a:failed_insert
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
         call <SID>error_log('ftfunc check failed')
-        return a:failed_insert
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
 
@@ -259,11 +272,11 @@ function! complete_parameter#complete(failed_insert) "{{{
     call <SID>debug_log(string(parseds))
     if type(parseds) != 3
         call <SID>error_log('return type error')
-        return a:failed_insert
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
     if empty(parseds) || parseds[0] == ''
-        return a:failed_insert
+        return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
     let s:complete_parameter['index'] = 0
@@ -280,23 +293,17 @@ function! complete_parameter#complete(failed_insert) "{{{
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
         endif
     endif
-    let keys = "\<ESC>".':call complete_parameter#goto_first_param("'.a:failed_insert.'")'."\<ENTER>"
+    let keys = "\<ESC>".':call complete_parameter#goto_first_param()'."\<ENTER>"
     call feedkeys(keys, 'n')
     return parameter
 endfunction "}}}
 
-function! complete_parameter#goto_first_param(failed_insert) "{{{
+function! complete_parameter#goto_first_param() "{{{
     if s:complete_parameter['success']
         let complete_pos = s:complete_parameter['complete_pos']
         call cursor(complete_pos[0], complete_pos[1])
         let s:complete_parameter['success'] = 0
         call complete_parameter#goto_next_param(1)
-    else
-        startinsert
-        " if insert one char, go right
-        if len(a:failed_insert) == 1
-            call feedkeys("\<RIGHT>", 'n')
-        endif
     endif
 endfunction "}}}
 
@@ -430,7 +437,7 @@ function! complete_parameter#overload_next(forward) "{{{
     let s:complete_parameter['success'] = 1
     exec 'normal! a'.next_content
     stopinsert
-    call complete_parameter#goto_first_param('')
+    call complete_parameter#goto_first_param()
 endfunction "}}}
 
 let s:stack = {'data':[]}
@@ -647,9 +654,9 @@ function! s:find_first_not_space(content, pos, end, step) "{{{
     return pos
 endfunction "}}}
 
-function! s:log(level, msg)
+function! s:log(level, msg) "{{{
     echom a:level . ':' . s:log_index . ':' a:msg
-endfunction
+endfunction "}}}
 
 function! s:error_log(msg) "{{{
     if g:complete_parameter_log_level <= 4

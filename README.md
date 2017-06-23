@@ -37,7 +37,7 @@ Plug 'tenfyzhong/CompleteParameter.vim'
 - Manual
 ```
 git clone https://github.com/tenfyzhong/CompleteParameter.vim.git ~/.vim/bundle/CompleteParameter.vim
-echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim'
+echo 'set rtp+=~/.vim/bundle/CompleteParameter.vim' >> ~/.vimrc
 vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 ```
 
@@ -186,6 +186,16 @@ let g:complete_parameter_log_level = 4
 ```
 
 
+# Event
+### The `User CompleteParameterFailed` event
+When complete failed, this event will be toggle. And the variable 
+`g:complete_parameter_last_failed_insert` was assigned the inserted value. 
+Eg: 
+```viml
+autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
+```
+
+
 # Supported
 ## Supported Complete Engine
 - [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
@@ -219,6 +229,11 @@ plugin after the auto-pairs process. You can add the following setting to you
 let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
 inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 ```
+
+
+### How to accept the selected function but not parameters
+You can type `<c-y>` key to accept the selected function and stop completion.
+When the popup menu is disappeared, the parameters will not be insert. 
 
 
 # Contributions 
