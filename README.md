@@ -231,6 +231,11 @@ inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 ```
 
 
+### How to accept the selected function but not parameters
+You can type `<c-y>` key to accept the selected function and stop completion.
+When the popup menu is disappeared, the parameters will not be insert. 
+
+
 # Contributions 
 Contributions and pull requests are welcome.
 

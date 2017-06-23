@@ -12,9 +12,10 @@ Contents:
 5. Event --------------------------------------- |complete-parameter-event|
 6. Supported ----------------------------------- |complete-parameter-supported|
 7. Writing Extensions -------------------------- |complete-parameter-extensions|
-8. Contributions ------------------------------- |complete-parameter-contributes|
-9. Thanks -------------------------------------- |complete-parameter-thanks|
-10. LICENSE ------------------------------------ |complete-parameter-license|
+8. FAQ ----------------------------------------- |complete-parameter-faq|
+9. Contributions ------------------------------- |complete-parameter-contributes|
+10. Thanks ------------------------------------- |complete-parameter-thanks|
+11. LICENSE ------------------------------------ |complete-parameter-license|
 
 
 ================================================================================
@@ -257,15 +258,31 @@ Finally, please send a pull request for me if you would like to share you
 extension.
 
 ================================================================================
-8. Contributions                                  *complete-parameter-contributes*
+8. FAQ                                                    *complete-parameter-faq*
+1) Can't work with plugin auto-pairs use the default mapping `(`
+Because the auto-pairs use `inoremap` to mapping the keys. It can't call this
+plugin after the auto-pairs process. You can add the following setting to you
+.vimrc, and it'll work well.  >
+  let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+  inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
+<
+
+2) How to accept the selected function but not parameters
+You can type `<c-y>` key to accept the selected function and stop completion.
+When the popup menu is disappeared, the parameters will not be insert. 
+
+
+
+================================================================================
+9. Contributions                                  *complete-parameter-contributes*
 Contributions and pull requests are welcome.
 
 ================================================================================
-9. Thanks                                              *complete-parameter-thanks*
+10. Thanks                                              *complete-parameter-thanks*
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-10. LICENSE                                           *complete-parameter-license*
+11. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#
