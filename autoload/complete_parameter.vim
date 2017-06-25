@@ -60,10 +60,10 @@ augroup END "}}}
 function! complete_parameter#init() "{{{
     runtime! cm_parser/*.vim
 
-    " BUG with ultisnips
-    " without this statement, the <m-n>,<m-p> mapping in select mode will
-    " delete the selected text, but I won't it the jump to the next parameter. 
+    " ultisnips will remove all smaps, this will without this plugin
     let g:UltiSnipsMappingsToIgnore = get(g:, 'UltiSnipsMappingsToIgnore', []) + ["complete_parameter"]
+    " neosnippet will remove all smaps
+    let g:neosnippet#disable_select_mode_mappings = 0
 
     if exists('g:complete_parameter_mapping_complete_for_ft') && type('g:complete_parameter_mapping_complete_for_ft') == 3
         let s:complete_parameter_mapping_complete_for_ft = extend(s:complete_parameter_mapping_complete_for_ft, g:complete_parameter_mapping_complete_for_ft, 'force')
