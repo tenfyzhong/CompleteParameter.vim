@@ -236,6 +236,13 @@ You can type `<c-y>` key to accept the selected function and stop completion.
 When the popup menu is disappeared, the parameters will not be insert. 
 
 
+### The mapping `<m-n>` doesn't jump to the next parameter, but delete the selected words. 
+If you use neosnippet, Please set `g:neosnippet#disable_select_mode_mappings`
+to 0. It will remove all select mappings. 
+If you don't use neosnippet, please send me a issue, and give me the plugins
+you are using. 
+
+
 # Contributions 
 Contributions and pull requests are welcome.
 
