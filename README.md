@@ -197,7 +197,8 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 
 # Supported
-**`x` has supported**
+**`x` has supported**  
+
 |            | youcompleteme | deoplete | neocomplete | completor | clang_complete |
 |------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
 | c          |       x       |          |             |           |                |
