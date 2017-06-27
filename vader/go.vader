@@ -124,3 +124,45 @@ Execute (func Scan(a net.Conn, b, c int) (a int, err error)):
   AssertEqual ['(a, b, c)'], result
 "}}}
 
+"{{{ deoplete
+Execute (func()):
+  let completed_item = {'info': 'func()', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (func(a)):
+  let completed_item = {'info': 'func(a)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a int)):
+  let completed_item = {'info': 'func(a int)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a net.Conn)):
+  let completed_item = {'info': 'func(a net.Conn)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a)'], result
+
+Execute (func(a net.Conn, b, c int)):
+  let completed_item = {'info': 'func(a net.Conn, b, c int)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+  
+Execute (func(a net.Conn, b, c int) error):
+  let completed_item = {'info': 'func(a net.Conn, b, c int) error', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+
+Execute (func(a net.Conn, b, c int) (int, error)):
+  let completed_item = {'info': 'func(a net.Conn, b, c int) (int, error)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+
+Execute (func(a net.Conn, b, c int) (a int, err error)):
+  let completed_item = {'info': 'func(a net.Conn, b, c int) (a int, err error)', 'word': 'Scan('}
+  let result = cm_parser#go#parameters(completed_item)
+  AssertEqual ['(a, b, c)'], result
+"}}}
+
