@@ -191,18 +191,19 @@ Eg: >
 
 ================================================================================
 6. Supported                                        *complete-parameter-supported*
-6.1 Supported Complete Engine
-- [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
-
-6.2 Supported Language
-- golang
-- erlang
-- c
-- c++
-- python
-- javascript
-- rust
-- typescript
+**`x` has supported**
+|            | youcompleteme | deoplete | neocomplete | completor | clang_complete |
+------------------------------------------------------------------------------------
+| c          |       x       |          |             |           |                |
+| cpp        |       x       |          |             |           |                |
+| go         |       x       |     x    |      x      |     x     |                |
+| python     |       x       |     x    |             |           |                |
+| rust       |       x       |          |             |           |                |
+| javascript |       x       |          |             |           |                |
+| typescript |       x       |          |             |           |                |
+| erlang     |       x       |          |             |           |                |
+| objc       |               |          |             |           |                |
+| c#         |               |          |             |           |                |
 
 ================================================================================
 7. Writing Extensions                              *complete-parameter-extensions*

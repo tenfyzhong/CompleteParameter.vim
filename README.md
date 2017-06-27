@@ -197,28 +197,19 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 
 # Supported
-## Supported Complete Engine
-- [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
-
-## Supported Language
-- golang
-- erlang
-- c
-- c++
-- python
-- javascript
-- rust
-- typescript
-
-# Todo
-- support language: objc
-- support language: c#
-- support engine: [completor.vim](https://github.com/maralla/completor.vim)
-- support engine: [neocomplete.vim](https://github.com/Shougo/neocomplete.vim)
-- support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)
-- support engine: [clang_complete](https://github.com/Rip-Rip/clang_complete)
-- support nvim
-
+**`x` has supported**
+|            | youcompleteme | deoplete | neocomplete | completor | clang_complete |
+|------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
+| c          |       x       |          |             |           |                |
+| cpp        |       x       |          |             |           |                |
+| go         |       x       |     x    |      x      |     x     |                |
+| python     |       x       |     x    |             |           |                |
+| rust       |       x       |          |             |           |                |
+| javascript |       x       |          |             |           |                |
+| typescript |       x       |          |             |           |                |
+| erlang     |       x       |          |             |           |                |
+| objc       |               |          |             |           |                |
+| c#         |               |          |             |           |                |
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`
