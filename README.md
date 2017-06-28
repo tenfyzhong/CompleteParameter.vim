@@ -207,7 +207,7 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 | python     |       x       |     x    |             |           |                |
 | rust       |       x       |          |             |           |                |
 | javascript |       x       |     x    |             |           |                |
-| typescript |       x       |          |             |           |                |
+| typescript |       x       |     x    |             |           |                |
 | erlang     |       x       |          |             |           |                |
 | objc       |               |          |             |           |                |
 | c#         |               |          |             |           |                |
