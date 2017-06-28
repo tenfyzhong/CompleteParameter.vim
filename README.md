@@ -205,7 +205,7 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 | **cpp**        |       x       |          |             |           |                |
 | **go**         |       x       |     x    |      x      |     x     |                |
 | **python**     |       x       |     x    |             |           |                |
-| **rust**       |       x       |          |             |           |                |
+| **rust**       |       x       |     x    |             |           |                |
 | **javascript** |       x       |     x    |             |           |                |
 | **typescript** |       x       |     x    |             |           |                |
 | **erlang**     |       x       |          |             |           |                |

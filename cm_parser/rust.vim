@@ -7,24 +7,32 @@
 " created: 2017-06-11 19:32:37
 "==============================================================
 
-" TODO support template
-function! cm_parser#rust#parameters(completed_item) "{{{
-    let menu = get(a:completed_item, 'menu', '')
-    let word = get(a:completed_item, 'word', '')
-    if empty(menu) || empty(word)
-        return []
-    endif
-
+" ycm
+"
+" deoplete
+" {'word': 'from_raw_parts', 'menu': '[Rust] pub unsafe fn from_raw_parts(ptr: *mut T', 'info': ub unsafe fn from_raw_partsptr: *mut T, length: usize, capacity: usize) -> Vec<T>', ('kind': 'Function', 'abbr': 'from_raw_parts'})'
+function! s:parse(word, param)
     " check is fn or not
-    if menu !~# '\m\<fn ' . word . '('
-        return []
-    endif
-    let param = substitute(menu, '\m.*'.word.'\(([^)]*)\).*', '\1', '')
+    let param = substitute(a:param, '\m.*'.a:word.'\(([^)]*)\).*', '\1', '')
     while param =~# '\m<.*>'
         let param = substitute(param, '\m<[^>]*>', '', 'g')
     endwhile
     let param = substitute(param, '\m:\s*[^,)]*', '', 'g')
     return [param]
+endfunction
+
+" TODO support template
+function! cm_parser#rust#parameters(completed_item) "{{{
+    let menu = get(a:completed_item, 'menu', '')
+    let word = get(a:completed_item, 'word', '')
+    let kind = get(a:completed_item, 'kind', '')
+    let info = get(a:completed_item, 'info', '')
+    if kind ==# 'f' && !empty(word) && menu =~# '(.*)' && empty(info)
+        return <SID>parse(word, menu)
+    elseif kind ==# 'Function' && !empty(word) && info =~# '(.*)'
+        return <SID>parse(word, info)
+    endif
+    return []
 endfunction "}}}
 
 function! cm_parser#rust#parameter_delim() "{{{
