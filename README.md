@@ -177,10 +177,10 @@ let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 
 ### The `g:complete_parameter_log_level` option
 This option set the log level.  
-4: only print **error** log. 
-2: print **error** and **debug** log.
-1: print **error**, **debug**, **trace**
-Default: 4
+4: only print **error** log.  
+2: print **error** and **debug** log.  
+1: print **error**, **debug**, **trace**  
+Default: 4  
 ```viml
 let g:complete_parameter_log_level = 4
 ```
@@ -199,18 +199,18 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 # Supported
 **`x` has supported**  
 
-|            | youcompleteme | deoplete | neocomplete | completor | clang_complete |
-|------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
-| c          |       x       |          |             |           |                |
-| cpp        |       x       |          |             |           |                |
-| go         |       x       |     x    |      x      |     x     |                |
-| python     |       x       |     x    |             |           |                |
-| rust       |       x       |          |             |           |                |
-| javascript |       x       |     x    |             |           |                |
-| typescript |       x       |          |             |           |                |
-| erlang     |       x       |          |             |           |                |
-| objc       |               |          |             |           |                |
-| c#         |               |          |             |           |                |
+|                | youcompleteme | deoplete | neocomplete | completor | clang_complete |
+|----------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
+| **c**          |       x       |          |             |           |                |
+| **cpp**        |       x       |          |             |           |                |
+| **go**         |       x       |     x    |      x      |     x     |                |
+| **python**     |       x       |     x    |             |           |                |
+| **rust**       |       x       |          |             |           |                |
+| **javascript** |       x       |     x    |             |           |                |
+| **typescript** |       x       |          |             |           |                |
+| **erlang**     |       x       |          |             |           |                |
+| **objc**       |               |          |             |           |                |
+| **c#**         |               |          |             |           |                |
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`
