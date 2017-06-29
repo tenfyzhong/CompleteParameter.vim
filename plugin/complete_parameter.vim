@@ -11,6 +11,7 @@ if (!has('nvim')&&version < 704) || (!has('nvim')&&version==704&&!has('patch774'
     finish
 endif
 let g:complete_parameter_version = "0.1.5"
+lockvar g:complete_parameter_version
 
 let save_cpo = &cpo
 set cpo&vim

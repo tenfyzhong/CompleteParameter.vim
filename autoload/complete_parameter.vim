@@ -51,10 +51,16 @@ function! s:init_filetype_mapping() "{{{
     endif
 endfunction "}}}
 
+function! s:default_failed_event_handler() "{{{
+    if g:complete_parameter_last_failed_insert ==# '()' 
+        call feedkeys("\<LEFT>", 'n') 
+    endif
+endfunction "}}}
+
 augroup complete_parameter_init "{{{
     autocmd!
     autocmd FileType * call <SID>init_filetype_mapping()
-    autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
+    autocmd User CompleteParameterFailed call <SID>default_failed_event_handler()
 augroup END "}}}
 
 function! complete_parameter#init() "{{{
@@ -216,7 +222,7 @@ endfunction "}}}
 
 function! s:failed_event(return_text, failed_insert) "{{{ return the text to insert and toggle event
     let g:complete_parameter_last_failed_insert = a:failed_insert
-    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
+    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>\<RIGHT>", 'n')
     return a:return_text
 endfunction "}}}
 
@@ -276,6 +282,7 @@ function! complete_parameter#complete(failed_insert) "{{{
     endif
 
     if empty(parseds) || parseds[0] == ''
+        call <SID>debug_log("parseds is empty")
         return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
@@ -284,15 +291,18 @@ function! complete_parameter#complete(failed_insert) "{{{
 
     let s:complete_parameter['complete_pos'] = [line('.'), col('.')]
     let col = s:complete_parameter['complete_pos'][1]
-    let content = getline(line('.'))
     let s:complete_parameter['success'] = 1
     
+    " if the first char of parameter was inserted, remove it from the parameter
+    let content = getline(line('.'))
     let parameter = s:complete_parameter['items'][0]
     if col > 1
-        if content[col-1] ==# parameter[0]
+        if content[col-2] ==# parameter[0]
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
+            let s:complete_parameter['complete_pos'][1] = col - 1
         endif
     endif
+
     let keys = "\<ESC>".':call complete_parameter#goto_first_param()'."\<ENTER>"
     call feedkeys(keys, 'n')
     return parameter
