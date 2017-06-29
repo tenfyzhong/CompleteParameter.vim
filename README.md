@@ -30,7 +30,7 @@ If you like this plugin, please star it.
 
 # Install
 I suggest you to use a plugin manager, such vim-plug or other.
-- [vim-plug](https://github.com/junegunn/vim-plug)
+- [vim-plug][]
 ```viml
 Plug 'tenfyzhong/CompleteParameter.vim'
 ```
@@ -197,20 +197,22 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 
 # Supported
-**`x` has supported**  
+The cell mark `x` means the completion engine has supported the language by itself.
+Of course, you must install the completion engine for the language follow its document.  
+The plugin name in the cell was support with the completion engine.   
 
-|                | youcompleteme | deoplete            | neocomplete  | completor | clang_complete |
-|----------------|---------------|---------------------|--------------|-----------|----------------|
-| **c**          | x             | [deoplete-clang][]  |              |           |                |
-| **cpp**        | x             | [deoplete-clang][]  |              |           |                |
-| **go**         | x             | [deoplete-go][]     | x            | x         |                |
-| **python**     | x             | x                   | [jedi-vim][] |           |                |
-| **rust**       | x             | [deoplete-rust][]   |              |           |                |
-| **javascript** | x             | x                   |              |           |                |
-| **typescript** | x             | [nvim-typescript][] |              |           |                |
-| **erlang**     | x             |                     |              |           |                |
-| **objc**       |               |                     |              |           |                |
-| **c#**         |               |                     |              |           |                |
+|                | [YouCompleteMe][]           | [deoplete][]        | [neocomplete][] | [completor][] | [clang_complete][] |
+|----------------|-----------------------------|---------------------|-----------------|---------------|--------------------|
+| **c**          | x                           | [deoplete-clang][]  |                 |               |                    |
+| **cpp**        | x                           | [deoplete-clang][]  |                 |               |                    |
+| **go**         | x                           | [vim-go][]          | [vim-go][]      | x             |                    |
+| **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]    |               |                    |
+| **rust**       | x                           | [deoplete-rust][]   |                 |               |                    |
+| **javascript** | x                           | [deoplete-ternjs][] |                 |               |                    |
+| **typescript** | x                           | [nvim-typescript][] |                 |               |                    |
+| **erlang**     | [vim-erlang-omnicomplete][] |                     |                 |               |                    |
+| **objc**       |                             |                     |                 |               |                    |
+| **c#**         |                             |                     |                 |               |                    |
 
 
 # FAQ
@@ -248,9 +250,17 @@ Contributions and pull requests are welcome.
 MIT License Copyright (c) 2017 tenfyzhong
 
 
+[vim-plug]: https://github.com/junegunn/vim-plug
+[YouCompleteMe]: https://github.com/Valloric/YouCompleteMe
+[deoplete]: https://github.com/Shougo/deoplete.nvim
+[neocomplete]: https://github.com/Shougo/neocomplete.vim
+[completor]: https://github.com/maralla/completor.vim
+[clang_complete]: https://github.com/Rip-Rip/clang_complete
 [deoplete-clang]: https://github.com/zchee/deoplete-clang
 [nvim-typescript]: https://github.com/mhartington/nvim-typescript
-[deoplete-go]: https://github.com/zchee/deoplete-go
 [deoplete-rust]: https://github.com/sebastianmarkow/deoplete-rust
 [jedi-vim]: https://github.com/davidhalter/jedi-vim
-
+[deoplete-ternjs]: https://github.com/carlitux/deoplete-ternjs
+[deoplete-jedi]: https://github.com/zchee/deoplete-jedi
+[vim-erlang-omnicomplete]: https://github.com/johnzeng/vim-erlang-omnicomplete
+[vim-go]: https://github.com/fatih/vim-go
