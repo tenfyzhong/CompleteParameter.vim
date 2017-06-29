@@ -199,18 +199,19 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 # Supported
 **`x` has supported**  
 
-|                | youcompleteme | deoplete | neocomplete | completor | clang_complete |
-|----------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
-| **c**          |       x       |     x    |             |           |                |
-| **cpp**        |       x       |     x    |             |           |                |
-| **go**         |       x       |     x    |      x      |     x     |                |
-| **python**     |       x       |     x    |             |           |                |
-| **rust**       |       x       |     x    |             |           |                |
-| **javascript** |       x       |     x    |             |           |                |
-| **typescript** |       x       |     x    |             |           |                |
-| **erlang**     |       x       |          |             |           |                |
-| **objc**       |               |          |             |           |                |
-| **c#**         |               |          |             |           |                |
+|                | youcompleteme | deoplete            | neocomplete  | completor | clang_complete |
+|----------------|---------------|---------------------|--------------|-----------|----------------|
+| **c**          | x             | [deoplete-clang][]  |              |           |                |
+| **cpp**        | x             | [deoplete-clang][]  |              |           |                |
+| **go**         | x             | [deoplete-go][]     | x            | x         |                |
+| **python**     | x             | x                   | [jedi-vim][] |           |                |
+| **rust**       | x             | [deoplete-rust][]   |              |           |                |
+| **javascript** | x             | x                   |              |           |                |
+| **typescript** | x             | [nvim-typescript][] |              |           |                |
+| **erlang**     | x             |                     |              |           |                |
+| **objc**       |               |                     |              |           |                |
+| **c#**         |               |                     |              |           |                |
+
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`
@@ -245,3 +246,11 @@ Contributions and pull requests are welcome.
 
 # LICENSE
 MIT License Copyright (c) 2017 tenfyzhong
+
+
+[deoplete-clang]: https://github.com/zchee/deoplete-clang
+[nvim-typescript]: https://github.com/mhartington/nvim-typescript
+[deoplete-go]: https://github.com/zchee/deoplete-go
+[deoplete-rust]: https://github.com/sebastianmarkow/deoplete-rust
+[jedi-vim]: https://github.com/davidhalter/jedi-vim
+
