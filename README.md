@@ -177,10 +177,10 @@ let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 
 ### The `g:complete_parameter_log_level` option
 This option set the log level.  
-4: only print **error** log. 
-2: print **error** and **debug** log.
-1: print **error**, **debug**, **trace**
-Default: 4
+4: only print **error** log.  
+2: print **error** and **debug** log.  
+1: print **error**, **debug**, **trace**  
+Default: 4  
 ```viml
 let g:complete_parameter_log_level = 4
 ```
@@ -197,28 +197,20 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 
 # Supported
-## Supported Complete Engine
-- [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
+**`x` has supported**  
 
-## Supported Language
-- golang
-- erlang
-- c
-- c++
-- python
-- javascript
-- rust
-- typescript
-
-# Todo
-- support language: objc
-- support language: c#
-- support engine: [completor.vim](https://github.com/maralla/completor.vim)
-- support engine: [neocomplete.vim](https://github.com/Shougo/neocomplete.vim)
-- support engine: [deoplete.nvim](https://github.com/Shougo/deoplete.nvim)
-- support engine: [clang_complete](https://github.com/Rip-Rip/clang_complete)
-- support nvim
-
+|                | youcompleteme | deoplete | neocomplete | completor | clang_complete |
+|----------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
+| **c**          |       x       |     x    |             |           |                |
+| **cpp**        |       x       |     x    |             |           |                |
+| **go**         |       x       |     x    |      x      |     x     |                |
+| **python**     |       x       |     x    |             |           |                |
+| **rust**       |       x       |     x    |             |           |                |
+| **javascript** |       x       |     x    |             |           |                |
+| **typescript** |       x       |     x    |             |           |                |
+| **erlang**     |       x       |          |             |           |                |
+| **objc**       |               |          |             |           |                |
+| **c#**         |               |          |             |           |                |
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`

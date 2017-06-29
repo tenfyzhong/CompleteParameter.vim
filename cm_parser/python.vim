@@ -7,10 +7,13 @@
 " created: 2017-06-11 18:11:12
 "==============================================================
 
+" deoplete
+" {'word': 'call_tracing(', 'menu': '', 'info': 'call_tracing(func, args) -> object^@^@Call func(*args), while tracing is enabled.  The tracing state is^@saved, and restored afterwards.  This is intended to be called from^@a debugger from a checkpoint, to recursively debug some other code.', 'kind': '', 'abbr': 'call_tracing(func, args)'}
 function! cm_parser#python#parameters(completed_item) "{{{
     let menu = get(a:completed_item, 'menu', '')
     let info = get(a:completed_item, 'info', '')
-    if menu !~# '\m^\%(function:\|def \)' || empty(info)
+    let word = get(a:completed_item, 'word', '')
+    if (menu !~# '\m^\%(function:\|def \)' && word !~# '\m^\w\+($') || empty(info)
         return []
     endif
 
