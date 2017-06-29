@@ -201,7 +201,7 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 |                | youcompleteme | deoplete | neocomplete | completor | clang_complete |
 |----------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
-| **c**          |       x       |          |             |           |                |
+| **c**          |       x       |     x    |             |           |                |
 | **cpp**        |       x       |     x    |             |           |                |
 | **go**         |       x       |     x    |      x      |     x     |                |
 | **python**     |       x       |     x    |             |           |                |
