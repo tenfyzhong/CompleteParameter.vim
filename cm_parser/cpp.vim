@@ -7,6 +7,10 @@
 " created: 2017-06-13 08:58:09
 "==============================================================
 
+" ycm
+"
+" deoplete
+" {'word': 'erase', 'menu': '[clang] ', 'info': 'erase(const_iterator __position)', 'kind': 'f iterator', 'abbr': 'erase(const_iterator __position)'}
 function! s:parse_function(word, info) "{{{
     let result = []
     let decls = split(a:info, "\n")
@@ -26,6 +30,10 @@ function! s:parse_function(word, info) "{{{
     return result
 endfunction "}}}
 
+" ycm
+"
+" deoplete 
+" {'word': 'vector', 'menu': '[clang] ', 'info': 'vector<class _Tp>', 'kind':  'p ', 'abbr' : 'vector<class _Tp>'}
 function! s:parse_class(word, info) "{{{
     let result = []
     let decls = split(a:info, "\n")
@@ -40,16 +48,19 @@ function! s:parse_class(word, info) "{{{
     return result
 endfunction "}}}
 
+
 function! cm_parser#cpp#parameters(completed_item) "{{{
     let kind = get(a:completed_item, 'kind', '')
     let word = get(a:completed_item, 'word', '')
     let info = get(a:completed_item, 'info', '')
-    if (kind !=# 'f' && kind != 'c') || empty(word) || empty(info)
-        return []
-    endif
+    let l:menu = get(a:completed_item, 'menu', '')
     if kind ==# 'f'
         return <SID>parse_function(word, info)
     elseif kind ==# 'c'
+        return <SID>parse_class(word, info)
+    elseif kind =~# '\m^f\s.\+' && l:menu ==# '[clang] '
+        return <SID>parse_function(word, info)
+    elseif kind ==# 'p ' && !empty(word) && info =~# '\m^'.word.'<.*>'
         return <SID>parse_class(word, info)
     else
         return []
