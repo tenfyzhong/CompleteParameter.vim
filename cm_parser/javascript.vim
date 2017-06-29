@@ -8,7 +8,7 @@
 "==============================================================
 
 " ycm
-function! s:parser0(menu)
+function! s:parser0(menu) "{{{
     let param = substitute(a:menu, '\m^fn\((.*)\)\%(\s*->.*\)\?', '\1', '')
     " remove fn
     while param =~# '\<fn('
@@ -16,10 +16,10 @@ function! s:parser0(menu)
     endwhile
     let param = substitute(param, '\m?\?:\s*[^,)]*', '', 'g')
     return [param]
-endfunction
+endfunction "}}}
 
 " deoplete
-function! s:check_parentheses_pairs(line)
+function! s:check_parentheses_pairs(line) "{{{
     let left = 0
     let right = 0
     let i = 0
@@ -32,9 +32,9 @@ function! s:check_parentheses_pairs(line)
         let i += 1
     endwhile
     return left == right
-endfunction
+endfunction "}}}
 
-function! s:parser1(info)
+function! s:parser1(info) "{{{
     let info_lines = split(a:info, '\n')
     let func = info_lines[0]
     for line in info_lines[1:]
@@ -50,7 +50,7 @@ function! s:parser1(info)
     endwhile
     let param = substitute(param, '\m?\?:\s*[^,)]*', '', 'g')
     return [param]
-endfunction
+endfunction "}}}
 
 function! cm_parser#javascript#parameters(completed_item) "{{{
     let menu = get(a:completed_item, 'menu', '')

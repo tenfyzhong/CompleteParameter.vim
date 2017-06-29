@@ -11,7 +11,7 @@
 "
 " deoplete
 " {'word': 'from_raw_parts', 'menu': '[Rust] pub unsafe fn from_raw_parts(ptr: *mut T', 'info': ub unsafe fn from_raw_partsptr: *mut T, length: usize, capacity: usize) -> Vec<T>', ('kind': 'Function', 'abbr': 'from_raw_parts'})'
-function! s:parse(word, param)
+function! s:parse(word, param) "{{{
     " check is fn or not
     let param = substitute(a:param, '\m.*'.a:word.'\(([^)]*)\).*', '\1', '')
     while param =~# '\m<.*>'
@@ -19,7 +19,7 @@ function! s:parse(word, param)
     endwhile
     let param = substitute(param, '\m:\s*[^,)]*', '', 'g')
     return [param]
-endfunction
+endfunction "}}}
 
 " TODO support template
 function! cm_parser#rust#parameters(completed_item) "{{{

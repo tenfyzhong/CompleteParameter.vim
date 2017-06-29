@@ -7,7 +7,7 @@
 " created: 2017-06-17 08:56:21
 "==============================================================
 
-function! s:parser0(word, abbr)
+function! s:parser0(word, abbr) "{{{
     let param = a:abbr
 
     " remove ()
@@ -26,11 +26,11 @@ function! s:parser0(word, abbr)
     let param = substitute(param, ':[^,)]*', '', 'g')
     let param = '('.param.')'
     return [param]
-endfunction
+endfunction "}}}
 
 " deoplete
 " {'word': 'concat', 'menu': 'TS Array<number>.concat(...i..(+1 overload)', 'info': 'Array<number>.concat(...items: number[][]): number[] (+1 overload)^@Combines two or more arrays.', 'kind': 'M', 'abbr': 'concat'}
-function! s:parser1(word, info)
+function! s:parser1(word, info) "{{{
     let param = split(a:info, '\n')[0]
     let pattern = printf('\m^.*%s\%%(<[^()<>]>\)\?(\(.*\)', a:word)
     let param = substitute(param, pattern, '\1', '')
@@ -40,7 +40,7 @@ function! s:parser1(word, info)
     let param = substitute(param, ':[^,)]*', '', 'g')
     let param = '('.param.')'
     return [param]
-endfunction
+endfunction "}}}
 
 function! cm_parser#typescript#parameters(completed_item) "{{{
     let kind = get(a:completed_item, 'kind', '')
