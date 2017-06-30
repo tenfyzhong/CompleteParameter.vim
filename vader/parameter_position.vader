@@ -352,9 +352,52 @@ Execute (hello(`a"'a`, "(\"", "ccc", d), 24):
   let result = complete_parameter#parameter_position('hello(`a"''a`, "(\"", "ccc", d)', 24, ',', '(', ')', 1)
   AssertEqual [29, 30], result
 
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to hello):
+  let i = 12
+  while i <= 19
+      let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', i, ',', '(', ')', 1)
+      AssertEqual [21, 28], result
+      let i += 1
+  endwhile
+
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to world):
+  let i = 21
+  while i <= 28
+      let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', i, ',', '(', ')', 1)
+      AssertEqual [30, 37], result
+      let i += 1
+  endwhile
+
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to end):
+  let i = 30
+  while i <= 36
+      let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', i, ',', '(', ')', 1)
+      AssertEqual [37, 37], result
+      let i += 1
+  endwhile
+
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to world, -1):
+  let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', 37, ',', ')', '(', -1)
+  AssertEqual [30, 37], result
+
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to hello, -1):
+  let i = 30
+  while i < 37
+      let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', i, ',', ')', '(', -1)
+      AssertEqual [21, 28], result
+      let i += 1
+  endwhile
+
+Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to "%s %s", -1):
+  let i = 21
+  while i < 28
+      let result = complete_parameter#parameter_position('fmt.Fscanf("%s %s", "hello", "world")', i, ',', ')', '(', -1)
+      AssertEqual [12, 19], result
+      let i += 1
+  endwhile
 "}}}
 
-" param has <>
+" {{{param has <>
 Execute (hello<a, b>, 1):
   let result = complete_parameter#parameter_position('hello<a, b>', 1, ',', "(<", ")>", 1)
   AssertEqual [7, 8], result
@@ -374,3 +417,4 @@ Execute (hello<a, b>(c, d), 10):
 Execute (hello<a, b>(c, d, func<e, f>(g, h, i))), 16):
   let result = complete_parameter#parameter_position('hello<a, b>(c, d, func<e, f>(g, h, i)))', 16, ',', "(<", ")>", 1)
   AssertEqual [19, 38], result
+"}}}
