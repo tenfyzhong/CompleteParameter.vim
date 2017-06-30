@@ -203,7 +203,7 @@ The plugin name in the cell was support with the completion engine.
 
 |                | [YouCompleteMe][]           | [deoplete][]        | [neocomplete][]    | [completor][] | [clang_complete][] |
 |----------------|-----------------------------|---------------------|--------------------|---------------|--------------------|
-| **c**          | x                           | [deoplete-clang][]  |                    |               |                    |
+| **c**          | x                           | [deoplete-clang][]  | [clang_complete][] |               | x                  |
 | **cpp**        | x                           | [deoplete-clang][]  | [clang_complete][] |               | x                  |
 | **go**         | x                           | [vim-go][]          | [vim-go][]         | x             |                    |
 | **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]       |               |                    |
