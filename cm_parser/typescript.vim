@@ -42,15 +42,21 @@ function! s:parser1(word, info) "{{{
     return [param]
 endfunction "}}}
 
+" neocomplete
+" {'word': 'concat', 'menu': '(method) Array<number>.concat(...items: number[][]): number[] (+1 overload)', 'info': '', 'kind': '', 'abbr': ''}
+
 function! cm_parser#typescript#parameters(completed_item) "{{{
     let kind = get(a:completed_item, 'kind', '')
     let l:abbr = get(a:completed_item, 'abbr', '')
     let word = get(a:completed_item, 'word', '')
     let info = get(a:completed_item, 'info', '')
+    let l:menu = get(a:completed_item, 'menu', '')
     if kind ==# 'm' &&  l:abbr =~# '\m^'.word.'\s*(method)'
         return <SID>parser0(word, l:abbr)
     elseif kind  ==# 'M' && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
         return <SID>parser1(word, info)
+    elseif empty(kind) && l:menu =~# '\m^(method).*'.word
+        return <SID>parser1(word, l:menu)
     endif
     return []
 endfunction "}}}

@@ -76,3 +76,35 @@ Execute (fun( const struct tm *restrict, char *restrict  )):
   let result = cm_parser#c#parameters(completed_item)
   AssertEqual ['(*restrict, *restrict)'], result
 "}}}
+
+"{{{ clang_complete
+Execute (fun()):
+  let completed_item = {'kind': 'f', 'menu': 'void fun()', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (fun(int)):
+  let completed_item = {'kind': 'f', 'menu': 'void fun(int)', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(int)'], result
+
+Execute (fun(struct tm *const)):
+  let completed_item = {'kind': 'f', 'menu': 'void fun(struct tm *const)', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*const)'], result
+
+Execute (fun(const char *)):
+  let completed_item = {'kind': 'f', 'menu': 'void fun(const char *)', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*char)'], result
+
+Execute (fun(const char **)):
+  let completed_item = {'kind': 'f', 'menu': 'void fun(const char **)', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(**char)'], result
+
+Execute (fun( const struct tm *restrict, char *restrict  )):
+  let completed_item = {'kind': 'f', 'menu': 'void fun( const struct tm *restrict, char *restrict  )', 'word': 'fun', 'abbr': 'fun'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(*restrict, *restrict)'], result
+"}}}
