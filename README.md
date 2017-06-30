@@ -207,13 +207,18 @@ The plugin name in the cell was support with the completion engine.
 | **cpp**        | x                           | [deoplete-clang][]  | [clang_complete][] |               | x                  |
 | **go**         | x                           | [vim-go][]          | [vim-go][]         | x             |                    |
 | **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]       |               |                    |
-| **rust**       | x                           | [deoplete-rust][]   |                    |               |                    |
+| **rust**       | x                           | [deoplete-rust][]   | [vim-racer][]      |               |                    |
 | **javascript** | x                           | [deoplete-ternjs][] |                    |               |                    |
 | **typescript** | x                           | [nvim-typescript][] |                    |               |                    |
 | **erlang**     | [vim-erlang-omnicomplete][] |                     |                    |               |                    |
 | **objc**       |                             |                     |                    |               |                    |
 | **c#**         |                             |                     |                    |               |                    |
 
+## Setting for completion plugins
+### `vim-racer`
+```viml
+let g:racer_experimental_completer = 1
+```
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`
@@ -264,3 +269,4 @@ MIT License Copyright (c) 2017 tenfyzhong
 [deoplete-jedi]: https://github.com/zchee/deoplete-jedi
 [vim-erlang-omnicomplete]: https://github.com/johnzeng/vim-erlang-omnicomplete
 [vim-go]: https://github.com/fatih/vim-go
+[vim-racer]: https://github.com/racer-rust/vim-racer
