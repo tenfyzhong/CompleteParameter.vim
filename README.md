@@ -201,18 +201,18 @@ The cell mark `x` means the completion engine has supported the language by itse
 Of course, you must install the completion engine for the language follow its document.  
 The plugin name in the cell was support with the completion engine.   
 
-|                | [YouCompleteMe][]           | [deoplete][]        | [neocomplete][] | [completor][] | [clang_complete][] |
-|----------------|-----------------------------|---------------------|-----------------|---------------|--------------------|
-| **c**          | x                           | [deoplete-clang][]  |                 |               |                    |
-| **cpp**        | x                           | [deoplete-clang][]  |                 |               |                    |
-| **go**         | x                           | [vim-go][]          | [vim-go][]      | x             |                    |
-| **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]    |               |                    |
-| **rust**       | x                           | [deoplete-rust][]   |                 |               |                    |
-| **javascript** | x                           | [deoplete-ternjs][] |                 |               |                    |
-| **typescript** | x                           | [nvim-typescript][] |                 |               |                    |
-| **erlang**     | [vim-erlang-omnicomplete][] |                     |                 |               |                    |
-| **objc**       |                             |                     |                 |               |                    |
-| **c#**         |                             |                     |                 |               |                    |
+|                | [YouCompleteMe][]           | [deoplete][]        | [neocomplete][]    | [completor][] | [clang_complete][] |
+|----------------|-----------------------------|---------------------|--------------------|---------------|--------------------|
+| **c**          | x                           | [deoplete-clang][]  |                    |               |                    |
+| **cpp**        | x                           | [deoplete-clang][]  | [clang_complete][] |               | x                  |
+| **go**         | x                           | [vim-go][]          | [vim-go][]         | x             |                    |
+| **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]       |               |                    |
+| **rust**       | x                           | [deoplete-rust][]   |                    |               |                    |
+| **javascript** | x                           | [deoplete-ternjs][] |                    |               |                    |
+| **typescript** | x                           | [nvim-typescript][] |                    |               |                    |
+| **erlang**     | [vim-erlang-omnicomplete][] |                     |                    |               |                    |
+| **objc**       |                             |                     |                    |               |                    |
+| **c#**         |                             |                     |                    |               |                    |
 
 
 # FAQ
