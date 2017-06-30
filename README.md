@@ -229,8 +229,8 @@ let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
 ```
 
 ### `tsuquyomi`
-let g:tsuquyomi_completion_detail = 1
 ```viml
+let g:tsuquyomi_completion_detail = 1
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
