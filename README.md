@@ -209,7 +209,7 @@ The plugin name in the cell was support with the completion engine.
 | **python**     | x                           | [deoplete-jedi][]   | [jedi-vim][]       |               |                    |
 | **rust**       | x                           | [deoplete-rust][]   | [vim-racer][]      |               |                    |
 | **javascript** | x                           | [deoplete-ternjs][] | [tern_for_vim][]   |               |                    |
-| **typescript** | x                           | [nvim-typescript][] |                    |               |                    |
+| **typescript** | x                           | [nvim-typescript][] | [tsuquyomi][]      |               |                    |
 | **erlang**     | [vim-erlang-omnicomplete][] |                     |                    |               |                    |
 | **objc**       |                             |                     |                    |               |                    |
 | **c#**         |                             |                     |                    |               |                    |
@@ -226,6 +226,15 @@ if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
+```
+
+### `tsuquyomi`
+let g:tsuquyomi_completion_detail = 1
+```viml
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.typescript = '[^. *\t]\.\w*\|\h\w*::'
 ```
 
 # FAQ
@@ -279,4 +288,4 @@ MIT License Copyright (c) 2017 tenfyzhong
 [vim-go]: https://github.com/fatih/vim-go
 [vim-racer]: https://github.com/racer-rust/vim-racer
 [tern_for_vim]: https://github.com/ternjs/tern_for_vim
-
+[tsuquyomi]: https://github.com/Quramy/tsuquyomi
