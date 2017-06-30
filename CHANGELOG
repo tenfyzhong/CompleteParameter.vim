@@ -1,3 +1,7 @@
+0.2.0: 2017-06-30
+Support neocomplete. 
+Support clang_complete. 
+
 0.1.6: 2017-06-29
 Support deoplete.nvim
 

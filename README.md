@@ -199,7 +199,7 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 # Supported
 The cell mark `x` means the completion engine has supported the language by itself.
 Of course, you must install the completion engine for the language follow its document.  
-The plugin name in the cell was support with the completion engine.   
+The plugin in the cell was supported with the completion engine.   
 
 |                | [YouCompleteMe][]           | [deoplete][]                | [neocomplete][]             | [completor][] | [clang_complete][] |
 |----------------|-----------------------------|-----------------------------|-----------------------------|---------------|--------------------|
