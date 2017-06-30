@@ -30,7 +30,7 @@ If you like this plugin, please star it.
 
 # Install
 I suggest you to use a plugin manager, such vim-plug or other.
-- [vim-plug](https://github.com/junegunn/vim-plug)
+- [vim-plug][]
 ```viml
 Plug 'tenfyzhong/CompleteParameter.vim'
 ```
@@ -197,20 +197,45 @@ autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert 
 
 
 # Supported
-**`x` has supported**  
+The cell mark `x` means the completion engine has supported the language by itself.
+Of course, you must install the completion engine for the language follow its document.  
+The plugin in the cell was supported with the completion engine.   
 
-|                | youcompleteme | deoplete | neocomplete | completor | clang_complete |
-|----------------|:-------------:|:--------:|:-----------:|:---------:|:--------------:|
-| **c**          |       x       |     x    |             |           |                |
-| **cpp**        |       x       |     x    |             |           |                |
-| **go**         |       x       |     x    |      x      |     x     |                |
-| **python**     |       x       |     x    |             |           |                |
-| **rust**       |       x       |     x    |             |           |                |
-| **javascript** |       x       |     x    |             |           |                |
-| **typescript** |       x       |     x    |             |           |                |
-| **erlang**     |       x       |          |             |           |                |
-| **objc**       |               |          |             |           |                |
-| **c#**         |               |          |             |           |                |
+|                | [YouCompleteMe][]           | [deoplete][]                | [neocomplete][]             | [completor][] | [clang_complete][] |
+|----------------|-----------------------------|-----------------------------|-----------------------------|---------------|--------------------|
+| **c**          | x                           | [deoplete-clang][]          | [clang_complete][]          |               | x                  |
+| **cpp**        | x                           | [deoplete-clang][]          | [clang_complete][]          |               | x                  |
+| **go**         | x                           | [vim-go][]                  | [vim-go][]                  | x             |                    |
+| **python**     | x                           | [deoplete-jedi][]           | [jedi-vim][]                |               |                    |
+| **rust**       | x                           | [deoplete-rust][]           | [vim-racer][]               |               |                    |
+| **javascript** | x                           | [deoplete-ternjs][]         | [tern_for_vim][]            |               |                    |
+| **typescript** | x                           | [nvim-typescript][]         | [tsuquyomi][]               |               |                    |
+| **erlang**     | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] |               |                    |
+| **objc**       |                             |                             |                             |               |                    |
+| **c#**         |                             |                             |                             |               |                    |
+
+## Setting for completion plugins
+### `vim-racer`
+```viml
+let g:racer_experimental_completer = 1
+```
+
+### `tern_for_vim`
+```viml
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
+```
+
+### `tsuquyomi`
+let g:tsuquyomi_completion_detail = 1
+```viml
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.typescript = '[^. *\t]\.\w*\|\h\w*::'
+```
 
 # FAQ
 ### Can't work with plugin auto-pairs use the default mapping `(`
@@ -245,3 +270,22 @@ Contributions and pull requests are welcome.
 
 # LICENSE
 MIT License Copyright (c) 2017 tenfyzhong
+
+
+[vim-plug]: https://github.com/junegunn/vim-plug
+[YouCompleteMe]: https://github.com/Valloric/YouCompleteMe
+[deoplete]: https://github.com/Shougo/deoplete.nvim
+[neocomplete]: https://github.com/Shougo/neocomplete.vim
+[completor]: https://github.com/maralla/completor.vim
+[clang_complete]: https://github.com/Rip-Rip/clang_complete
+[deoplete-clang]: https://github.com/zchee/deoplete-clang
+[nvim-typescript]: https://github.com/mhartington/nvim-typescript
+[deoplete-rust]: https://github.com/sebastianmarkow/deoplete-rust
+[jedi-vim]: https://github.com/davidhalter/jedi-vim
+[deoplete-ternjs]: https://github.com/carlitux/deoplete-ternjs
+[deoplete-jedi]: https://github.com/zchee/deoplete-jedi
+[vim-erlang-omnicomplete]: https://github.com/johnzeng/vim-erlang-omnicomplete
+[vim-go]: https://github.com/fatih/vim-go
+[vim-racer]: https://github.com/racer-rust/vim-racer
+[tern_for_vim]: https://github.com/ternjs/tern_for_vim
+[tsuquyomi]: https://github.com/Quramy/tsuquyomi
