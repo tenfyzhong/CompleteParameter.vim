@@ -201,18 +201,16 @@ The cell mark `x` means the completion engine has supported the language by itse
 Of course, you must install the completion engine for the language follow its document.  
 The plugin in the cell was supported with the completion engine.   
 
-|                | [YouCompleteMe][]           | [deoplete][]                | [neocomplete][]             | [completor][] | [clang_complete][] |
-|----------------|-----------------------------|-----------------------------|-----------------------------|---------------|--------------------|
-| **c**          | x                           | [deoplete-clang][]          | [clang_complete][]          |               | x                  |
-| **cpp**        | x                           | [deoplete-clang][]          | [clang_complete][]          |               | x                  |
-| **go**         | x                           | [vim-go][]                  | [vim-go][]                  | x             |                    |
-| **python**     | x                           | [deoplete-jedi][]           | [jedi-vim][]                |               |                    |
-| **rust**       | x                           | [deoplete-rust][]           | [vim-racer][]               |               |                    |
-| **javascript** | x                           | [deoplete-ternjs][]         | [tern_for_vim][]            |               |                    |
-| **typescript** | x                           | [nvim-typescript][]         | [tsuquyomi][]               |               |                    |
-| **erlang**     | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] |               |                    |
-| **objc**       |                             |                             |                             |               |                    |
-| **c#**         |                             |                             |                             |               |                    |
+|                | [YouCompleteMe][]           | [deoplete][]                | [neocomplete][]             | [clang_complete][] |
+|----------------|-----------------------------|-----------------------------|-----------------------------|--------------------|
+| **c**          | x                           | [deoplete-clang][]          | [clang_complete][]          | x                  |
+| **cpp**        | x                           | [deoplete-clang][]          | [clang_complete][]          | x                  |
+| **go**         | x                           | [vim-go][]                  | [vim-go][]                  |                    |
+| **python**     | x                           | [deoplete-jedi][]           | [jedi-vim][]                |                    |
+| **rust**       | x                           | [deoplete-rust][]           | [vim-racer][]               |                    |
+| **javascript** | x                           | [deoplete-ternjs][]         | [tern_for_vim][]            |                    |
+| **typescript** | x                           | [nvim-typescript][]         | [tsuquyomi][]               |                    |
+| **erlang**     | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] |                    |
 
 ## Setting for completion plugins
 ### `vim-racer`
@@ -276,7 +274,6 @@ MIT License Copyright (c) 2017 tenfyzhong
 [YouCompleteMe]: https://github.com/Valloric/YouCompleteMe
 [deoplete]: https://github.com/Shougo/deoplete.nvim
 [neocomplete]: https://github.com/Shougo/neocomplete.vim
-[completor]: https://github.com/maralla/completor.vim
 [clang_complete]: https://github.com/Rip-Rip/clang_complete
 [deoplete-clang]: https://github.com/zchee/deoplete-clang
 [nvim-typescript]: https://github.com/mhartington/nvim-typescript
