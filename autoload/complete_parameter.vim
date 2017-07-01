@@ -537,7 +537,11 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     let end_pos = 0
 
     " check has previous quote
-    let quote_test_content = a:content[:pos-1]
+    let quote_test_content_pos = pos
+    if a:content[quote_test_content_pos] =~# '\m["''`]'
+        let quote_test_content_pos -= step
+    endif
+    let quote_test_content = a:content[:quote_test_content_pos]
     let quote_test_content = substitute(quote_test_content, '\m\\.', '', 'g')
     let quote_test_content = substitute(quote_test_content, '\m[^"''`]', '', 'g')
     let quotes = split(quote_test_content, '\zs')
