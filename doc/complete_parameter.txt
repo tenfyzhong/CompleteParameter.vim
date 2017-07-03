@@ -176,6 +176,18 @@ This option set the log level.
 Default: 4 >
   let g:complete_parameter_log_level = 4
 <
+                                              *g:complete_parameter_jump_in_scope*
+* g:complete_parameter_jump_in_scope
+This option set the jump action only can work in the parameter scope.  
+For example, if the value of this option is 1, >
+  fmt.Printf("%s\n", "hello") 
+<
+The `<m-n>` and `<m-p>` can work only the position of the cursor between in 
+the `(` and `)`(include them), if in the insert mode, the right side of `)` included.
+If the value of this is 0, then the `<m-n>` and `<m-p>` can work on every position.   
+Default: 1  >
+  let g:complete_parameter_jump_in_scope = 1
+<
 
 ================================================================================
 5. Event                                                *complete-parameter-event*

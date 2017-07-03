@@ -1,3 +1,9 @@
+0.2.2: 
+Add g:complete_parameter_jump_in_scope option. Only jump between in the scope.
+
+0.2.1: 2017-06-30
+Fix bug. 
+
 0.2.0: 2017-06-30
 Support neocomplete. 
 Support clang_complete. 

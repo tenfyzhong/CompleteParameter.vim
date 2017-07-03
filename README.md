@@ -179,10 +179,24 @@ let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 This option set the log level.  
 4: only print **error** log.  
 2: print **error** and **debug** log.  
-1: print **error**, **debug**, **trace**  
+1: print **error**, **debug**, **trace** log.  
 Default: 4  
 ```viml
 let g:complete_parameter_log_level = 4
+```
+
+### The `g:complete_parameter_jump_in_scope` option
+This option set the jump action only can work in the parameter scope.  
+For example, if the value of this option is 1,  
+```go
+fmt.Printf("%s\n", "hello") 
+```
+The `<m-n>` and `<m-p>` can work only the position of the cursor between in 
+the `(` and `)`(include them), if in the insert mode, the right side of `)` included.
+If the value of this is 0, then the `<m-n>` and `<m-p>` can work on every position.   
+Default: 1
+```viml
+let g:complete_parameter_jump_in_scope = 1
 ```
 
 

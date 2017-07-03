@@ -1,4 +1,7 @@
 "{{{ forward
+Before:
+  let g:complete_parameter_jump_in_scope = 0
+
 Given go(no jump):
   fmt.Printf
 
