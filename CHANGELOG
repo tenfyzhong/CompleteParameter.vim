@@ -1,5 +1,5 @@
 0.2.2: 
-Add g:complete_parameter_jump_in_scope option. Only jump between in the scope.
+Only jump between in the scope.
 
 0.2.1: 2017-06-30
 Fix bug. 
