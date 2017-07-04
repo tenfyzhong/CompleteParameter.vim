@@ -77,4 +77,20 @@ Execute (fn hello(s: Cow<'a, [T]>) -> Vec<T>):
   let completed_item = {'word': 'hello(', 'info': 'fn hello(s: Cow<''a, [T]>) -> Vec<T>', 'kind': 'f', 'abbr': 'hello'}
   let result = cm_parser#rust#parameters(completed_item)
   AssertEqual ['(s)'], result
+
+Execute (gen_range):
+  let completed_item = {'word': 'gen_range', 'menu': 'fn gen_range<T: PartialOrd + SampleRange>(&mut self, low: T, high: T) -> T where Self: Sized', 'info': '', 'kind': 'f', 'abbr': ''}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['(low, high)'], result
+
+Execute (has self):
+  let completed_item = {'word': 'gen_range', 'menu': 'fn gen_range(mut self, low: T, high: T) -> T where Self: Sized', 'info': '', 'kind': 'f', 'abbr': ''}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['(low, high)'], result
+
+Execute (trim):
+  let completed_item = {'word': 'trim', 'menu': 'pub fn trim(&self) -> &str', 'info': '', 'kind': 'f', 'abbr': ''}
+  let result = cm_parser#rust#parameters(completed_item)
+  AssertEqual ['()'], result
+
 "}}}
