@@ -222,7 +222,7 @@ endfunction "}}}
 
 function! s:failed_event(return_text, failed_insert) "{{{ return the text to insert and toggle event
     let g:complete_parameter_last_failed_insert = a:failed_insert
-    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>\<RIGHT>", 'n')
+    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
     return a:return_text
 endfunction "}}}
 
