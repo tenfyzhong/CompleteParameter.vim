@@ -105,7 +105,6 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
     let s:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
 
- 
     call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
     call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', s:complete_parameter_goto_next_mode)
     call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', s:complete_parameter_goto_previous_mode)
@@ -222,7 +221,7 @@ endfunction "}}}
 
 function! s:failed_event(return_text, failed_insert) "{{{ return the text to insert and toggle event
     let g:complete_parameter_last_failed_insert = a:failed_insert
-    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>\<RIGHT>", 'n')
+    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
     return a:return_text
 endfunction "}}}
 
@@ -241,6 +240,16 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
         return ''
     endif
 endfunction "}}}
+
+function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end)
+    if len(a:parameter) < 2
+        return 0
+    endif
+    " echom printf('mb, begin: %s, p[0]: %s, result: %d', a:parameter_begin, a:parameter[0], match(a:parameter_begin, a:parameter[0]) != -1)
+    " echom printf('me, end: %s, p[-1]: %s, result: %d', a:parameter_end, a:parameter[-1], match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1)
+    return match(a:parameter_begin, a:parameter[0]) != -1 &&
+                \match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1
+endfunction
 
 function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
@@ -281,7 +290,10 @@ function! complete_parameter#complete(failed_insert) "{{{
         return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
-    if empty(parseds) || parseds[0] == ''
+    let parameter_begin = ftfunc.parameter_begin()
+    let parameter_end = ftfunc.parameter_end()
+
+    if empty(parseds) || len(parseds[0]) < 2 || !complete_parameter#check_parameter_return(parseds[0], parameter_begin, parameter_end)
         call <SID>debug_log("parseds is empty")
         return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
@@ -491,6 +503,18 @@ function! s:stack.str() dict "{{{
     return str
 endfunction "}}}
 
+function! s:in_scope(content, pos, border, step, end)
+    " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
+    let i = a:pos
+    while i != a:end
+        if a:content[i] =~# '\m['.a:border.']'
+            return 1
+        endif
+        let i += a:step
+    endwhile
+    return 0
+endfunction
+
 " content: string, the content to parse
 " current_col: int, current col
 " delim:  string, split the paramter letter
@@ -514,6 +538,13 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     if current_pos >= content_len
         call <SID>error_log('current_pos is large than content_len')
         return [0, 0]
+    endif
+
+    " check current pos is in the scope or not
+    let score_end = step > 0 ? -1 : content_len
+    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, score_end)
+        call <SID>trace_log("no in scope")
+        retur [0, 0]
     endif
 
     let stack = <SID>new_stack()

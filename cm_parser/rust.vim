@@ -8,6 +8,8 @@
 "==============================================================
 
 " ycm
+" {'word': 'gen_range', 'menu': 'fn gen_range<T: PartialOrd + SampleRange>(&mut self, low: T, high: T) -> T where Self: Sized', 'info': '', 'kind': 'f', 'abbr': ''}
+" {'word': 'trim', 'menu': 'pub fn trim(&self) -> &str', 'info': '', 'kind': 'f', 'abbr': ''}
 "
 " deoplete
 " {'word': 'from_raw_parts', 'menu': '[Rust] pub unsafe fn from_raw_parts(ptr: *mut T', 'info': 'pub unsafe fn from_raw_parts(ptr: *mut T, length: usize, capacity: usize) -> Vec<T>', 'kind': 'Function', 'abbr': 'from_raw_parts'})'
@@ -17,11 +19,13 @@
 '
 function! s:parse(word, param) "{{{
     " check is fn or not
-    let param = substitute(a:param, '\m.*'.a:word.'\(([^)]*)\).*', '\1', '')
+    let param = substitute(a:param, '\m.*'.a:word.'\%(<.*>\)\?\(([^)]*)\).*', '\1', '')
     while param =~# '\m<.*>'
         let param = substitute(param, '\m<[^>]*>', '', 'g')
     endwhile
     let param = substitute(param, '\m:\s*[^,)]*', '', 'g')
+    let param = substitute(param, '\m(&\?\%(\s*mut\s\+\)\?self\s*\([,)]\)', '(\1', '')
+    let param = substitute(param, '\m(\s*,\s*', '(', '')
     return [param]
 endfunction "}}}
 

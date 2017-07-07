@@ -19,7 +19,7 @@ Do:
 Then:
   AssertEqual 'n', mode()
   let col = col('.')
-  AssertEqual 12, col
+  AssertEqual 5, col
 
 Given go(fmt.Printf(format, a), 10, goto format):
   fmt.Printf(format, a)
@@ -28,11 +28,9 @@ Do:
   1gg10|\<m-n>
 
 Then:
-  AssertEqual 's', mode()
-  let start = col('v')
-  AssertEqual 12, start
-  let end = col('.')
-  AssertEqual 17, end
+  AssertEqual 'n', mode()
+  let start = col('.')
+  AssertEqual 10, start
 
 Given go(fmt.Printf(format, a), 11, goto format):
   fmt.Printf(format, a)

@@ -1,3 +1,10 @@
+0.2.2: 
+Only jump between in the scope.
+Check the value of the parser returned. 
+
+0.2.1: 2017-06-30
+Fix bug. 
+
 0.2.0: 2017-06-30
 Support neocomplete. 
 Support clang_complete. 

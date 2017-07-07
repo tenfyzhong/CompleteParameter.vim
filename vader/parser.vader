@@ -10,3 +10,45 @@ Execute:
           Assert 0
       endtry
   endfor
+
+Execute (check parameter return,(),(,)):
+  let parameter = '()'
+  let begin = '('
+  let end = ')'
+  Assert complete_parameter#check_parameter_return(parameter, begin, end)
+
+Execute (check parameter return,(a),(,)):
+  let parameter = '(a)'
+  let begin = '('
+  let end = ')'
+
+Execute (check parameter return,(a),(<,)>):
+  Assert complete_parameter#check_parameter_return(parameter, begin, end)
+  let parameter = '(a)'
+  let begin = '(<'
+  let end = ')>'
+  Assert complete_parameter#check_parameter_return(parameter, begin, end)
+
+Execute (check parameter return,,(,)):
+  let parameter = ''
+  let begin = '('
+  let end = ')'
+  Assert !complete_parameter#check_parameter_return(parameter, begin, end)
+
+Execute (check parameter return,(,(,)):
+  let parameter = '('
+  let begin = '('
+  let end = ')'
+  Assert !complete_parameter#check_parameter_return(parameter, begin, end)
+
+Execute (check parameter return,(a,(,)):
+  let parameter = '(a'
+  let begin = '('
+  let end = ')'
+  Assert !complete_parameter#check_parameter_return(parameter, begin, end)
+
+Execute (check parameter return,a),(,)):
+  let parameter = '(a'
+  let begin = '('
+  let end = ')'
+  Assert !complete_parameter#check_parameter_return(parameter, begin, end)

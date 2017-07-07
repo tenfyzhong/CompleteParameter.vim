@@ -1,5 +1,6 @@
 Before:
   let g:complete_parameter_log_level = 5
+  call complete_parameter#init()
 
 " {{{ parameter checker
 Execute (empty content):
@@ -44,7 +45,7 @@ Execute (has no paramameter backword):
 " zero parameter {{{
 Execute (hello(), 1):
   let result = complete_parameter#parameter_position('hello()', 1, ',', '(', ')', 1)
-  AssertEqual [7, 7], result
+  AssertEqual [0, 0], result
 
 Execute (hello(), 1, -1):
   let result = complete_parameter#parameter_position('hello()', 5, ',', ')', '(', -1)
@@ -68,11 +69,11 @@ Execute (hello(), 7, -1):
 
 Execute (hello( ), 5):
   let result = complete_parameter#parameter_position('hello( )', 5, ',', '(', ')', 1)
-  AssertEqual [8, 8], result
+  AssertEqual [0, 0], result
 
 Execute (hello() , 8, -1):
   let result = complete_parameter#parameter_position('hello() ', 8, ',', ')', '(', -1)
-  AssertEqual [6, 6], result
+  AssertEqual [0, 0], result
 
 Execute (hello( ), 6):
   let result = complete_parameter#parameter_position('hello( )', 6, ',', '(', ')', 1)
@@ -90,7 +91,7 @@ Execute (hello( ), 8):
 " one parameter {{{
 Execute (hello(a), 5):
   let result = complete_parameter#parameter_position('hello(a)', 5, ',', '(', ')', 1)
-  AssertEqual [7, 8], result
+  AssertEqual [0, 0], result
   
 Execute (hello(a), 8, -1):
   let result = complete_parameter#parameter_position('hello(a)', 8, ',', ')', '(', -1)
@@ -102,7 +103,7 @@ Execute (hello(a), 6):
 
 Execute (hello(a) , 9, -1):
   let result = complete_parameter#parameter_position('hello(a) ', 9, ',', ')', '(', -1)
-  AssertEqual [7, 8], result
+  AssertEqual [0, 0], result
 
 Execute (hello(a), 7):
   let result = complete_parameter#parameter_position('hello(a)', 7, ',', '(', ')', 1)
@@ -110,7 +111,7 @@ Execute (hello(a), 7):
 
 Execute (hello( a), 5):
   let result = complete_parameter#parameter_position('hello( a)', 5, ',', '(', ')', 1)
-  AssertEqual [8, 9], result
+  AssertEqual [0, 0], result
 
 Execute (hello( a) , 9, -1):
   let result = complete_parameter#parameter_position('hello( a) ', 9, ',', ')', '(', -1)
@@ -134,7 +135,7 @@ Execute (hello( a), 9):
 
 Execute (hello( a ), 5):
   let result = complete_parameter#parameter_position('hello( a )', 5, ',', '(', ')', 1)
-  AssertEqual [8, 9], result
+  AssertEqual [0, 0], result
 
 Execute (hello( a ) , 10, -1):
   let result = complete_parameter#parameter_position('hello( a ) ', 10, ',', ')', '(', -1)
@@ -154,7 +155,8 @@ Execute (hello( a ), 7):
 
 Execute (hello(aa), 5):
   let result = complete_parameter#parameter_position('hello(aa)', 5, ',', '(', ')', 1)
-  AssertEqual [7, 9], result
+  let g:complete_parameter_jump_in_scope = 0
+  AssertEqual [0, 0], result
 
 Execute (hello(aa) , 9, -1):
   let result = complete_parameter#parameter_position('hello(aa) ', 9, ',', ')', '(', -1)
@@ -172,7 +174,7 @@ Execute (hello(aa), 7):
 " 2 parameter {{{
 Execute (hello(aa, bb), 5):
   let result = complete_parameter#parameter_position('hello(aa, bb)', 5, ',', '(', ')', 1)
-  AssertEqual [7, 9], result
+  AssertEqual [0, 0], result
 
 Execute (hello(aa, bb), 13, -1):
   let result = complete_parameter#parameter_position('hello(aa, bb)', 13, ',', ')', '(', -1)
@@ -224,7 +226,7 @@ Execute (hello(aa, bb, cccc), 15):
 " param with () {{{
 Execute (hello(foo()), 1):
   let result = complete_parameter#parameter_position('hello(foo())', 1, ',', '(', ')', 1)
-  AssertEqual [7, 12], result
+  AssertEqual [0, 0], result
 
 Execute (hello(foo()), 12, -1):
   let result = complete_parameter#parameter_position('hello(foo())', 12, ',', ')', '(', -1)
@@ -400,7 +402,7 @@ Execute (fmt.Fscanf("%s %s", "hello", "world"), jump to "%s %s", -1):
 " {{{param has <>
 Execute (hello<a, b>, 1):
   let result = complete_parameter#parameter_position('hello<a, b>', 1, ',', "(<", ")>", 1)
-  AssertEqual [7, 8], result
+  AssertEqual [0, 0], result
 
 Execute (hello<a, b>, 7):
   let result = complete_parameter#parameter_position('hello<a, b>', 7, ',', "(<", ")>", 1)
@@ -418,3 +420,25 @@ Execute (hello<a, b>(c, d, func<e, f>(g, h, i))), 16):
   let result = complete_parameter#parameter_position('hello<a, b>(c, d, func<e, f>(g, h, i)))', 16, ',', "(<", ")>", 1)
   AssertEqual [19, 38], result
 "}}}
+
+"{{{ border check
+Execute(border left):
+  let result = complete_parameter#parameter_position('hello(a, b)', 5, ',', '(<', ')>', 1)
+  AssertEqual [0, 0], result
+
+Execute(border ():
+  let result = complete_parameter#parameter_position('hello(a, b)', 6, ',', '(<', ')>', 1)
+  AssertEqual [7, 8], result
+
+Execute(border )):
+  let result = complete_parameter#parameter_position('hello(a, b)', 11, ',', '(<', ')>', 1)
+  AssertEqual [11, 11], result
+
+Execute(border ), -1):
+  let result = complete_parameter#parameter_position('hello(a, b)', 11, ',', ')>', '(<', -1)
+  AssertEqual [10, 11], result
+
+Execute(border ) , -1):
+  let result = complete_parameter#parameter_position('hello(a, b) ', 12, ',', ')>', '(<', -1)
+  AssertEqual [0, 0], result
+" }}}
