@@ -179,7 +179,7 @@ let g:complete_parameter_mapping_overload_up_mode = 'ivn'
 This option set the log level.  
 4: only print **error** log.  
 2: print **error** and **debug** log.  
-1: print **error**, **debug**, **trace**  
+1: print **error**, **debug**, **trace** log.  
 Default: 4  
 ```viml
 let g:complete_parameter_log_level = 4

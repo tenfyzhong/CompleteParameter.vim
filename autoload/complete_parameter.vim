@@ -105,7 +105,6 @@ function! complete_parameter#init() "{{{
     let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
     let s:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
 
- 
     call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
     call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', s:complete_parameter_goto_next_mode)
     call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', s:complete_parameter_goto_previous_mode)
@@ -504,6 +503,18 @@ function! s:stack.str() dict "{{{
     return str
 endfunction "}}}
 
+function! s:in_scope(content, pos, border, step, end)
+    " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
+    let i = a:pos
+    while i != a:end
+        if a:content[i] =~# '\m['.a:border.']'
+            return 1
+        endif
+        let i += a:step
+    endwhile
+    return 0
+endfunction
+
 " content: string, the content to parse
 " current_col: int, current col
 " delim:  string, split the paramter letter
@@ -527,6 +538,13 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     if current_pos >= content_len
         call <SID>error_log('current_pos is large than content_len')
         return [0, 0]
+    endif
+
+    " check current pos is in the scope or not
+    let score_end = step > 0 ? -1 : content_len
+    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, score_end)
+        call <SID>trace_log("no in scope")
+        retur [0, 0]
     endif
 
     let stack = <SID>new_stack()
