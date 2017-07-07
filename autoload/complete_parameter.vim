@@ -242,6 +242,16 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     endif
 endfunction "}}}
 
+function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end)
+    if len(a:parameter) < 2
+        return 0
+    endif
+    " echom printf('mb, begin: %s, p[0]: %s, result: %d', a:parameter_begin, a:parameter[0], match(a:parameter_begin, a:parameter[0]) != -1)
+    " echom printf('me, end: %s, p[-1]: %s, result: %d', a:parameter_end, a:parameter[-1], match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1)
+    return match(a:parameter_begin, a:parameter[0]) != -1 &&
+                \match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1
+endfunction
+
 function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
@@ -281,7 +291,10 @@ function! complete_parameter#complete(failed_insert) "{{{
         return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
 
-    if empty(parseds) || parseds[0] == ''
+    let parameter_begin = ftfunc.parameter_begin()
+    let parameter_end = ftfunc.parameter_end()
+
+    if empty(parseds) || len(parseds[0]) < 2 || !complete_parameter#check_parameter_return(parseds[0], parameter_begin, parameter_end)
         call <SID>debug_log("parseds is empty")
         return <SID>failed_event(a:failed_insert, a:failed_insert)
     endif
