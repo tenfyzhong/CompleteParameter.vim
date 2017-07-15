@@ -18,4 +18,7 @@ set cpo&vim
 
 call complete_parameter#init()
 
+" set rtp+=expand('<sfile>:h:h:p').'/after'
+" runtime expand('<sfile>:h:h:p').'/after/*.vim'
+
 let &cpo = save_cpo

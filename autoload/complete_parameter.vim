@@ -86,30 +86,30 @@ function! complete_parameter#init() "{{{
     let s:complete_parameter_failed_insert = get(g:, 'complete_parameter_failed_insert', '()')
 
     let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
-    let s:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
+    let g:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
     let g:complete_parameter_goto_next_mode = get(g:, 'complete_parameter_goto_next_mode', '')
-    let s:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'inv'
+    let g:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'inv'
 
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
-    let s:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
+    let g:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
     let g:complete_parameter_goto_previous_mode = get(g:, 'complete_parameter_goto_previous_mode', '')
-    let s:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'inv'
+    let g:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'inv'
 
     let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
-    let s:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
+    let g:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
     let g:complete_parameter_mapping_overload_up_mode = get(g:, 'complete_parameter_mapping_overload_up_mode', '')
-    let s:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'inv'
+    let g:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'inv'
 
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
-    let s:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
+    let g:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
     let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
-    let s:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
+    let g:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
 
     call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
-    call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', s:complete_parameter_goto_next_mode)
-    call complete_parameter#mapping_action(s:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', s:complete_parameter_goto_previous_mode)
-    call complete_parameter#mapping_action(s:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>', s:complete_parameter_mapping_overload_up_mode)
-    call complete_parameter#mapping_action(s:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>', s:complete_parameter_mapping_overload_down_mode)
+    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', g:complete_parameter_goto_next_mode)
+    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', g:complete_parameter_goto_previous_mode)
+    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>', g:complete_parameter_mapping_overload_up_mode)
+    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>', g:complete_parameter_mapping_overload_down_mode)
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
@@ -333,17 +333,17 @@ function! complete_parameter#goto_next_param(forward) "{{{
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
-        return
+        return ''
     endif
 
     try
         let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new ftfunc failed')
-        return
+        return ''
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
-        return
+        return ''
     endif
 
 
@@ -361,7 +361,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
     call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
         call <SID>debug_log('word_begin and word_end is 0')
-        return
+        return ''
     endif
     let word_len = word_end - word_begin
     call <SID>trace_log('word_len:'.word_len)
@@ -387,6 +387,7 @@ function! complete_parameter#goto_next_param(forward) "{{{
         let keys .= "\<C-G>"
         call feedkeys(keys, 'n')
     endif
+    return ''
 endfunction "}}}
 
 " items: all overload complete function parameters
@@ -533,6 +534,9 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif "}}}2
     let step = a:step > 0 ? 1 : -1
     let current_pos = a:current_col - 1
+    if mode() ==# 'i'
+        let current_pos -= 1
+    endif
     let content_len = len(a:content)
     let end = a:step > 0 ? content_len : -1
     if current_pos >= content_len
