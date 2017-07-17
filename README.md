@@ -113,9 +113,9 @@ let g:complete_parameter_mapping_goto_next = '<c-j>'
 This option set the mapping `g:complete_parameter_mapping_goto_next` mode. 
 For example, the value is `iv`, it'll only map 
 `g:complete_parameter_mapping_goto_next` in the mode of insert and visual(select).
-Default: `ivn`
+Default: `iv`
 ```viml
-let g:complete_parameter_goto_next_mode = 'ivn'
+let g:complete_parameter_goto_next_mode = 'iv'
 ```
 
 ### The `g:complete_parameter_mapping_goto_previous` option
@@ -130,9 +130,9 @@ let g:complete_parameter_mapping_goto_previous = '<c-k>'
 This option set the mapping `g:complete_parameter_mapping_goto_previous` mode. 
 For example, the value is `iv`, it'll only map 
 `g:complete_parameter_mapping_goto_previous` in the mode of insert and visual(select).
-Default: `ivn`
+Default: `iv`
 ```viml
-let g:complete_parameter_goto_previous_mode = 'ivn'
+let g:complete_parameter_goto_previous_mode = 'iv'
 ```
 
 ### The `g:complete_parameter_mapping_overload_down` option
@@ -150,9 +150,9 @@ let g:complete_parameter_mapping_overload_down = '<m-d>'
 This option set the mapping `g:complete_parameter_mapping_overload_down` mode. 
 For example, the value is `iv`, it'll only map 
 `g:complete_parameter_mapping_overload_down` in the mode of insert and visual(select).
-Default: `ivn`
+Default: `iv`
 ```viml
-let g:complete_parameter_mapping_overload_down_mode = 'ivn'
+let g:complete_parameter_mapping_overload_down_mode = 'iv'
 ```
 
 ### The `g:complete_parameter_mapping_overload_up` option
@@ -170,9 +170,9 @@ let g:complete_parameter_mapping_overload_up = '<m-u>'
 This option set the mapping `g:complete_parameter_mapping_overload_up` mode. 
 For example, the value is `iv`, it'll only map 
 `g:complete_parameter_mapping_overload_up` in the mode of insert and visual(select).
-Default: `ivn`
+Default: `iv`
 ```viml
-let g:complete_parameter_mapping_overload_up_mode = 'ivn'
+let g:complete_parameter_mapping_overload_up_mode = 'iv'
 ```
 
 ### The `g:complete_parameter_log_level` option
