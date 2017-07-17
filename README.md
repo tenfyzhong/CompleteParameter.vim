@@ -246,6 +246,12 @@ inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 ```
 
 
+### Can't jump to next parameter
+If you use `ultinsips`, you must load `ultisnips` before this plugin. In other 
+words, if you use `plug` to load plugins, `Plug 'SirVer/ultisnips'` must before 
+`Plug 'tenfyzhong/CompleteParameter.vim'` in your vimrc. 
+
+
 ### How to accept the selected function but not parameters
 You can type `<c-y>` key to accept the selected function and stop completion.
 When the popup menu is disappeared, the parameters will not be insert. 
