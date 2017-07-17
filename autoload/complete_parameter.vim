@@ -86,24 +86,24 @@ function! complete_parameter#init() "{{{
     let s:complete_parameter_failed_insert = get(g:, 'complete_parameter_failed_insert', '()')
 
     let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
-    let g:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<m-n>'
+    let g:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<c-j>'
     let g:complete_parameter_goto_next_mode = get(g:, 'complete_parameter_goto_next_mode', '')
-    let g:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'inv'
+    let g:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'iv'
 
     let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
-    let g:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<m-p>'
+    let g:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<c-k>'
     let g:complete_parameter_goto_previous_mode = get(g:, 'complete_parameter_goto_previous_mode', '')
-    let g:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'inv'
+    let g:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'iv'
 
     let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
     let g:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
     let g:complete_parameter_mapping_overload_up_mode = get(g:, 'complete_parameter_mapping_overload_up_mode', '')
-    let g:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'inv'
+    let g:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'iv'
 
     let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
     let g:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
     let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
-    let g:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'inv'
+    let g:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'iv'
 
     call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
     call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', g:complete_parameter_goto_next_mode)

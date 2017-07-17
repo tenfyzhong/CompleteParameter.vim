@@ -9,28 +9,13 @@
 
 function! s:wrap_next(check_val, forward)
     if get(g:, a:check_val, 0) == 0
-        echom 'failed'
         return complete_parameter#goto_next_param(a:forward)
     else
-        echom 'success:' . mode() . ' pos: ' . string(col('.'))
         exec printf('let g:%s=0', a:check_val)
-        " if mode() ==# 'n'
-        "     call feedkeys('', 'ix!')
-        " endif
+        if getchar(1) == 0
+            call feedkeys('a', 'n')
+        endif
         return ''
-    endif
-endfunction
-
-function! s:wrap_s(funcname, check_val, forward)
-    let Ultifunc = function(a:funcname)
-    call Ultifunc()
-    " call UltiSnips#ExpandSnippetOrJump()
-    if get(g:, a:check_val, 0)
-        echom 'failed'
-        call complete_parameter#goto_next_param(a:forward)
-    else
-        echom 'success'
-        exec printf('let g:%s=0', a:check_val)
     endif
 endfunction
 
@@ -53,7 +38,6 @@ if exists(':UltiSnipsEdit')
 
             if match(g:complete_parameter_goto_next_mode, 'v') != -1 || match(g:complete_parameter_goto_next_mode, 's') != -1
                 exec "snoremap <silent> " . g:UltiSnipsExpandTrigger . " <ESC>:call UltiSnips#ExpandSnippetOrJump()<cr><ESC>:call <SID>wrap_next('ulti_expand_or_jump_res', 1)<cr>"
-                " exec "snoremap <silent> " . g:UltiSnipsExpandTrigger . " <ESC>:call <SID>wrap_s('UltiSnips#ExpandSnippetOrJump', 'ulti_expand_or_jump_res', 1)<cr>"
 
             endif
         endif
@@ -64,8 +48,7 @@ if exists(':UltiSnipsEdit')
             endif
 
             if match(g:complete_parameter_goto_next_mode, 'v') != -1 || match(g:complete_parameter_goto_next_mode, 's') != -1
-                " exec "snoremap <silent> " . g:UltiSnipsJumpForwardTrigger . " <ESC>:call UltiSnips#JumpForwards()<cr><ESC>:call <SID>wrap_next('ulti_jump_forwards_res', 1)<cr>"
-                exec "snoremap <silent> " . g:UltiSnipsExpandTrigger . " <ESC>:call <SID>wrap_s('UltiSnips#JumpForwards', 'ulti_jump_forwards_res', 1)<cr>"
+                exec "snoremap <silent> " . g:UltiSnipsJumpForwardTrigger . " <ESC>:call UltiSnips#JumpForwards()<cr><ESC>:call <SID>wrap_next('ulti_jump_forwards_res', 1)<cr>"
             endif
         endif
     endif
