@@ -1,3 +1,9 @@
+Before:
+    call complete_parameter#mapping_action('<m-n>', '<ESC>:call complete_parameter#goto_next_param(1)<cr>', 'inv')
+    call complete_parameter#mapping_action('<m-p>',  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', 'inv')
+    call complete_parameter#mapping_action('<m-u>', '<ESC>:call complete_parameter#overload_next(0)<cr>', 'inv')
+    call complete_parameter#mapping_action('<m-d>', '<ESC>:call complete_parameter#overload_next(1)<cr>', 'inv')
+
 " {{{ test mapping <m-n>
 Execute (test nmap <m-n>):
   redir => mapping_result

@@ -10,12 +10,15 @@
 if (!has('nvim')&&version < 704) || (!has('nvim')&&version==704&&!has('patch774')) || &compatible || exists('g:complete_parameter_version') 
     finish
 endif
-let g:complete_parameter_version = "0.2.2"
+let g:complete_parameter_version = "0.2.3"
 lockvar g:complete_parameter_version
 
 let save_cpo = &cpo
 set cpo&vim
 
 call complete_parameter#init()
+
+" set rtp+=expand('<sfile>:h:h:p').'/after'
+" runtime expand('<sfile>:h:h:p').'/after/*.vim'
 
 let &cpo = save_cpo

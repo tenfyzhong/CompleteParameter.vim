@@ -68,9 +68,9 @@ function! cm_parser#javascript#parameter_delim() "{{{
 endfunction "}}}
 
 function! cm_parser#javascript#parameter_begin() "{{{
-    return '('
+    return '({'
 endfunction "}}}
 
 function! cm_parser#javascript#parameter_end() "{{{
-    return ')'
+    return ')}'
 endfunction "}}}

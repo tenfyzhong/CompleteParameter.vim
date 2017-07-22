@@ -25,8 +25,8 @@ a function.
 
 - Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
-- `<m-n>`(default mapping) to jump to the next parameter in any position. 
-- `<m-p>`(default mapping) to jump to the previous parameter in any position. 
+- `<c-j>`(default mapping) to jump to the next parameter in any position. 
+- `<c-k>`(default mapping) to jump to the previous parameter in any position. 
 - `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
 - `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
 
@@ -50,7 +50,7 @@ completion popup menu you want to select, and then type `(`(default mapping),
 the parameters will be completed and jump the the first parameter. The first 
 completion item will be seleted if no one selected and the input is equal to 
 the first popup item after you type `(`. 
-`<m-n>`/`<m-p>`(default mapping) will jump to the next/previous parameter 
+`<c-j>`/`<c-k>`(default mapping) will jump to the next/previous parameter 
 and select it. 
 
 ================================================================================
@@ -59,11 +59,11 @@ and select it.
 Mapping type: inoremap
 Call the parameter completor. 
 
-* <m-n>                                                                    *<m-n>*
+* <c-j>                                                                    *<c-j>*
 Mapping type: inoremap,nnoremap,vnoremap
 Goto the next parameter and select it.
 
-* <m-p>                                                                    *<m-p>*
+* <c-k>                                                                    *<c-k>*
 Mapping type: inoremap,nnoremap,vnoremap
 Goto the previous parameter and select it.
 
@@ -105,31 +105,31 @@ Default: {'cpp': {'(': '()', '<': '<'} }  >
 * g:complete_parameter_mapping_goto_next
 This option set the goto to next paramater mapping. When this mapping was called,
 it'll goto to the next parameter.  
-Default: '<m-n>'  >
-  let g:complete_parameter_mapping_goto_next = '<m-n>'
+Default: '<c-j>'  >
+  let g:complete_parameter_mapping_goto_next = '<c-j>'
 <
                                              *g:complete_parameter_goto_next_mode*
 * g:complete_parameter_goto_next_mode
 This option set the mapping |g:complete_parameter_mapping_goto_next| mode. 
 For example, the value is 'iv', it'll only map 
 |g:complete_parameter_mapping_goto_next| in the mode of insert and visual(select).
-Default: 'ivn' >
-  let g:complete_parameter_goto_next_mode = 'ivn'
+Default: 'iv' >
+  let g:complete_parameter_goto_next_mode = 'iv'
 <
                                       *g:complete_parameter_mapping_goto_previous*
 * g:complete_parameter_mapping_goto_previous
 This option set the goto to previous paramater mapping. When this mapping was called,
 it'll goto to the previous parameter.  
-Default: '<m-p>'  >
-  let g:complete_parameter_mapping_goto_previous = '<m-p>'
+Default: '<c-k>'  >
+  let g:complete_parameter_mapping_goto_previous = '<c-k>'
 <
                                          *g:complete_parameter_goto_previous_mode*
 * g:complete_parameter_goto_previous_mode
 This option set the mapping |g:complete_parameter_mapping_goto_previous| mode. 
 For example, the value is 'iv', it'll only map 
 |g:complete_parameter_mapping_goto_previous| in the mode of insert and visual(select).
-Default: 'ivn' >
-  let g:complete_parameter_goto_previous_mode = 'ivn'
+Default: 'iv' >
+  let g:complete_parameter_goto_previous_mode = 'iv'
 <
                                       *g:complete_parameter_mapping_overload_down*
 * g:complete_parameter_mapping_overload_down
@@ -146,8 +146,8 @@ Default: '<m-d>' >
 This option set the mapping |g:complete_parameter_mapping_overload_down| mode. 
 For example, the value is 'iv', it'll only map 
 |g:complete_parameter_mapping_overload_down| in the mode of insert and visual(select).
-Default: 'ivn' >
-  let g:complete_parameter_mapping_overload_down_mode = 'ivn'
+Default: 'iv' >
+  let g:complete_parameter_mapping_overload_down_mode = 'iv'
 <
                                         *g:complete_parameter_mapping_overload_up*
 * g:complete_parameter_mapping_overload_up
@@ -164,8 +164,8 @@ Default: '<m-u>' >
 This option set the mapping |g:complete_parameter_mapping_overload_up| mode. 
 For example, the value is 'iv', it'll only map 
 |g:complete_parameter_mapping_overload_up| in the mode of insert and visual(select).
-Default: 'ivn' >
-  let g:complete_parameter_mapping_overload_up_mode = 'ivn'
+Default: 'iv' >
+  let g:complete_parameter_mapping_overload_up_mode = 'iv'
 <
                                                   *g:complete_parameter_log_level*
 * g:complete_parameter_log_level
@@ -255,7 +255,7 @@ You can type `<c-y>` key to accept the selected function and stop completion.
 When the popup menu is disappeared, the parameters will not be insert. 
 
 
-3) The mapping `<m-n>` doesn't jump to the next parameter, but delete the
+3) The mapping `<c-j>` doesn't jump to the next parameter, but delete the
    selected words. 
 If you use neosnippet, Please set `g:neosnippet#disable_select_mode_mappings`
 to 0. It will remove all select mappings. 
