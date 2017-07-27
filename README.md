@@ -14,7 +14,12 @@ If you like this plugin, please star it.
 
 
 # Screenshots
-![cp_screenshorts](https://ooo.0o0.ooo/2017/06/14/5940c34725a1a.gif)
+Without CompleteParameter, only insert the function name. 
+![ycm_only](http://wx4.sinaimg.cn/mw690/69472223gy1fhyjw7996cg20hs0a0n1b.gif)
+
+With CompleteParameter, insert the function name and parameters. You can jump to 
+the next parameter use `<c-j>` and jump to the previous parameter use `<c-k>`. 
+![ycm_with_cp](http://wx4.sinaimg.cn/mw690/69472223gy1fhyjvrjhr3g20hs0a0qby.gif)
 
 
 # Features
