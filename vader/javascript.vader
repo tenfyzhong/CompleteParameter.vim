@@ -29,6 +29,11 @@ Execute (fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> b
   let completed_item = {'menu': 'fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool'}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ['(test, context)'], result
+
+Execute (fn(test: {elt: string, i: number, array: Array}, context?: ?) -> bool):
+  let completed_item = {'menu': 'fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(test, context)'], result
 "}}}
 
 "{{{ deoplete
@@ -59,6 +64,11 @@ Execute (fn(other: ?) -> string):
 
 
 Execute (fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool):
+  let completed_item = {"info": "fn(test: fn(elt: ?, i: number, array: Array) -> bool, \ncontext?: ?) -> bool"}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ["(test, context)"], result
+
+Execute (fn(test: {elt: number, i: number, array: Array}, context?: ?) -> bool):
   let completed_item = {"info": "fn(test: fn(elt: ?, i: number, array: Array) -> bool, \ncontext?: ?) -> bool"}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ["(test, context)"], result
