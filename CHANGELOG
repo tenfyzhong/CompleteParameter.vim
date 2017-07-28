@@ -1,4 +1,27 @@
-0.2.3: 
+0.3.0: 2017-07-28
+Refactor normal mapping to <Plug> mapping. 
+    Remove mapping options:
+       g:complete_parameter_goto_next_mode,
+       g:complete_parameter_mapping_goto_next,
+       g:complete_parameter_goto_previous_mode,
+       g:complete_parameter_mapping_goto_previous,
+       g:complete_parameter_mapping_overload_up_mode,
+       g:complete_parameter_mapping_overload_up,
+       g:complete_parameter_mapping_overload_down_mode,
+       g:complete_parameter_mapping_overload_down,
+       g:complete_parameter_mapping_complete,
+       g:complete_parameter_failed_insert,
+       g:complete_parameter_mapping_complete_for_ft
+	Add mapping.
+       <Plug>(complete_parameter#goto_next_parameter),
+       <Plug>(complete_parameter#goto_previous_parameter),
+       <Plug>(complete_parameter#overload_up),
+       <Plug>(complete_parameter#overload_down)
+    Add options: g:complete_parameter_use_ultisnips_mappings
+
+Fix parser bug.
+
+0.2.3: 2017-07-22
 Change `<m-n>`/`<m-p>` to `<c-j>`/`<c-k>` and compatible with ultisnips. 
 Disable normal mapping. 
 Fix parser bug.

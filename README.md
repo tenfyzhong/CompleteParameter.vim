@@ -14,18 +14,22 @@ If you like this plugin, please star it.
 
 
 # Screenshots
-![cp_screenshorts](https://ooo.0o0.ooo/2017/06/14/5940c34725a1a.gif)
+Without CompleteParameter, only insert the function name. 
+![ycm_only](http://wx4.sinaimg.cn/mw690/69472223gy1fhyjw7996cg20hs0a0n1b.gif)
+
+With CompleteParameter, insert the function name and parameters. You can jump to 
+the next parameter use `<c-j>` and jump to the previous parameter use `<c-k>`. 
+![ycm_with_cp](http://wx4.sinaimg.cn/mw690/69472223gy1fhyjvrjhr3g20hs0a0qby.gif)
 
 
 # Features
 - Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
-- `<c-j>`(default mapping) to jump to the next parameter in any position. 
-- `<c-k>`(default mapping) to jump to the previous parameter in any position. 
-- `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
-- `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
-- Select the first item in the completion popup menu if you no select one and 
-  type `(`(default mapping).
+- Jump to next parameter. 
+- Jump to previous parameter. 
+- Select next overload function. 
+- Select previous overload function. 
+- Select the first item in the completion popup menu. 
 
 
 # Install
@@ -43,138 +47,66 @@ vim -c 'helptag ~/.vim/bundle/CompleteParameter.vim/doc' -c qa!
 
 
 # Usage
-Install a complete engine we have supported. Goto the completion item of the
-completion popup menu you want to select, and then type `(`(default mapping), 
-the parameters will be completed and jump the the first parameter. The first 
-completion item will be seleted if no one selected and the input is equal to 
-the first popup item after you type `(`. 
-`<c-j>`/`<c-k>`(default mapping) will jump to the next/previous parameter 
+Install a complete engine have supported. Goto the completion item of the
+completion popup menu you want to select, and then type `(`(minimal setting), 
+the parameters will be inserted and select the the first parameter. 
+`<c-j>`/`<c-k>`(minimal setting) will jump to the next/previous parameter 
 and select it. 
 
 
+# Minimal setting
+```viml
+inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+```
+
+**The parameter of `complete_parameter#pre_complete` will be insert if
+parameter completion failed.**
+
+
 # Mapping
-### `(`
-Mapping type: inoremap  
-Call the parameter completor.  
+### `<Plug>(complete_parameter#goto_next_parameter)`
+Goto next parameter and select it.  
+eg:  
+```viml
+nmap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+```
 
-### `<c-j>`
-Mapping type: inoremap,nnoremap,vnoremap  
-Goto the next parameter and select it.  
 
-### `<c-k>`
-Mapping type: inoremap,nnoremap,vnoremap  
-Goto the previous parameter and select it.
+### `<Plug>(complete_parameter#goto_previous_parameter)`
+Goto previous parameter and select it.  
+eg:  
+```viml
+nmap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+```
 
-### `<m-d>`
-Mapping type: inoremap,nnoremap,vnoremap  
-Select the next overload function.   
+### `<Plug>(complete_parameter#overload_down)`
+Select next overload function.  
+eg:  
+```viml
+nmap <m-d> <Plug>(complete_parameter#overload_down)
+imap <m-d> <Plug>(complete_parameter#overload_down)
+smap <m-d> <Plug>(complete_parameter#overload_down)
+```
 
-### `<m-u>`
-Mapping type: inoremap,nnoremap,vnoremap  
-Select the previous overload function.  
+### `<Plug>(complete_parameter#overload_up)`
+Select previous overload function.  
+eg:  
+```viml
+nmap <m-u> <Plug>(complete_parameter#overload_up)
+imap <m-u> <Plug>(complete_parameter#overload_up)
+smap <m-u> <Plug>(complete_parameter#overload_up)
+```
+
 
 # Options
-### The `g:complete_parameter_mapping_complete` option
-This option set the complete mapping. When you are in a complete item of the 
-completion popup menu, type this mapping, it'll complete the parameters.   
-Default: `(`  
-```viml
-let g:complete_parameter_mapping_complete = '('
-```
-
-### The `g:complete_parameter_failed_insert` option
-This option set the complete text when the parameter complete failed. 
-Default: `()`
-```viml
-let g:complete_parameter_failed_insert = '()'
-```
-
-### The `g:complete_parameter_mapping_complete_for_ft` option
-This option set the complete mapping for special typefile. By default, the 
-complete mapping is the `g:complete_parameter_mapping_complete` value. But 
-you can define other key for a special. For example, you can set the cpp 
-complete mapping to `(` and `<`. This option is a map, the key of the map
-is filetype, the value is a map too.  The key of the value map is the 
-complete mapping key, the value is a string when fail to call the complete. 
-Default: `{'cpp': {'(': '()', '<': '<'}}`
-```viml
-let g:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': '<'}}
-```
-
-### The `g:complete_parameter_mapping_goto_next` option
-This option set the goto to next paramater mapping. When this mapping was called,
-it'll goto to the next parameter.  
-Default: `<c-j>`  
-```viml
-let g:complete_parameter_mapping_goto_next = '<c-j>'
-```
-
-### The `g:complete_parameter_goto_next_mode` option
-This option set the mapping `g:complete_parameter_mapping_goto_next` mode. 
-For example, the value is `iv`, it'll only map 
-`g:complete_parameter_mapping_goto_next` in the mode of insert and visual(select).
-Default: `iv`
-```viml
-let g:complete_parameter_goto_next_mode = 'iv'
-```
-
-### The `g:complete_parameter_mapping_goto_previous` option
-This option set the goto to previous paramater mapping. When this mapping was called,
-it'll goto to the previous parameter.  
-Default: `<c-k>`  
-```viml
-let g:complete_parameter_mapping_goto_previous = '<c-k>'
-```
-
-### The `g:complete_parameter_goto_previous_mode` option
-This option set the mapping `g:complete_parameter_mapping_goto_previous` mode. 
-For example, the value is `iv`, it'll only map 
-`g:complete_parameter_mapping_goto_previous` in the mode of insert and visual(select).
-Default: `iv`
-```viml
-let g:complete_parameter_goto_previous_mode = 'iv'
-```
-
-### The `g:complete_parameter_mapping_overload_down` option
-This option set the select next overload parameters mapping. When this 
-mapping was called, it'll delete the current completed paramaters and insert
-the next overload parameters. It works only the cursor in the current 
-completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
-in the `(` and `)`, it can be work. 
-Default: `<m-d>`
-```viml
-let g:complete_parameter_mapping_overload_down = '<m-d>'
-```
-
-### The `g:complete_parameter_mapping_overload_down_mode` option
-This option set the mapping `g:complete_parameter_mapping_overload_down` mode. 
-For example, the value is `iv`, it'll only map 
-`g:complete_parameter_mapping_overload_down` in the mode of insert and visual(select).
-Default: `iv`
-```viml
-let g:complete_parameter_mapping_overload_down_mode = 'iv'
-```
-
-### The `g:complete_parameter_mapping_overload_up` option
-This option set the select previous overload parameters mapping. When this 
-mapping was called, it'll delete the current completed paramaters and insert
-the previous overload parameters. It works only the cursor in the current 
-completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
-in the `(` and `)`, it can be work. 
-Default: `<m-u>`
-```viml
-let g:complete_parameter_mapping_overload_up = '<m-u>'
-```
-
-### The `g:complete_parameter_mapping_overload_up_mode` option
-This option set the mapping `g:complete_parameter_mapping_overload_up` mode. 
-For example, the value is `iv`, it'll only map 
-`g:complete_parameter_mapping_overload_up` in the mode of insert and visual(select).
-Default: `iv`
-```viml
-let g:complete_parameter_mapping_overload_up_mode = 'iv'
-```
-
 ### The `g:complete_parameter_log_level` option
 This option set the log level.  
 4: only print **error** log.  
@@ -185,6 +117,13 @@ Default: 4
 let g:complete_parameter_log_level = 4
 ```
 
+### The `g:complete_parameter_use_ultisnips_mappings` option
+If this option is 1 and you use ultisnips together, it will use ultisnips mapping 
+to goto next or previous parameter.  
+default: 0  
+```viml
+let g:complete_parameter_use_ultisnips_mapping = 0
+```
 
 # Event
 ### The `User CompleteParameterFailed` event

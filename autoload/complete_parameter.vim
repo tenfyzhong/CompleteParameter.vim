@@ -8,48 +8,9 @@
 "==============================================================
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
-let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
-
-" mapping complete key
-function! s:mapping_complete(key, failed_insert) "{{{
-    let mapping = printf('imap <silent><expr><buffer> %s complete_parameter#pre_complete("%s")', a:key, a:failed_insert)
-    exec mapping
-endfunction "}}}
-
-" mapping goto parameter and select overload function
-function! complete_parameter#mapping_action(key, action, mode) "{{{
-    let l:mode = a:mode
-    if empty(l:mode)
-        return
-    endif
-    let mode_list = split(l:mode, '\zs')
-    for m in mode_list
-        if m !~# '[inv]'
-            continue
-        endif
-        exec m.'noremap <silent>' . a:key . ' ' . a:action
-    endfor
-endfunction "}}}
-
-function! s:init_filetype_mapping() "{{{
-    let filetype = &ft
-    if !<SID>filetype_func_exist(filetype)
-        return
-    endif
-
-    let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, filetype, {})
-    if empty(mapping_complete)
-        let mapping = s:complete_parameter_mapping_complete
-        call <SID>mapping_complete(mapping, s:complete_parameter_failed_insert)
-    else
-        for [k, v] in items(mapping_complete)
-            call <SID>mapping_complete(k, v)
-        endfor
-    endif
-endfunction "}}}
 
 function! s:default_failed_event_handler() "{{{
     if g:complete_parameter_last_failed_insert ==# '()' 
@@ -59,7 +20,6 @@ endfunction "}}}
 
 augroup complete_parameter_init "{{{
     autocmd!
-    autocmd FileType * call <SID>init_filetype_mapping()
     autocmd User CompleteParameterFailed call <SID>default_failed_event_handler()
 augroup END "}}}
 
@@ -71,45 +31,12 @@ function! complete_parameter#init() "{{{
     " neosnippet will remove all smaps
     let g:neosnippet#disable_select_mode_mappings = 0
 
-    if exists('g:complete_parameter_mapping_complete_for_ft') && type('g:complete_parameter_mapping_complete_for_ft') == 3
-        let s:complete_parameter_mapping_complete_for_ft = extend(s:complete_parameter_mapping_complete_for_ft, g:complete_parameter_mapping_complete_for_ft, 'force')
-    endif
-
     " 4 error
     " 2 error + debug
     " 1 erro + debug + trace
     let g:complete_parameter_log_level = get(g:, 'complete_parameter_log_level', 4)
 
-    let g:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '')
-    let s:complete_parameter_mapping_complete = g:complete_parameter_mapping_complete != '' ? g:complete_parameter_mapping_complete : '('
-
-    let s:complete_parameter_failed_insert = get(g:, 'complete_parameter_failed_insert', '()')
-
-    let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
-    let g:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<c-j>'
-    let g:complete_parameter_goto_next_mode = get(g:, 'complete_parameter_goto_next_mode', '')
-    let g:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'iv'
-
-    let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
-    let g:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<c-k>'
-    let g:complete_parameter_goto_previous_mode = get(g:, 'complete_parameter_goto_previous_mode', '')
-    let g:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'iv'
-
-    let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
-    let g:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
-    let g:complete_parameter_mapping_overload_up_mode = get(g:, 'complete_parameter_mapping_overload_up_mode', '')
-    let g:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'iv'
-
-    let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
-    let g:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
-    let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
-    let g:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'iv'
-
-    call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', g:complete_parameter_goto_next_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', g:complete_parameter_goto_previous_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>', g:complete_parameter_mapping_overload_up_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>', g:complete_parameter_mapping_overload_down_mode)
+    let g:complete_parameter_use_ultisnips_mappings = get(g:, 'complete_parameter_use_ultisnips_mappings', 0)
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
@@ -241,7 +168,7 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     endif
 endfunction "}}}
 
-function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end)
+function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end) "{{{
     if len(a:parameter) < 2
         return 0
     endif
@@ -249,7 +176,7 @@ function! complete_parameter#check_parameter_return(parameter, parameter_begin, 
     " echom printf('me, end: %s, p[-1]: %s, result: %d', a:parameter_end, a:parameter[-1], match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1)
     return match(a:parameter_begin, a:parameter[0]) != -1 &&
                 \match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1
-endfunction
+endfunction "}}}
 
 function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
@@ -504,7 +431,7 @@ function! s:stack.str() dict "{{{
     return str
 endfunction "}}}
 
-function! s:in_scope(content, pos, border, step, end)
+function! s:in_scope(content, pos, border, step, end) "{{{
     " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
     let i = a:pos
     while i != a:end
@@ -514,7 +441,32 @@ function! s:in_scope(content, pos, border, step, end)
         let i += a:step
     endwhile
     return 0
-endfunction
+endfunction "}}}
+
+function! complete_parameter#jumpable(forward) "{{{ can jump to next parameter or not
+    let filetype = &ft
+    try
+        let ftfunc = complete_parameter#new_ftfunc(filetype)
+    catch
+        call <SID>debug_log('new ftfunc failed')
+        return 0
+    endtry
+    if !complete_parameter#filetype_func_check(ftfunc)
+        call <SID>debug_log('func check failed')
+        return 0
+    endif
+
+    let delim = ftfunc.parameter_delim()
+    let border = a:forward > 0 ? ftfunc.parameter_begin() : ftfunc.parameter_end()
+    let step = a:forward > 0 ? -1 : 1
+
+    let lnum = line('.')
+    let content = getline(lnum)
+    let current_pos = col('.') - 1
+
+    let end = a:forward > 0 ? -1 : len(content)
+    return <SID>in_scope(content, current_pos, border, step, end)
+endfunction "}}}
 
 " content: string, the content to parse
 " current_col: int, current col
@@ -545,8 +497,8 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif
 
     " check current pos is in the scope or not
-    let score_end = step > 0 ? -1 : content_len
-    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, score_end)
+    let scope_end = step > 0 ? -1 : content_len
+    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, scope_end)
         call <SID>trace_log("no in scope")
         retur [0, 0]
     endif
