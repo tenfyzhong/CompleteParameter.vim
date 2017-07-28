@@ -168,7 +168,7 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     endif
 endfunction "}}}
 
-function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end)
+function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end) "{{{
     if len(a:parameter) < 2
         return 0
     endif
@@ -176,7 +176,7 @@ function! complete_parameter#check_parameter_return(parameter, parameter_begin, 
     " echom printf('me, end: %s, p[-1]: %s, result: %d', a:parameter_end, a:parameter[-1], match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1)
     return match(a:parameter_begin, a:parameter[0]) != -1 &&
                 \match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1
-endfunction
+endfunction "}}}
 
 function! complete_parameter#complete(failed_insert) "{{{
     call <SID>trace_log(string(v:completed_item))
@@ -431,7 +431,7 @@ function! s:stack.str() dict "{{{
     return str
 endfunction "}}}
 
-function! s:in_scope(content, pos, border, step, end)
+function! s:in_scope(content, pos, border, step, end) "{{{
     " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
     let i = a:pos
     while i != a:end
@@ -441,7 +441,32 @@ function! s:in_scope(content, pos, border, step, end)
         let i += a:step
     endwhile
     return 0
-endfunction
+endfunction "}}}
+
+function! complete_parameter#jumpable(forward) "{{{ can jump to next parameter or not
+    let filetype = &ft
+    try
+        let ftfunc = complete_parameter#new_ftfunc(filetype)
+    catch
+        call <SID>debug_log('new ftfunc failed')
+        return 0
+    endtry
+    if !complete_parameter#filetype_func_check(ftfunc)
+        call <SID>debug_log('func check failed')
+        return 0
+    endif
+
+    let delim = ftfunc.parameter_delim()
+    let border = a:forward > 0 ? ftfunc.parameter_begin() : ftfunc.parameter_end()
+    let step = a:forward > 0 ? -1 : 1
+
+    let lnum = line('.')
+    let content = getline(lnum)
+    let current_pos = col('.') - 1
+
+    let end = a:forward > 0 ? -1 : len(content)
+    return <SID>in_scope(content, current_pos, border, step, end)
+endfunction "}}}
 
 " content: string, the content to parse
 " current_col: int, current col
@@ -472,8 +497,8 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     endif
 
     " check current pos is in the scope or not
-    let score_end = step > 0 ? -1 : content_len
-    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, score_end)
+    let scope_end = step > 0 ? -1 : content_len
+    if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, scope_end)
         call <SID>trace_log("no in scope")
         retur [0, 0]
     endif

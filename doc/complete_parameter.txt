@@ -122,6 +122,10 @@ default: 0  >
 call parameter completion. If failed, the parameter `failed_insert` will be
 inserted. 
 
+                                                     *complete_parameter#jumpable*
+`complete_parameter#jumpable(forward)`
+can jump to next parameter or not. 
+
 ================================================================================
 6. Event                                                *complete-parameter-event*
                                                          *CompleteParameterFailed*
