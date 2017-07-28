@@ -8,48 +8,9 @@
 "==============================================================
 
 let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
-let s:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': "<"}}
 let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
-
-" mapping complete key
-function! s:mapping_complete(key, failed_insert) "{{{
-    let mapping = printf('imap <silent><expr><buffer> %s complete_parameter#pre_complete("%s")', a:key, a:failed_insert)
-    exec mapping
-endfunction "}}}
-
-" mapping goto parameter and select overload function
-function! complete_parameter#mapping_action(key, action, mode) "{{{
-    let l:mode = a:mode
-    if empty(l:mode)
-        return
-    endif
-    let mode_list = split(l:mode, '\zs')
-    for m in mode_list
-        if m !~# '[inv]'
-            continue
-        endif
-        exec m.'noremap <silent>' . a:key . ' ' . a:action
-    endfor
-endfunction "}}}
-
-function! s:init_filetype_mapping() "{{{
-    let filetype = &ft
-    if !<SID>filetype_func_exist(filetype)
-        return
-    endif
-
-    let mapping_complete = get(s:complete_parameter_mapping_complete_for_ft, filetype, {})
-    if empty(mapping_complete)
-        let mapping = s:complete_parameter_mapping_complete
-        call <SID>mapping_complete(mapping, s:complete_parameter_failed_insert)
-    else
-        for [k, v] in items(mapping_complete)
-            call <SID>mapping_complete(k, v)
-        endfor
-    endif
-endfunction "}}}
 
 function! s:default_failed_event_handler() "{{{
     if g:complete_parameter_last_failed_insert ==# '()' 
@@ -59,7 +20,6 @@ endfunction "}}}
 
 augroup complete_parameter_init "{{{
     autocmd!
-    autocmd FileType * call <SID>init_filetype_mapping()
     autocmd User CompleteParameterFailed call <SID>default_failed_event_handler()
 augroup END "}}}
 
@@ -71,45 +31,12 @@ function! complete_parameter#init() "{{{
     " neosnippet will remove all smaps
     let g:neosnippet#disable_select_mode_mappings = 0
 
-    if exists('g:complete_parameter_mapping_complete_for_ft') && type('g:complete_parameter_mapping_complete_for_ft') == 3
-        let s:complete_parameter_mapping_complete_for_ft = extend(s:complete_parameter_mapping_complete_for_ft, g:complete_parameter_mapping_complete_for_ft, 'force')
-    endif
-
     " 4 error
     " 2 error + debug
     " 1 erro + debug + trace
     let g:complete_parameter_log_level = get(g:, 'complete_parameter_log_level', 4)
 
-    let g:complete_parameter_mapping_complete = get(g:, 'complete_parameter_mapping_complete', '')
-    let s:complete_parameter_mapping_complete = g:complete_parameter_mapping_complete != '' ? g:complete_parameter_mapping_complete : '('
-
-    let s:complete_parameter_failed_insert = get(g:, 'complete_parameter_failed_insert', '()')
-
-    let g:complete_parameter_mapping_goto_next = get(g:, 'complete_parameter_mapping_goto_next', '')
-    let g:complete_parameter_mapping_goto_next = g:complete_parameter_mapping_goto_next != '' ? g:complete_parameter_mapping_goto_next : '<c-j>'
-    let g:complete_parameter_goto_next_mode = get(g:, 'complete_parameter_goto_next_mode', '')
-    let g:complete_parameter_goto_next_mode = g:complete_parameter_goto_next_mode != '' ? g:complete_parameter_goto_next_mode : 'iv'
-
-    let g:complete_parameter_mapping_goto_previous = get(g:, 'complete_parameter_mapping_goto_previous', '')
-    let g:complete_parameter_mapping_goto_previous = g:complete_parameter_mapping_goto_previous != '' ? g:complete_parameter_mapping_goto_previous : '<c-k>'
-    let g:complete_parameter_goto_previous_mode = get(g:, 'complete_parameter_goto_previous_mode', '')
-    let g:complete_parameter_goto_previous_mode = g:complete_parameter_goto_previous_mode != '' ? g:complete_parameter_goto_previous_mode : 'iv'
-
-    let g:complete_parameter_mapping_overload_up = get(g:, 'complete_parameter_mapping_overload_up', '<m-u>')
-    let g:complete_parameter_mapping_overload_up = g:complete_parameter_mapping_overload_up != '' ? g:complete_parameter_mapping_overload_up : '<m-u>'
-    let g:complete_parameter_mapping_overload_up_mode = get(g:, 'complete_parameter_mapping_overload_up_mode', '')
-    let g:complete_parameter_mapping_overload_up_mode = g:complete_parameter_mapping_overload_up_mode != '' ? g:complete_parameter_mapping_overload_up_mode : 'iv'
-
-    let g:complete_parameter_mapping_overload_down = get(g:, 'complete_parameter_mapping_overload_down', '<m-d>')
-    let g:complete_parameter_mapping_overload_down = g:complete_parameter_mapping_overload_down != '' ? g:complete_parameter_mapping_overload_down : '<m-d>'
-    let g:complete_parameter_mapping_overload_down_mode = get(g:, 'complete_parameter_mapping_overload_down_mode', '')
-    let g:complete_parameter_mapping_overload_down_mode = g:complete_parameter_mapping_overload_down_mode != '' ? g:complete_parameter_mapping_overload_down_mode : 'iv'
-
-    call <SID>mapping_complete(s:complete_parameter_mapping_complete, s:complete_parameter_failed_insert)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_next, '<ESC>:call complete_parameter#goto_next_param(1)<cr>', g:complete_parameter_goto_next_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_goto_previous,  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', g:complete_parameter_goto_previous_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_up, '<ESC>:call complete_parameter#overload_next(0)<cr>', g:complete_parameter_mapping_overload_up_mode)
-    call complete_parameter#mapping_action(g:complete_parameter_mapping_overload_down, '<ESC>:call complete_parameter#overload_next(1)<cr>', g:complete_parameter_mapping_overload_down_mode)
+    let g:complete_parameter_use_ultisnips_mappings = get(g:, 'complete_parameter_use_ultisnips_mappings', 0)
 endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'

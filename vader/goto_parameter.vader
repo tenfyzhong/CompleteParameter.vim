@@ -1,6 +1,10 @@
 Before:
-    call complete_parameter#mapping_action('<m-n>', '<ESC>:call complete_parameter#goto_next_param(1)<cr>', 'inv')
-    call complete_parameter#mapping_action('<m-p>',  '<ESC>:call complete_parameter#goto_next_param(0)<cr>', 'inv')
+    smap <m-n> <Plug>(complete_parameter#goto_next_parameter)
+    imap <m-n> <Plug>(complete_parameter#goto_next_parameter)
+    nmap <m-n> <Plug>(complete_parameter#goto_next_parameter)
+    smap <m-p> <Plug>(complete_parameter#goto_previous_parameter)
+    imap <m-p> <Plug>(complete_parameter#goto_previous_parameter)
+    nmap <m-p> <Plug>(complete_parameter#goto_previous_parameter)
 
 "{{{ forward
 Given go(no jump):

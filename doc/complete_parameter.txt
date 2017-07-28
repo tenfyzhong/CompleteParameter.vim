@@ -9,26 +9,28 @@ Contents:
 2. Usage --------------------------------------- |complete-parameter-usage|
 3. Mapping ------------------------------------- |complete-parameter-mapping|
 4. Options ------------------------------------- |complete-parameter-options|
-5. Event --------------------------------------- |complete-parameter-event|
-6. Writing Extensions -------------------------- |complete-parameter-extensions|
-7. FAQ ----------------------------------------- |complete-parameter-faq|
-8. Contributions ------------------------------- |complete-parameter-contributes|
-9. Thanks -------------------------------------- |complete-parameter-thanks|
-10. LICENSE ------------------------------------ |complete-parameter-license|
+5. Functions ----------------------------------- |complete-parameter-functions|
+6. Event --------------------------------------- |complete-parameter-event|
+7. Writing Extensions -------------------------- |complete-parameter-extensions|
+8. FAQ ----------------------------------------- |complete-parameter-faq|
+9. Contributions ------------------------------- |complete-parameter-contributes|
+10. Thanks ------------------------------------- |complete-parameter-thanks|
+11. LICENSE ------------------------------------ |complete-parameter-license|
 
 
 ================================================================================
-Introduction                                     *complete-parameter-introduction*
+0. Introduction                                  *complete-parameter-introduction*
 
 CompletEparameter is a plugin for complete function's parameters after complete
 a function.  
 
 - Complete parameters after select a complete item from the completion popup menu. 
 - After complete the parameters, jump to the first parameter and the select it. 
-- `<c-j>`(default mapping) to jump to the next parameter in any position. 
-- `<c-k>`(default mapping) to jump to the previous parameter in any position. 
-- `<m-d>`(default mapping) select next overload function parameters. Only cpp now.
-- `<m-u>`(default mapping) select previous overload function parameters. Only cpp now
+- Jump to next parameter. 
+- Jump to previous parameter. 
+- Select next overload function. 
+- Select previous overload function. 
+- Select the first item in the completion popup menu. 
 
 
 ================================================================================
@@ -45,128 +47,57 @@ I suggest you to use a plugin manager, such vim-plug or other.
 <
 ================================================================================
 2. Usage                                                *complete-parameter-usage*
-Install a complete engine we have supported. Goto the complete item of the
-completion popup menu you want to select, and then type `(`(default mapping), 
-the parameters will be completed and jump the the first parameter. The first 
-completion item will be seleted if no one selected and the input is equal to 
-the first popup item after you type `(`. 
-`<c-j>`/`<c-k>`(default mapping) will jump to the next/previous parameter 
+Install a complete engine have supported. Goto the completion item of the
+completion popup menu you want to select, and then type `(`(minimal setting), 
+the parameters will be inserted and select the the first parameter. 
+`<c-j>`/`<c-k>`(minimal setting) will jump to the next/previous parameter 
 and select it. 
+
+## Minimal setting >
+  inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+  smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+  imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+  smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+  imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+<
 
 ================================================================================
 3. Mapping                                            *complete-parameter-mapping*
-* (                                                                            *(*
-Mapping type: inoremap
-Call the parameter completor. 
-
-* <c-j>                                                                    *<c-j>*
-Mapping type: inoremap,nnoremap,vnoremap
-Goto the next parameter and select it.
-
-* <c-k>                                                                    *<c-k>*
-Mapping type: inoremap,nnoremap,vnoremap
-Goto the previous parameter and select it.
-
-* <m-d>                                                                    *<m-d>*
-Mapping type: inoremap,nnoremap,vnoremap
-Select the next overload function. 
-
-* <m-u>                                                                    *<m-u>*
-Mapping type: inoremap,nnoremap,vnoremap
-Select the previous overload function. 
+                                  *<Plug>(complete_parameter#goto_next_parameter)*
+`<Plug>(complete_parameter#goto_next_parameter)`
+Goto next parameter and select it.  
+eg: >
+  nmap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+  imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+  smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+<
+                              *<Plug>(complete_parameter#goto_previous_parameter)*
+`<Plug>(complete_parameter#goto_previous_parameter)`
+Goto previous parameter and select it.  
+eg:  >
+  nmap <c-k> <plug>(complete_parameter#goto_previous_parameter)
+  imap <c-k> <plug>(complete_parameter#goto_previous_parameter)
+  smap <c-k> <plug>(complete_parameter#goto_previous_parameter)
+<
+                                        *<Plug>(complete_parameter#overload_down)*
+`<Plug>(complete_parameter#overload_down)`
+Select next overload function.  
+eg:  >
+  nmap <m-d> <Plug>(complete_parameter#overload_down)
+  imap <m-d> <Plug>(complete_parameter#overload_down)
+  smap <m-d> <Plug>(complete_parameter#overload_down)
+<
+                                          *<Plug>(complete_parameter#overload_up)*
+`<Plug>(complete_parameter#overload_up)`
+Select previous overload function.  
+eg: >
+  nmap <m-u> <Plug>(complete_parameter#overload_up)
+  imap <m-u> <Plug>(complete_parameter#overload_up)
+  smap <m-u> <Plug>(complete_parameter#overload_up)
+<
 
 ================================================================================
 4. Options                                            *complete-parameter-options*
-                                           *g:complete_parameter_mapping_complete*
-* `g:complete_parameter_mapping_complete`
-This option set the complete mapping. When you are in a complete item of the 
-completion popup menu, type this mapping, it'll complete the parameters.   
-Default: '('  >
-  let g:complete_parameter_mapping_complete = '('
-<
-                                              *g:complete_parameter_failed_insert*
-* g:complete_parameter_failed_insert
-This option set the complete text when the parameter complete failed. 
-Default: '()'  >
-  let g:complete_parameter_failed_insert = '()'
-<
-                                    *g:complete_parameter_mapping_complete_for_ft*
-* g:complete_parameter_mapping_complete_for_ft
-This option set the complete mapping for special typefile. By default, the 
-complete mapping is the `g:complete_parameter_mapping_complete` value. But 
-you can define other key for a special. For example, you can set the cpp 
-complete mapping to `(` and `<`. This option is a map, the key of the map
-is filetype, the value is a map too.  The key of the value map is the 
-complete mapping key, the value is a string when fail to call the complete. 
-Default: {'cpp': {'(': '()', '<': '<'} }  >
-  let g:complete_parameter_mapping_complete_for_ft = {'cpp': {'(': '()', '<': '<'}}
-<
-                                          *g:complete_parameter_mapping_goto_next*
-* g:complete_parameter_mapping_goto_next
-This option set the goto to next paramater mapping. When this mapping was called,
-it'll goto to the next parameter.  
-Default: '<c-j>'  >
-  let g:complete_parameter_mapping_goto_next = '<c-j>'
-<
-                                             *g:complete_parameter_goto_next_mode*
-* g:complete_parameter_goto_next_mode
-This option set the mapping |g:complete_parameter_mapping_goto_next| mode. 
-For example, the value is 'iv', it'll only map 
-|g:complete_parameter_mapping_goto_next| in the mode of insert and visual(select).
-Default: 'iv' >
-  let g:complete_parameter_goto_next_mode = 'iv'
-<
-                                      *g:complete_parameter_mapping_goto_previous*
-* g:complete_parameter_mapping_goto_previous
-This option set the goto to previous paramater mapping. When this mapping was called,
-it'll goto to the previous parameter.  
-Default: '<c-k>'  >
-  let g:complete_parameter_mapping_goto_previous = '<c-k>'
-<
-                                         *g:complete_parameter_goto_previous_mode*
-* g:complete_parameter_goto_previous_mode
-This option set the mapping |g:complete_parameter_mapping_goto_previous| mode. 
-For example, the value is 'iv', it'll only map 
-|g:complete_parameter_mapping_goto_previous| in the mode of insert and visual(select).
-Default: 'iv' >
-  let g:complete_parameter_goto_previous_mode = 'iv'
-<
-                                      *g:complete_parameter_mapping_overload_down*
-* g:complete_parameter_mapping_overload_down
-This option set the select next overload parameters mapping. When this 
-mapping was called, it'll delete the current completed paramaters and insert
-the next overload parameters. It works only the cursor in the current 
-completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
-in the `(` and `)`, it can be work. 
-Default: '<m-d>' >
-  let g:complete_parameter_mapping_overload_down = '<m-d>'
-<
-                                 *g:complete_parameter_mapping_overload_down_mode*
-* g:complete_parameter_mapping_overload_down_mode
-This option set the mapping |g:complete_parameter_mapping_overload_down| mode. 
-For example, the value is 'iv', it'll only map 
-|g:complete_parameter_mapping_overload_down| in the mode of insert and visual(select).
-Default: 'iv' >
-  let g:complete_parameter_mapping_overload_down_mode = 'iv'
-<
-                                        *g:complete_parameter_mapping_overload_up*
-* g:complete_parameter_mapping_overload_up
-This option set the select previous overload parameters mapping. When this 
-mapping was called, it'll delete the current completed paramaters and insert
-the previous overload parameters. It works only the cursor in the current 
-completed parameters. For example, `v.erase(__first, __last)`, only the cursor 
-in the `(` and `)`, it can be work. 
-Default: '<m-u>' >
-  let g:complete_parameter_mapping_overload_up = '<m-u>'
-<
-                                   *g:complete_parameter_mapping_overload_up_mode*
-* g:complete_parameter_mapping_overload_up_mode
-This option set the mapping |g:complete_parameter_mapping_overload_up| mode. 
-For example, the value is 'iv', it'll only map 
-|g:complete_parameter_mapping_overload_up| in the mode of insert and visual(select).
-Default: 'iv' >
-  let g:complete_parameter_mapping_overload_up_mode = 'iv'
-<
                                                   *g:complete_parameter_log_level*
 * g:complete_parameter_log_level
 This option set the log level.  
@@ -176,9 +107,23 @@ This option set the log level.
 Default: 4 >
   let g:complete_parameter_log_level = 4
 <
+                                     *g:complete_parameter_use_ultisnips_mappings*
+* g:complete_parameter_use_ultisnips_mappings
+If this option is 1 and you use ultisnips together, it will use ultisnips mapping 
+to goto next or previous parameter.  
+default: 0  >
+  let g:complete_parameter_use_ultisnips_mapping = 0
+<
 
 ================================================================================
-5. Event                                                *complete-parameter-event*
+5. Functions                                        *complete-parameter-functions*
+                                                 *complete_parameter#pre_complete*
+`complete_parameter#pre_complete(failed_insert)`
+call parameter completion. If failed, the parameter `failed_insert` will be
+inserted. 
+
+================================================================================
+6. Event                                                *complete-parameter-event*
                                                          *CompleteParameterFailed*
 * User CompleteParameterFailed
 When complete failed, this event will be toggle. And the variable 
@@ -188,7 +133,7 @@ Eg: >
 <
 
 ================================================================================
-6. Writing Extensions                              *complete-parameter-extensions*
+7. Writing Extensions                              *complete-parameter-extensions*
 It's easy to writing extensions for languages. 
 Follow the next steps. All commands below was work in this plugin directory. 
 1) Create a file named `filetype.vim` in path `cm_parser`. For example,
@@ -241,7 +186,7 @@ Finally, please send a pull request for me if you would like to share you
 extension.
 
 ================================================================================
-7. FAQ                                                    *complete-parameter-faq*
+8. FAQ                                                    *complete-parameter-faq*
 1) Can't work with plugin auto-pairs use the default mapping `(`
 Because the auto-pairs use `inoremap` to mapping the keys. It can't call this
 plugin after the auto-pairs process. You can add the following setting to you
@@ -265,15 +210,15 @@ you are using.
 
 
 ================================================================================
-8. Contributions                                  *complete-parameter-contributes*
+9. Contributions                                  *complete-parameter-contributes*
 Contributions and pull requests are welcome.
 
 ================================================================================
-9. Thanks                                              *complete-parameter-thanks*
+10. Thanks                                              *complete-parameter-thanks*
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-10. LICENSE                                           *complete-parameter-license*
+11. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#
