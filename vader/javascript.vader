@@ -34,6 +34,11 @@ Execute (fn(test: {elt: string, i: number, array: Array}, context?: ?) -> bool):
   let completed_item = {'menu': 'fn(test: fn(elt: ?, i: number, array: Array) -> bool, context?: ?) -> bool'}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ['(test, context)'], result
+
+Execute (fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'menu': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(options)'], result
 "}}}
 
 "{{{ deoplete
