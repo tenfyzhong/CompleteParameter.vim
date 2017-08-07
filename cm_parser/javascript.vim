@@ -15,7 +15,7 @@ function! s:parser0(menu) "{{{
         let param = substitute(param, '\m\<fn([^)]*)', '', 'g')
     endwhile
     while param =~# '\w\+\s*:\s*{[^{}]*}'
-        let param = substitute(param, '\m\(\w\+)\s*:{[^{}]*}', '\1', 'g')
+        let param = substitute(param, '\m\(\w\+\):\s{[^{}]*}', '\1', 'g')
     endwhile
     let param = substitute(param, '\m?\?:\s*[^,)]*', '', 'g')
     return [param]

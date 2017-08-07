@@ -6,7 +6,7 @@
 "   email: tenfyzhong@qq.com
 " created: 2017-07-14 22:08:37
 "==============================================================
-if !exists(':UltiSnipsEdit') && !g:complete_parameter_use_ultisnips_mappings
+if !exists(':UltiSnipsEdit') && get(g:, 'complete_parameter_use_ultisnips_mappings', 0) == 0
     finish
 endif
 
