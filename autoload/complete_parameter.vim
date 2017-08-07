@@ -125,10 +125,6 @@ function! s:empty_completed_item() "{{{
     return empty(menu) && empty(info) && empty(kind) && empty(abbr)
 endfunction "}}}
 
-function! s:insert_mode_call_complete_func(failed_insert) "{{{
-    return printf("\<C-r>=complete_parameter#complete('%s')\<ENTER>", a:failed_insert)
-endfunction "}}}
-
 " select an item if need, and the check need to revert or not
 " else call the complete function
 function! complete_parameter#pre_complete(failed_insert) "{{{
@@ -140,9 +136,7 @@ function! complete_parameter#pre_complete(failed_insert) "{{{
         call feedkeys(feed, 'n')
         return "\<C-n>"
     else
-        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
-        call feedkeys(feed, 'n')
-        return ''
+        return complete_parameter#complete(a:failed_insert)
     endif
 endfunction "}}}
 
@@ -159,12 +153,10 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     call <SID>trace_log('s:completed_word: ' . a:completed_word)
     call <SID>trace_log('select_complete_word: ' . select_complete_word)
     if select_complete_word !=? a:completed_word
-        call feedkeys(a:failed_insert, 'n')
-        return <SID>failed_event("\<C-p>", a:failed_insert)
+        return <SID>failed_event("\<C-p>".a:failed_insert, a:failed_insert)
     else
-        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
-        call feedkeys(feed, 'n')
-        return ''
+        let keys = complete_parameter#complete(a:failed_insert)
+        return keys
     endif
 endfunction "}}}
 
@@ -242,21 +234,27 @@ function! complete_parameter#complete(failed_insert) "{{{
         endif
     endif
 
-    let keys = "\<ESC>".':call complete_parameter#goto_first_param()'."\<ENTER>"
-    call feedkeys(keys, 'n')
-    return parameter
+    return complete_parameter#goto_first_param(parameter)
 endfunction "}}}
 
-function! complete_parameter#goto_first_param() "{{{
+function! complete_parameter#goto_first_param(parameter) "{{{
     if s:complete_parameter['success']
-        let complete_pos = s:complete_parameter['complete_pos']
-        call cursor(complete_pos[0], complete_pos[1])
-        let s:complete_parameter['success'] = 0
-        call complete_parameter#goto_next_param(1)
+        let lnum = line('.')
+        let content = getline(lnum)
+        let current_col = col('.')
+        let content = content[:current_col] . a:parameter . content[current_col:]
+        call <SID>trace_log("content: " . content)
+        call <SID>trace_log("current_col: " . current_col)
+        let keys = complete_parameter#goto_next_param_keys(1, content, current_col+1)
+        let keys = printf("%s\<ESC>%dh%s", a:parameter, len(a:parameter)-2, keys)
+        call <SID>trace_log("keys: ". keys)
+        return keys
+    else
+        return a:parameter
     endif
 endfunction "}}}
 
-function! complete_parameter#goto_next_param(forward) "{{{
+function! complete_parameter#goto_next_param_keys(forward, content, current_col) abort "{{{
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
@@ -273,18 +271,13 @@ function! complete_parameter#goto_next_param(forward) "{{{
         return ''
     endif
 
-
-    let lnum = line('.')
-    let content = getline(lnum)
-    let current_col = col('.')
-
     let step = a:forward ? 1 : -1
 
     let delim = ftfunc.parameter_delim()
     let border_begin = a:forward ? ftfunc.parameter_begin() : ftfunc.parameter_end()
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
-    let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
+    let [word_begin, word_end] = complete_parameter#parameter_position(a:content, a:current_col, delim, border_begin, border_end, step)
     call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
         call <SID>debug_log('word_begin and word_end is 0')
@@ -292,28 +285,30 @@ function! complete_parameter#goto_next_param(forward) "{{{
     endif
     let word_len = word_end - word_begin
     call <SID>trace_log('word_len:'.word_len)
+    let keys = printf("\<ESC>0%dl", word_begin-2)
     if word_len == 0
         if a:forward
-            call cursor(lnum, word_begin)
-            startinsert
-            call feedkeys("\<RIGHT>", 'n')
+            return keys . "a\<RIGHT>"
         endif
     else
-        call cursor(lnum, word_begin)
-        startinsert
-        " BUG added by tenfyzhong 2017-06-10 20:13 
-        " when call the `gh` key, it will select more the word_len letter
-        " I don't know why.
-        " call feedkeys("\<ESC>l".word_len.'gh', 'n')
-        let keys = "\<ESC>lv"
+        let keys .= "lv"
         let right_len = word_len - 1
         if right_len > 0
             let keys .= right_len
             let keys .= "l"
         endif
         let keys .= "\<C-G>"
-        call feedkeys(keys, 'n')
+        return keys
     endif
+    return ''
+endfunction "}}}
+
+function! complete_parameter#goto_next_param(forward) "{{{
+    let lnum = line('.')
+    let content = getline(lnum)
+    let current_col = col('.')
+    let keys = complete_parameter#goto_next_param_keys(a:forward, content, current_col)
+    call feedkeys(keys, 'n')
     return ''
 endfunction "}}}
 
@@ -499,7 +494,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     " check current pos is in the scope or not
     let scope_end = step > 0 ? -1 : content_len
     if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, scope_end)
-        call <SID>trace_log("no in scope")
+        call <SID>trace_log(printf("no in scope, content: %s, current_pos: %d, a:border_begin: %s, step: %d, scope_end: %d", a:content, current_pos, a:border_begin, -step, scope_end))
         retur [0, 0]
     endif
 
