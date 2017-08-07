@@ -152,7 +152,7 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     let select_complete_word = get(v:completed_item, 'word', '')
     call <SID>trace_log('s:completed_word: ' . a:completed_word)
     call <SID>trace_log('select_complete_word: ' . select_complete_word)
-    if select_complete_word !=? a:completed_word
+    if select_complete_word !=# a:completed_word
         return <SID>failed_event("\<C-p>".a:failed_insert, a:failed_insert)
     else
         let keys = complete_parameter#complete(a:failed_insert)
