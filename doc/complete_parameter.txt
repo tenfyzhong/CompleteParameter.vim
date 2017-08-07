@@ -10,12 +10,11 @@ Contents:
 3. Mapping ------------------------------------- |complete-parameter-mapping|
 4. Options ------------------------------------- |complete-parameter-options|
 5. Functions ----------------------------------- |complete-parameter-functions|
-6. Event --------------------------------------- |complete-parameter-event|
-7. Writing Extensions -------------------------- |complete-parameter-extensions|
-8. FAQ ----------------------------------------- |complete-parameter-faq|
-9. Contributions ------------------------------- |complete-parameter-contributes|
-10. Thanks ------------------------------------- |complete-parameter-thanks|
-11. LICENSE ------------------------------------ |complete-parameter-license|
+6. Writing Extensions -------------------------- |complete-parameter-extensions|
+7. FAQ ----------------------------------------- |complete-parameter-faq|
+8. Contributions ------------------------------- |complete-parameter-contributes|
+9. Thanks -------------------------------------- |complete-parameter-thanks|
+10. LICENSE ------------------------------------ |complete-parameter-license|
 
 
 ================================================================================
@@ -126,18 +125,13 @@ inserted.
 `complete_parameter#jumpable(forward)`
 can jump to next parameter or not. 
 
-================================================================================
-6. Event                                                *complete-parameter-event*
                                                          *CompleteParameterFailed*
-* User CompleteParameterFailed
-When complete failed, this event will be toggle. And the variable 
-`g:complete_parameter_last_failed_insert` was assigned the inserted value. 
-Eg: >
-  autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
-<
+`CompleteParameterFailed(failed_insert)`
+You can define this function and process the failed event. The return will be 
+inserted. 
 
 ================================================================================
-7. Writing Extensions                              *complete-parameter-extensions*
+6. Writing Extensions                              *complete-parameter-extensions*
 It's easy to writing extensions for languages. 
 Follow the next steps. All commands below was work in this plugin directory. 
 1) Create a file named `filetype.vim` in path `cm_parser`. For example,
@@ -190,7 +184,7 @@ Finally, please send a pull request for me if you would like to share you
 extension.
 
 ================================================================================
-8. FAQ                                                    *complete-parameter-faq*
+7. FAQ                                                    *complete-parameter-faq*
 1) Can't work with plugin auto-pairs use the default mapping `(`
 Because the auto-pairs use `inoremap` to mapping the keys. It can't call this
 plugin after the auto-pairs process. You can add the following setting to you
@@ -214,15 +208,15 @@ you are using.
 
 
 ================================================================================
-9. Contributions                                  *complete-parameter-contributes*
+8. Contributions                                  *complete-parameter-contributes*
 Contributions and pull requests are welcome.
 
 ================================================================================
-10. Thanks                                              *complete-parameter-thanks*
+9. Thanks                                              *complete-parameter-thanks*
 - [johnzeng](https://github.com/johnzeng), support erlang
 
 ================================================================================
-11. LICENSE                                           *complete-parameter-license*
+10. LICENSE                                           *complete-parameter-license*
 MIT License Copyright (c) 2017 tenfyzhong
 
 " vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#

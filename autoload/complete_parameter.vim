@@ -12,18 +12,7 @@ let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
 
-function! s:default_failed_event_handler() "{{{
-    if g:complete_parameter_last_failed_insert ==# '()' 
-        call feedkeys("\<LEFT>", 'n') 
-    endif
-endfunction "}}}
-
-augroup complete_parameter_init "{{{
-    autocmd!
-    autocmd User CompleteParameterFailed call <SID>default_failed_event_handler()
-augroup END "}}}
-
-function! complete_parameter#init() "{{{
+function! complete_parameter#init() abort "{{{
     runtime! cm_parser/*.vim
 
     " ultisnips will remove all smaps, this will without this plugin
@@ -41,7 +30,7 @@ endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
 let s:ftfunc = {'ft': ''}
-function! complete_parameter#new_ftfunc(filetype) "{{{
+function! complete_parameter#new_ftfunc(filetype) abort "{{{
     if empty(a:filetype)
         throw 'filetype is empty'
     endif
@@ -60,7 +49,7 @@ function! complete_parameter#new_ftfunc(filetype) "{{{
     return ftfunc
 endfunction "}}}
 
-function! s:filetype_func_exist(filetype) "{{{
+function! s:filetype_func_exist(filetype) abort "{{{
     let filetype_func_prefix = s:ftfunc_prefix.a:filetype.'#'
     let parameters_func_name = filetype_func_prefix.'parameters'
     let parameter_delim_func_name = filetype_func_prefix.'parameter_delim'
@@ -76,7 +65,7 @@ function! s:filetype_func_exist(filetype) "{{{
     return 1
 endfunction "}}}
 
-function! complete_parameter#filetype_func_check(ftfunc) "{{{
+function! complete_parameter#filetype_func_check(ftfunc) abort "{{{
     if !<SID>filetype_func_exist(a:ftfunc['ft'])
         return 0
     endif
@@ -113,7 +102,7 @@ function! complete_parameter#filetype_func_check(ftfunc) "{{{
 endfunction "}}}
 
 " check v:completed_item is empty or not
-function! s:empty_completed_item() "{{{
+function! s:empty_completed_item() abort "{{{
     let completed_item = v:completed_item
     if empty(completed_item)
         return 1
@@ -125,13 +114,9 @@ function! s:empty_completed_item() "{{{
     return empty(menu) && empty(info) && empty(kind) && empty(abbr)
 endfunction "}}}
 
-function! s:insert_mode_call_complete_func(failed_insert) "{{{
-    return printf("\<C-r>=complete_parameter#complete('%s')\<ENTER>", a:failed_insert)
-endfunction "}}}
-
 " select an item if need, and the check need to revert or not
 " else call the complete function
-function! complete_parameter#pre_complete(failed_insert) "{{{
+function! complete_parameter#pre_complete(failed_insert) abort "{{{
     let s:log_index += 1
     let completed_word = get(v:completed_item, 'word', '')
 
@@ -140,35 +125,44 @@ function! complete_parameter#pre_complete(failed_insert) "{{{
         call feedkeys(feed, 'n')
         return "\<C-n>"
     else
-        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
-        call feedkeys(feed, 'n')
+        return complete_parameter#complete(a:failed_insert)
+    endif
+endfunction "}}}
+
+function! complete_parameter#default_failed_insert(failed_insert) "{{{
+    if a:failed_insert =~# '()$'
+        return "\<LEFT>"
+    else
         return ''
     endif
 endfunction "}}}
 
-function! s:failed_event(return_text, failed_insert) "{{{ return the text to insert and toggle event
-    let g:complete_parameter_last_failed_insert = a:failed_insert
-    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
-    return a:return_text
+function! s:failed_event(failed_insert) abort "{{{ return the text to insert and toggle event
+    let keys = ''
+    if exists('*CompleteParameterFailed')
+        let keys =  CompleteParameterFailed(a:failed_insert)
+    else
+        let keys =  complete_parameter#default_failed_insert(a:failed_insert)
+    endif
+    return a:failed_insert . keys
 endfunction "}}}
 
 " if the select item is not match with completed_word, the revert
 " else call the complete function
-function! complete_parameter#check_revert_select(failed_insert, completed_word) "{{{
+function! complete_parameter#check_revert_select(failed_insert, completed_word) abort "{{{
     let select_complete_word = get(v:completed_item, 'word', '')
     call <SID>trace_log('s:completed_word: ' . a:completed_word)
     call <SID>trace_log('select_complete_word: ' . select_complete_word)
-    if select_complete_word !=? a:completed_word
-        call feedkeys(a:failed_insert, 'n')
-        return <SID>failed_event("\<C-p>", a:failed_insert)
+    redraw!
+    if select_complete_word !=# a:completed_word
+        return <SID>failed_event("\<C-p>".a:failed_insert)
     else
-        let feed = <SID>insert_mode_call_complete_func(a:failed_insert)
-        call feedkeys(feed, 'n')
-        return ''
+        let keys = complete_parameter#complete(a:failed_insert)
+        return keys
     endif
 endfunction "}}}
 
-function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end) "{{{
+function! complete_parameter#check_parameter_return(parameter, parameter_begin, parameter_end) abort "{{{
     if len(a:parameter) < 2
         return 0
     endif
@@ -178,28 +172,28 @@ function! complete_parameter#check_parameter_return(parameter, parameter_begin, 
                 \match(a:parameter_end, a:parameter[len(a:parameter)-1]) != -1
 endfunction "}}}
 
-function! complete_parameter#complete(failed_insert) "{{{
+function! complete_parameter#complete(failed_insert) abort "{{{
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     try
         let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
         call <SID>error_log('ftfunc check failed')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
 
@@ -214,7 +208,7 @@ function! complete_parameter#complete(failed_insert) "{{{
     call <SID>debug_log(string(parseds))
     if type(parseds) != 3
         call <SID>error_log('return type error')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let parameter_begin = ftfunc.parameter_begin()
@@ -222,7 +216,7 @@ function! complete_parameter#complete(failed_insert) "{{{
 
     if empty(parseds) || len(parseds[0]) < 2 || !complete_parameter#check_parameter_return(parseds[0], parameter_begin, parameter_end)
         call <SID>debug_log("parseds is empty")
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let s:complete_parameter['index'] = 0
@@ -242,21 +236,27 @@ function! complete_parameter#complete(failed_insert) "{{{
         endif
     endif
 
-    let keys = "\<ESC>".':call complete_parameter#goto_first_param()'."\<ENTER>"
-    call feedkeys(keys, 'n')
-    return parameter
+    return complete_parameter#goto_first_param(parameter)
 endfunction "}}}
 
-function! complete_parameter#goto_first_param() "{{{
+function! complete_parameter#goto_first_param(parameter) abort "{{{
     if s:complete_parameter['success']
-        let complete_pos = s:complete_parameter['complete_pos']
-        call cursor(complete_pos[0], complete_pos[1])
-        let s:complete_parameter['success'] = 0
-        call complete_parameter#goto_next_param(1)
+        let lnum = line('.')
+        let content = getline(lnum)
+        let current_col = col('.')
+        let content = content[:current_col] . a:parameter . content[current_col:]
+        call <SID>trace_log("content: " . content)
+        call <SID>trace_log("current_col: " . current_col)
+        let keys = complete_parameter#goto_next_param_keys(1, content, current_col+1)
+        let keys = printf("%s\<ESC>%dh%s", a:parameter, len(a:parameter)-2, keys)
+        call <SID>trace_log("keys: ". keys)
+        return keys
+    else
+        return a:parameter
     endif
 endfunction "}}}
 
-function! complete_parameter#goto_next_param(forward) "{{{
+function! complete_parameter#goto_next_param_keys(forward, content, current_col) abort "{{{
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
@@ -273,18 +273,13 @@ function! complete_parameter#goto_next_param(forward) "{{{
         return ''
     endif
 
-
-    let lnum = line('.')
-    let content = getline(lnum)
-    let current_col = col('.')
-
     let step = a:forward ? 1 : -1
 
     let delim = ftfunc.parameter_delim()
     let border_begin = a:forward ? ftfunc.parameter_begin() : ftfunc.parameter_end()
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
-    let [word_begin, word_end] = complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step)
+    let [word_begin, word_end] = complete_parameter#parameter_position(a:content, a:current_col, delim, border_begin, border_end, step)
     call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
     if word_begin == 0 && word_end == 0
         call <SID>debug_log('word_begin and word_end is 0')
@@ -292,28 +287,30 @@ function! complete_parameter#goto_next_param(forward) "{{{
     endif
     let word_len = word_end - word_begin
     call <SID>trace_log('word_len:'.word_len)
+    let keys = printf("\<ESC>0%dl", word_begin-2)
     if word_len == 0
         if a:forward
-            call cursor(lnum, word_begin)
-            startinsert
-            call feedkeys("\<RIGHT>", 'n')
+            return keys . "a\<RIGHT>"
         endif
     else
-        call cursor(lnum, word_begin)
-        startinsert
-        " BUG added by tenfyzhong 2017-06-10 20:13 
-        " when call the `gh` key, it will select more the word_len letter
-        " I don't know why.
-        " call feedkeys("\<ESC>l".word_len.'gh', 'n')
-        let keys = "\<ESC>lv"
+        let keys .= "lv"
         let right_len = word_len - 1
         if right_len > 0
             let keys .= right_len
             let keys .= "l"
         endif
         let keys .= "\<C-G>"
-        call feedkeys(keys, 'n')
+        return keys
     endif
+    return ''
+endfunction "}}}
+
+function! complete_parameter#goto_next_param(forward) abort "{{{
+    let lnum = line('.')
+    let content = getline(lnum)
+    let current_col = col('.')
+    let keys = complete_parameter#goto_next_param_keys(a:forward, content, current_col)
+    call feedkeys(keys, 'n')
     return ''
 endfunction "}}}
 
@@ -322,7 +319,7 @@ endfunction "}}}
 " complete_pos: the pos where called complete
 " forward: down or up
 " [success, item, next_index, old_item_len]
-function! complete_parameter#next_overload_content(items, current_index, current_line, complete_pos, forward) "{{{
+function! complete_parameter#next_overload_content(items, current_index, current_line, complete_pos, forward) abort "{{{
     if len(a:items) <= 1 || 
                 \a:current_index >= len(a:items) || 
                 \empty(a:current_line) || 
@@ -347,7 +344,7 @@ function! complete_parameter#next_overload_content(items, current_index, current
     return [1, a:items[next_index], next_index, len(a:items[a:current_index])]
 endfunction "}}}
 
-function! complete_parameter#overload_next(forward) "{{{
+function! complete_parameter#overload_next(forward) abort "{{{
     let overload_len = len(s:complete_parameter['items'])
     if overload_len <= 1
         return
@@ -392,37 +389,37 @@ endfunction "}}}
 
 let s:stack = {'data':[]}
 
-function! s:new_stack() "{{{
+function! s:new_stack() abort "{{{
     return deepcopy(s:stack)
 endfunction "}}}
 
-function! s:stack.push(e) dict "{{{
+function! s:stack.push(e) abort dict "{{{
     call add(self.data, a:e)
 endfunction "}}}
 
-function! s:stack.len() dict "{{{
+function! s:stack.len() abort dict "{{{
     return len(self.data)
 endfunction "}}}
 
-function! s:stack.empty() dict "{{{
+function! s:stack.empty() abort dict "{{{
     return self.len() == 0
 endfunction "}}}
 
-function! s:stack.top() dict "{{{
+function! s:stack.top() abort dict "{{{
     if self.empty()
         throw "stack is empty"
     endif
     return self.data[-1]
 endfunction "}}}
 
-function! s:stack.pop() dict "{{{
+function! s:stack.pop() abort dict "{{{
     if self.empty()
         throw "stack is empty"
     endif
     call remove(self.data, -1)
 endfunction "}}}
 
-function! s:stack.str() dict "{{{
+function! s:stack.str() abort dict "{{{
     let str = 'stack size:'.self.len()
     for d in self.data
         let str .= "\n"
@@ -431,7 +428,7 @@ function! s:stack.str() dict "{{{
     return str
 endfunction "}}}
 
-function! s:in_scope(content, pos, border, step, end) "{{{
+function! s:in_scope(content, pos, border, step, end) abort "{{{
     " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
     let i = a:pos
     while i != a:end
@@ -443,7 +440,7 @@ function! s:in_scope(content, pos, border, step, end) "{{{
     return 0
 endfunction "}}}
 
-function! complete_parameter#jumpable(forward) "{{{ can jump to next parameter or not
+function! complete_parameter#jumpable(forward) abort "{{{ can jump to next parameter or not
     let filetype = &ft
     try
         let ftfunc = complete_parameter#new_ftfunc(filetype)
@@ -472,7 +469,7 @@ endfunction "}}}
 " current_col: int, current col
 " delim:  string, split the paramter letter
 " return: [int, int] begin_col, end_col
-function! complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step) "{{{
+function! complete_parameter#parameter_position(content, current_col, delim, border_begin, border_end, step) abort "{{{
     "{{{2
     if empty(a:content) || 
                 \a:current_col==0 ||
@@ -499,7 +496,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     " check current pos is in the scope or not
     let scope_end = step > 0 ? -1 : content_len
     if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, scope_end)
-        call <SID>trace_log("no in scope")
+        call <SID>trace_log(printf("no in scope, content: %s, current_pos: %d, a:border_begin: %s, step: %d, scope_end: %d", a:content, current_pos, a:border_begin, -step, scope_end))
         retur [0, 0]
     endif
 
@@ -640,7 +637,7 @@ function! complete_parameter#parameter_position(content, current_col, delim, bor
     return [begin_pos+1, end_pos+2]
 endfunction "}}}
 
-function! s:find_first_not_space(content, pos, end, step) "{{{
+function! s:find_first_not_space(content, pos, end, step) abort "{{{
     let pos = a:pos
     if pos == -1 ||
                 \pos==len(a:content)
@@ -655,11 +652,11 @@ function! s:find_first_not_space(content, pos, end, step) "{{{
     return pos
 endfunction "}}}
 
-function! s:log(level, msg) "{{{
+function! s:log(level, msg) abort "{{{
     echom a:level . ':' . s:log_index . ':' a:msg
 endfunction "}}}
 
-function! s:error_log(msg) "{{{
+function! s:error_log(msg) abort "{{{
     if g:complete_parameter_log_level <= 4
         echohl ErrorMsg 
         call <SID>log('ERROR', a:msg)
@@ -667,13 +664,13 @@ function! s:error_log(msg) "{{{
     endif
 endfunction "}}}
 
-function! s:debug_log(msg) "{{{
+function! s:debug_log(msg) abort "{{{
     if g:complete_parameter_log_level <= 2
         call <SID>log('DEBUG', a:msg)
     endif
 endfunction "}}}
 
-function! s:trace_log(msg) "{{{
+function! s:trace_log(msg) abort "{{{
     if g:complete_parameter_log_level <= 1
         call <SID>log('TRACE', a:msg)
     endif
