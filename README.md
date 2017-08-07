@@ -125,15 +125,6 @@ default: 0
 let g:complete_parameter_use_ultisnips_mapping = 0
 ```
 
-# Event
-### The `User CompleteParameterFailed` event
-When complete failed, this event will be toggle. And the variable 
-`g:complete_parameter_last_failed_insert` was assigned the inserted value. 
-Eg: 
-```viml
-autocmd User CompleteParameterFailed if g:complete_parameter_last_failed_insert ==# '()' | call feedkeys("\<LEFT>", 'n') | endif
-```
-
 
 # Supported
 The cell mark `x` means the completion engine has supported the language by itself.

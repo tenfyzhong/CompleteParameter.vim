@@ -12,17 +12,6 @@ let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
 
-function! s:default_failed_event_handler() abort "{{{
-    if g:complete_parameter_last_failed_insert ==# '()' 
-        call feedkeys("\<LEFT>", 'n') 
-    endif
-endfunction "}}}
-
-augroup complete_parameter_init "{{{
-    autocmd!
-    autocmd User CompleteParameterFailed call <SID>default_failed_event_handler()
-augroup END "}}}
-
 function! complete_parameter#init() abort "{{{
     runtime! cm_parser/*.vim
 
@@ -140,10 +129,22 @@ function! complete_parameter#pre_complete(failed_insert) abort "{{{
     endif
 endfunction "}}}
 
-function! s:failed_event(return_text, failed_insert) abort "{{{ return the text to insert and toggle event
-    let g:complete_parameter_last_failed_insert = a:failed_insert
-    call feedkeys("\<C-O>:doautocmd User CompleteParameterFailed\<ENTER>", 'n')
-    return a:return_text
+function! complete_parameter#default_failed_insert(failed_insert) "{{{
+    if a:failed_insert =~# '()$'
+        return "\<LEFT>"
+    else
+        return ''
+    endif
+endfunction "}}}
+
+function! s:failed_event(failed_insert) abort "{{{ return the text to insert and toggle event
+    let keys = ''
+    if exists('*CompleteParameterFailed')
+        let keys =  CompleteParameterFailed(a:failed_insert)
+    else
+        let keys =  complete_parameter#default_failed_insert(a:failed_insert)
+    endif
+    return a:failed_insert . keys
 endfunction "}}}
 
 " if the select item is not match with completed_word, the revert
@@ -153,7 +154,7 @@ function! complete_parameter#check_revert_select(failed_insert, completed_word) 
     call <SID>trace_log('s:completed_word: ' . a:completed_word)
     call <SID>trace_log('select_complete_word: ' . select_complete_word)
     if select_complete_word !=# a:completed_word
-        return <SID>failed_event("\<C-p>".a:failed_insert, a:failed_insert)
+        return <SID>failed_event("\<C-p>".a:failed_insert)
     else
         let keys = complete_parameter#complete(a:failed_insert)
         return keys
@@ -174,24 +175,24 @@ function! complete_parameter#complete(failed_insert) abort "{{{
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let filetype = &ft
     if empty(filetype)
         call <SID>debug_log('filetype is empty')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     try
         let ftfunc = complete_parameter#new_ftfunc(filetype)
     catch
         call <SID>debug_log('new_ftfunc failed. '.string(v:exception))
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endtry
     if !complete_parameter#filetype_func_check(ftfunc)
         call <SID>error_log('ftfunc check failed')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
 
@@ -206,7 +207,7 @@ function! complete_parameter#complete(failed_insert) abort "{{{
     call <SID>debug_log(string(parseds))
     if type(parseds) != 3
         call <SID>error_log('return type error')
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let parameter_begin = ftfunc.parameter_begin()
@@ -214,7 +215,7 @@ function! complete_parameter#complete(failed_insert) abort "{{{
 
     if empty(parseds) || len(parseds[0]) < 2 || !complete_parameter#check_parameter_return(parseds[0], parameter_begin, parameter_end)
         call <SID>debug_log("parseds is empty")
-        return <SID>failed_event(a:failed_insert, a:failed_insert)
+        return <SID>failed_event(a:failed_insert)
     endif
 
     let s:complete_parameter['index'] = 0
