@@ -30,6 +30,7 @@ the next parameter use `<c-j>` and jump to the previous parameter use `<c-k>`.
 - Select next overload function. 
 - Select previous overload function. 
 - Select the first item in the completion popup menu. 
+- Echo signature when select an item. (need to `set noshowmode` or `set cmdheight=2`) 
 
 
 # Install
@@ -126,7 +127,7 @@ let g:complete_parameter_use_ultisnips_mapping = 0
 ```
 
 ### The `g:complete_parameter_echo_signature` option
-It will echo signature if this option is 1.  
+It will echo signature if this option is 1. (need to `set noshowmode` or `set cmdheight=2`) 
 default: 1  
 ```viml
 let g:complete_parameter_echo_signature = 1
