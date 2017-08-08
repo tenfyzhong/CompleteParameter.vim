@@ -125,21 +125,27 @@ default: 0
 let g:complete_parameter_use_ultisnips_mapping = 0
 ```
 
+### The `g:complete_parameter_echo_signature` option
+It will echo signature if this option is 1.  
+default: 1  
+```viml
+let g:complete_parameter_echo_signature = 1
+```
 
 # Supported
-The cell mark `x` means the completion engine has supported the language by itself.
+The cell mark `√` means the completion engine has supported the language by itself.
 Of course, you must install the completion engine for the language follow its document.  
 The plugin in the cell was supported with the completion engine.   
 
 |                | [YouCompleteMe][]           | [deoplete][]                | [neocomplete][]             | [clang_complete][] |
 |----------------|-----------------------------|-----------------------------|-----------------------------|--------------------|
-| **c**          | x                           | [deoplete-clang][]          | [clang_complete][]          | x                  |
-| **cpp**        | x                           | [deoplete-clang][]          | [clang_complete][]          | x                  |
-| **go**         | x                           | [vim-go][]                  | [vim-go][]                  |                    |
-| **python**     | x                           | [deoplete-jedi][]           | [jedi-vim][]                |                    |
-| **rust**       | x                           | [deoplete-rust][]           | [vim-racer][]               |                    |
-| **javascript** | x                           | [deoplete-ternjs][]         | [tern_for_vim][]            |                    |
-| **typescript** | x                           | [nvim-typescript][]         | [tsuquyomi][]               |                    |
+| **c**          | √                           | [deoplete-clang][]          | [clang_complete][]          | √                  |
+| **cpp**        | √                           | [deoplete-clang][]          | [clang_complete][]          | √                  |
+| **go**         | √                           | [vim-go][]                  | [vim-go][]                  |                    |
+| **python**     | √                           | [deoplete-jedi][]           | [jedi-vim][]                |                    |
+| **rust**       | √                           | [deoplete-rust][]           | [vim-racer][]               |                    |
+| **javascript** | √                           | [deoplete-ternjs][]         | [tern_for_vim][]            |                    |
+| **typescript** | √                           | [nvim-typescript][]         | [tsuquyomi][]               |                    |
 | **erlang**     | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] |                    |
 
 ## Setting for completion plugins

@@ -52,3 +52,21 @@ endfunction "}}}
 function! cm_parser#c#parameter_end() "{{{
     return ')'
 endfunction "}}}
+
+function! cm_parser#c#echos(completed_item) "{{{
+    let kind = get(a:completed_item, 'kind', '')
+    let l:abbr = get(a:completed_item, 'abbr', '')
+    let word = get(a:completed_item, 'word', '')
+    let l:menu = get(a:completed_item, 'menu', '')
+    if kind ==# 'f' && l:abbr == word
+        " clang_complete
+        return [l:menu]
+    elseif kind ==# 'f'
+        " ycm
+        return [l:abbr]
+    elseif kind =~# '\m^f .*' && l:menu ==# '[clang] ' && !empty(word) && l:abbr =~# '\m^'.word.'(.*)'
+        " deoplete
+        return [l:abbr]
+    endif
+    return []
+endfunction "}}}

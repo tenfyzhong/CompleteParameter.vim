@@ -113,6 +113,12 @@ to goto next or previous parameter.
 default: 0  >
   let g:complete_parameter_use_ultisnips_mapping = 0
 <
+                                             *g:complete_parameter_echo_signature*
+* g:complete_parameter_echo_signature
+It will echo signature if this option is 1. 
+default: 1 >
+  let g:complete_parameter_echo_signature = 1
+<
 
 ================================================================================
 5. Functions                                        *complete-parameter-functions*
@@ -174,8 +180,12 @@ Follow the next steps. All commands below was work in this plugin directory.
    `cm_parser#filetype#parameter_end()` must be equal. Each char of them must 
    be match. For example, the the first char of begin is '(', the first of end
    must be ')'. 
+
+6) Create function `cm_parser#filetype#echos(completed_item)`
+   This function return the signatures. When the parameter completed, the
+   signature will echo to cmd window. It's optional. 
    
-6) Please write unittest for your function `cm_parser#filetype#parameters` 
+7) Please write unittest for your function `cm_parser#filetype#parameters` 
    use [vader](https://github.com/junegunn/vader.vim) test framework. And put 
    the unittest in the `vader` directory. This is optional. But if you would
    send a pull request, this is required. 
