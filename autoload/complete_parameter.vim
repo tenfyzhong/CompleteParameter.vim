@@ -7,7 +7,7 @@
 " created: 2017-06-07 20:29:10
 "==============================================================
 
-let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0}
+let s:complete_parameter = {'index': 0, 'items': [], 'complete_pos': [], 'success': 0, 'echos': []}
 let g:complete_parameter_last_failed_insert = ''
 
 let s:log_index = 0
@@ -28,6 +28,10 @@ function! complete_parameter#init() abort "{{{
     let g:complete_parameter_use_ultisnips_mappings = get(g:, 'complete_parameter_use_ultisnips_mappings', 0)
 endfunction "}}}
 
+function! complete_parameter#default_echos(completed_item)
+    return []
+endfunction
+
 let s:ftfunc_prefix = 'cm_parser#'
 let s:ftfunc = {'ft': ''}
 function! complete_parameter#new_ftfunc(filetype) abort "{{{
@@ -42,6 +46,11 @@ function! complete_parameter#new_ftfunc(filetype) abort "{{{
         let ftfunc['parameter_delim'] = function(s:ftfunc_prefix . a:filetype . '#parameter_delim')
         let ftfunc['parameter_begin'] = function(s:ftfunc_prefix. a:filetype . '#parameter_begin')
         let ftfunc['parameter_end'] = function(s:ftfunc_prefix . a:filetype . '#parameter_end')
+        if exists('*'.s:ftfunc_prefix.a:filetype.'#echos')
+            let ftfunc['echos'] = function(s:ftfunc_prefix.a:filetype.'#echos')
+        else
+            let ftfunc['echos'] = function('complete_parameter#default_echos')
+        endif
     catch /^E700/
         throw 'the function should be defined: ' . v:exception
     endtry
@@ -225,6 +234,9 @@ function! complete_parameter#complete(failed_insert) abort "{{{
     let s:complete_parameter['complete_pos'] = [line('.'), col('.')]
     let col = s:complete_parameter['complete_pos'][1]
     let s:complete_parameter['success'] = 1
+    if get(g:, 'complete_parameter_echo_signature', 1)
+        let s:complete_parameter['echos'] = ftfunc.echos(v:completed_item)
+    endif
     
     " if the first char of parameter was inserted, remove it from the parameter
     let content = getline(line('.'))
@@ -250,6 +262,11 @@ function! complete_parameter#goto_first_param(parameter) abort "{{{
         let keys = complete_parameter#goto_next_param_keys(1, content, current_col+1)
         let keys = printf("%s\<ESC>%dh%s", a:parameter, len(a:parameter)-2, keys)
         call <SID>trace_log("keys: ". keys)
+
+        let index = s:complete_parameter['index']
+        if len(s:complete_parameter['echos']) > index && s:complete_parameter['echos'][index] !=# ''
+            echon s:complete_parameter['echos'][index]
+        endif
         return keys
     else
         return a:parameter
