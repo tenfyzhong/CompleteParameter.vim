@@ -80,3 +80,14 @@ endfunction "}}}
 function! cm_parser#javascript#parameter_end() "{{{
     return ')}'
 endfunction "}}}
+
+function! cm_parser#javascript#echos(completed_item) "{{{
+    let menu = get(a:completed_item, 'menu', '')
+    let info = get(a:completed_item, 'info', '')
+    if menu =~# '\m^fn('
+        return [menu]
+    elseif info =~# '\m^fn('
+        return [info]
+    endif
+    return []
+endfunction "}}}

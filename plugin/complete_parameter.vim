@@ -10,7 +10,7 @@
 if (!has('nvim')&&version < 704) || (!has('nvim')&&version==704&&!has('patch774')) || &compatible || exists('g:complete_parameter_version') 
     finish
 endif
-let g:complete_parameter_version = "0.4.0"
+let g:complete_parameter_version = "0.5.0"
 lockvar g:complete_parameter_version
 
 let save_cpo = &cpo
@@ -26,12 +26,12 @@ nnoremap <silent> <Plug>(complete_parameter#goto_previous_parameter) <ESC>:call 
 snoremap <silent> <Plug>(complete_parameter#goto_previous_parameter) <ESC>:call complete_parameter#goto_next_param(0)<cr>
 inoremap <silent> <Plug>(complete_parameter#goto_previous_parameter) <ESC>:call complete_parameter#goto_next_param(0)<cr>
 
-nnoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#loverload_next(1)<cr>
-snoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#loverload_next(1)<cr>
-inoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#loverload_next(1)<cr>
+nnoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#overload_next(1)<cr>
+snoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#overload_next(1)<cr>
+inoremap <silent> <Plug>(complete_parameter#overload_down) <ESC>:call complete_parameter#overload_next(1)<cr>
 
-nnoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#loverload_next(0)<cr>
-snoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#loverload_next(0)<cr>
-inoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#loverload_next(0)<cr>
+nnoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#overload_next(0)<cr>
+snoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#overload_next(0)<cr>
+inoremap <silent> <Plug>(complete_parameter#overload_up) <ESC>:call complete_parameter#overload_next(0)<cr>
 
 let &cpo = save_cpo

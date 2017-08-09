@@ -72,3 +72,21 @@ endfunction "}}}
 function! cm_parser#typescript#parameter_end() "{{{
     return ')'
 endfunction "}}}
+
+function! cm_parser#typescript#echos(completed_item) "{{{
+    let kind = get(a:completed_item, 'kind', '')
+    let word = get(a:completed_item, 'word', '')
+
+    let l:abbr = get(a:completed_item, 'abbr', '')
+    let info = get(a:completed_item, 'info', '')
+    let l:menu = get(a:completed_item, 'menu', '')
+
+    if kind ==# 'm' &&  l:abbr =~# '\m^'.word.'\s*(method)'
+        return [l:abbr]
+    elseif kind  ==# 'M' && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
+        return [info]
+    elseif empty(kind) && l:menu =~# '\m^(method).*'.word
+        return [l:menu]
+    endif
+    return []
+endfunction "}}}

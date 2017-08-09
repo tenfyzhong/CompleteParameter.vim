@@ -61,3 +61,14 @@ endfunction "}}}
 function! cm_parser#go#parameter_end() "{{{
     return ')'
 endfunction "}}}
+
+function! cm_parser#go#echos(completed_item) "{{{
+    let menu = get(a:completed_item, 'menu', '')
+    let info = get(a:completed_item, 'info', '')
+    if menu =~# '^func'
+        return [menu]
+    elseif info =~# '^func'
+        return [info]
+    endif
+    return []
+endfunction "}}}
