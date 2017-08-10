@@ -248,18 +248,21 @@ function! cmp#complete(failed_insert) abort "{{{
         endif
     endif
 
-    return cmp#goto_first_param(parameter)
+    " must be insert mode
+    " the cursor is in the last char+1,col('$')
+    " we need the pass the last char col, so col('.')-1
+    return cmp#goto_first_param(parameter, content, col('.')-1)
 endfunction "}}}
 
-function! cmp#goto_first_param(parameter) abort "{{{
+function! cmp#goto_first_param(parameter, content, current_col) abort "{{{
     if s:complete_parameter['success']
-        let lnum = line('.')
-        let content = getline(lnum)
-        let current_col = col('.')
-        let content = content[:current_col] . a:parameter . content[current_col:]
+        call <SID>trace_log(printf('content:[%s] current_col:%d, left:[%s], right:[%s]', a:content, a:current_col, a:content[:a:current_col-1], a:content[a:current_col:]))
+        let content = a:content[:a:current_col-1] . a:parameter . a:content[a:current_col:]
         call <SID>trace_log("content: " . content)
-        call <SID>trace_log("current_col: " . current_col)
-        let keys = cmp#goto_next_param_keys(1, content, current_col+1)
+        call <SID>trace_log("current_col: " . a:current_col)
+        " the current_col is no in the `()`
+        " show we need to add 1
+        let keys = cmp#goto_next_param_keys(1, content, a:current_col+1)
         let keys = printf("%s\<ESC>%dh%s", a:parameter, len(a:parameter)-2, keys)
         call <SID>trace_log("keys: ". keys)
 
@@ -297,7 +300,7 @@ function! cmp#goto_next_param_keys(forward, content, current_col) abort "{{{
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
     let [word_begin, word_end] = cmp#parameter_position(a:content, a:current_col, delim, border_begin, border_end, step)
-    call <SID>trace_log('word_begin:'.word_begin.' word_end:'.word_end)
+    call <SID>trace_log(printf('content:[%s],current_col:%d,word_begin:%d,word_end:%d', a:content, a:current_col, word_begin, word_end))
     if word_begin == 0 && word_end == 0
         call <SID>debug_log('word_begin and word_end is 0')
         return ''
@@ -323,6 +326,7 @@ function! cmp#goto_next_param_keys(forward, content, current_col) abort "{{{
 endfunction "}}}
 
 function! cmp#goto_next_param(forward) abort "{{{
+    let s:log_index = <sid>timenow_ms()
     let lnum = line('.')
     let content = getline(lnum)
     let current_col = col('.')
@@ -411,7 +415,17 @@ function! cmp#overload_next(forward) abort "{{{
 
     let s:complete_parameter['index'] = result[2]
     let s:complete_parameter['success'] = 1
-    let ret = 'a'.cmp#goto_first_param(next_content)
+    let content = getline(line('.'))
+    let current_col = col('.')
+    let insert_method = 'a'
+    if current_col != col('$')-1
+        " if no the last char
+        " the cursor in the last complete char+1
+        " we need to -1
+        let current_col -= 1
+        let insert_method = 'i'
+    endif
+    let ret = insert_method.cmp#goto_first_param(next_content, content, current_col)
     call <SID>trace_log(ret)
     call feedkeys(ret, 'n')
 endfunction "}}}
@@ -498,6 +512,9 @@ endfunction "}}}
 " current_col: int, current col
 " delim:  string, split the paramter letter
 " return: [int, int] begin_col, end_col
+"
+" col: base 1
+" pos: base 0
 function! cmp#parameter_position(content, current_col, delim, border_begin, border_end, step) abort "{{{
     "{{{2
     if empty(a:content) || 
@@ -512,14 +529,10 @@ function! cmp#parameter_position(content, current_col, delim, border_begin, bord
     endif "}}}2
     let step = a:step > 0 ? 1 : -1
     let current_pos = a:current_col - 1
-    if mode() ==# 'i'
-        let current_pos -= 1
-    endif
     let content_len = len(a:content)
     let end = a:step > 0 ? content_len : -1
     if current_pos >= content_len
-        call <SID>error_log('current_pos is large than content_len')
-        return [0, 0]
+        let current_pos = content_len-1
     endif
 
     " check current pos is in the scope or not
