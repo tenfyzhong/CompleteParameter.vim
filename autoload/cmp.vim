@@ -343,9 +343,41 @@ endfunction "}}}
 
 function! cmp#goto_next_param(forward) abort "{{{
     let s:log_index = <sid>timenow_ms()
+
+    let filetype = &ft
+    if empty(filetype)
+        call <SID>debug_log('filetype is empty')
+        return ''
+    endif
+
+    try
+        let ftfunc = cmp#new_ftfunc(filetype)
+    catch
+        call <SID>debug_log('new ftfunc failed')
+        return ''
+    endtry
+    if !cmp#filetype_func_check(ftfunc)
+        return ''
+    endif
+
+    let step = a:forward ? 1 : -1
+
+    let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
+
     let lnum = line('.')
     let content = getline(lnum)
     let current_col = col('.')
+
+    let pos = current_col - 1
+
+    " if the selected is an object and the cursor char is an border_end
+    " go back to border_begin and it can select the item in the object. 
+    if mode() == 'n' && match(border_end, content[pos]) != -1
+        normal %
+        let current_col = col('.')
+    endif
+
+
     let keys = cmp#goto_next_param_keys(a:forward, content, current_col)
     call feedkeys(keys, 'n')
     return ''

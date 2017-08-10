@@ -137,4 +137,17 @@ Then:
   AssertEqual 'n', mode()
   let end = col('.')
   AssertEqual 12, end
+
+Given javascript(a.fun({format, a}), select {}, jump to format):
+  a.fun({format, a})
+
+Do:
+  1gg7|v10l\<c-g>\<m-n>
+
+Then:
+  AssertEqual 's', mode()
+  let start = col('v')
+  AssertEqual 8, start
+  let end = col('.')
+  AssertEqual 13, end
 "}}}

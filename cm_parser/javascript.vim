@@ -7,17 +7,23 @@
 " created: 2017-06-11 21:14:37
 "==============================================================
 
-" ycm
-function! s:parser0(menu) "{{{
-    let param = substitute(a:menu, '\m^fn\((.*)\)\%(\s*->.*\)\?', '\1', '')
+function! s:process_param(param)
+    let param = a:param
     " remove fn
     while param =~# '\<fn('
         let param = substitute(param, '\m\<fn([^)]*)', '', 'g')
     endwhile
     while param =~# '\w\+\s*:\s*{[^{}]*}'
-        let param = substitute(param, '\m\(\w\+\):\s{[^{}]*}', '\1', 'g')
+        let param = substitute(param, '\m\w\+:\s\({[^{}]*}\)', '\1', 'g')
     endwhile
-    let param = substitute(param, '\m?\?:\s*[^,)]*', '', 'g')
+    let param = substitute(param, '\m?\?:\s*[^,(){}]*', '', 'g')
+    return param
+endfunction
+
+" ycm
+function! s:parser0(menu) "{{{
+    let param = substitute(a:menu, '\m^fn\((.*)\)\%(\s*->.*\)\?', '\1', '')
+    let param = <sid>process_param(param)
     return [param]
 endfunction "}}}
 
@@ -47,14 +53,7 @@ function! s:parser1(info) "{{{
         let func .= line
     endfor
     let param = substitute(func, '\m^fn\((.*)\)\%(\s*->.*\)\?', '\1', '')
-    " remove fn
-    while param =~# '\<fn('
-        let param = substitute(param, '\m\<fn([^)]*)', '', 'g')
-    endwhile
-    while param =~# '\w\+\s*:\s*{[^{}]*}'
-        let param = substitute(param, '\m\(\w\+)\s*:{[^{}]*}', '\1', 'g')
-    endwhile
-    let param = substitute(param, '\m?\?:\s*[^,)]*', '', 'g')
+    let param = <sid>process_param(param)
     return [param]
 endfunction "}}}
 
