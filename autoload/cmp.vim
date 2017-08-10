@@ -126,7 +126,7 @@ endfunction "}}}
 " select an item if need, and the check need to revert or not
 " else call the complete function
 function! cmp#pre_complete(failed_insert) abort "{{{
-    let s:log_index += 1
+    let s:log_index = <SID>timenow_ms()
     let completed_word = get(v:completed_item, 'word', '')
 
     if <SID>empty_completed_item() && pumvisible()
@@ -361,7 +361,18 @@ function! cmp#next_overload_content(items, current_index, current_line, complete
     return [1, a:items[next_index], next_index, len(a:items[a:current_index])]
 endfunction "}}}
 
+function! s:timenow_us()
+    let t = reltime()
+    return t[0] * 1000000 + t[1]
+endfunction
+
+function! s:timenow_ms()
+    return <SID>timenow_us()
+endfunction
+
 function! cmp#overload_next(forward) abort "{{{
+    let s:log_index = <SID>timenow_ms()
+
     let overload_len = len(s:complete_parameter['items'])
     if overload_len <= 1
         return
@@ -392,6 +403,7 @@ function! cmp#overload_next(forward) abort "{{{
     let current_overload_len = result[3]
 
     call cursor(complete_pos[0], complete_pos[1])
+    call <sid>trace_log(printf('pos: %d %d', complete_pos[0], complete_pos[1]))
 
     exec 'normal! d'.current_overload_len.'l'
 
@@ -399,9 +411,9 @@ function! cmp#overload_next(forward) abort "{{{
 
     let s:complete_parameter['index'] = result[2]
     let s:complete_parameter['success'] = 1
-    exec 'normal! a'.next_content
-    stopinsert
-    call cmp#goto_first_param(next_content)
+    let ret = 'a'.cmp#goto_first_param(next_content)
+    call <SID>trace_log(ret)
+    call feedkeys(ret, 'n')
 endfunction "}}}
 
 let s:stack = {'data':[]}
