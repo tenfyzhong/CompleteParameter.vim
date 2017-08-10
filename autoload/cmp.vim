@@ -299,7 +299,23 @@ function! cmp#goto_next_param_keys(forward, content, current_col) abort "{{{
     let border_begin = a:forward ? ftfunc.parameter_begin() : ftfunc.parameter_end()
     let border_end = a:forward ? ftfunc.parameter_end() : ftfunc.parameter_begin()
 
-    let [word_begin, word_end] = cmp#parameter_position(a:content, a:current_col, delim, border_begin, border_end, step)
+    " if in the insert mode
+    " go back to the first none space
+    " this can select the parameter after cursor
+    let pos = a:current_col-1
+    let scope_end = step > 0 ? -1 : len(a:content)
+    if mode() ==# 'i'
+        while pos != scope_end && 
+                    \(a:content[pos-1] =~# '['.delim.border_begin.']' || 
+                    \ a:content[pos-1] ==# ' ')
+            let pos -= 1
+            if a:content[pos] =~# '['.delim.border_begin.']'
+                break
+            endif
+        endwhile
+    endif
+
+    let [word_begin, word_end] = cmp#parameter_position(a:content, pos+1, delim, border_begin, border_end, step)
     call <SID>trace_log(printf('content:[%s],current_col:%d,word_begin:%d,word_end:%d', a:content, a:current_col, word_begin, word_end))
     if word_begin == 0 && word_end == 0
         call <SID>debug_log('word_begin and word_end is 0')
