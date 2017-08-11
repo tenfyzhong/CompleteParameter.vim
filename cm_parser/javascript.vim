@@ -13,6 +13,15 @@ function! s:process_param(param)
     while param =~# '\<fn('
         let param = substitute(param, '\m\<fn([^)]*)', '', 'g')
     endwhile
+
+    " both parameter and the type is object
+    " remove type
+    while param =~# '{[^{}]*}\s*:\s*{[^{}]*}'
+        let param = substitute(param, '\m\({[^{}]*}\)\s*:\s*{[^{}]*}', '\1', 'g')
+    endwhile
+
+    " if the type of parameter is an object
+    " return object but not parameter
     while param =~# '\w\+\s*:\s*{[^{}]*}'
         let param = substitute(param, '\m\w\+:\s\({[^{}]*}\)', '\1', 'g')
     endwhile

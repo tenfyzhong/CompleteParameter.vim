@@ -39,6 +39,11 @@ Execute (fn(options: {compressible: bool, extensions: [?], register: ?, source: 
   let completed_item = {'menu': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ['({compressible, extensions, register, source, type})'], result
+
+Execute (fn({compressible, extensions, register, source, type}: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'menu': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
 "}}}
 
 "{{{ deoplete
@@ -79,6 +84,11 @@ Execute (fn(test: {elt: number, i: number, array: Array}, context?: ?) -> bool):
   AssertEqual ["(test, context)"], result
 
 Execute (fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'info': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
+
+Execute (fn({compressible, extensions, register, source, type}: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
   let completed_item = {'info': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ['({compressible, extensions, register, source, type})'], result
