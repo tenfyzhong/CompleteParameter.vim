@@ -263,7 +263,7 @@ function! cmp#goto_first_param(parameter, content, current_col) abort "{{{
         " the current_col is no in the `()`
         " show we need to add 1
         let keys = cmp#goto_next_param_keys(1, content, a:current_col+1)
-        let keys = printf("%s\<ESC>%dh%s", a:parameter, len(a:parameter)-2, keys)
+        let keys = printf("%s\<ESC>%s", a:parameter, keys)
         call <SID>trace_log("keys: ". keys)
 
         let index = s:complete_parameter['index']
