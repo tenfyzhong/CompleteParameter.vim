@@ -134,7 +134,8 @@ function! cmp#pre_complete(failed_insert) abort "{{{
         call feedkeys(feed, 'n')
         return "\<C-n>"
     else
-        return cmp#complete(a:failed_insert)
+        return <SID>omnicomplete(a:failed_insert)
+        " return cmp#complete(a:failed_insert)
     endif
 endfunction "}}}
 
@@ -156,6 +157,11 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
     return a:failed_insert . keys
 endfunction "}}}
 
+function! s:omnicomplete(failed_insert)
+    call feedkeys("\<c-r>=cmp#complete('".a:failed_insert."')\<cr>", 'n')
+    return "\<c-x>\<c-o>"
+endfunction
+
 " if the select item is not match with completed_word, the revert
 " else call the complete function
 function! cmp#check_revert_select(failed_insert, completed_word) abort "{{{
@@ -166,8 +172,9 @@ function! cmp#check_revert_select(failed_insert, completed_word) abort "{{{
     if select_complete_word !=# a:completed_word
         return <SID>failed_event("\<C-p>".a:failed_insert)
     else
-        let keys = cmp#complete(a:failed_insert)
-        return keys
+        return <SID>omnicomplete(a:failed_insert)
+        " let keys = cmp#complete(a:failed_insert)
+        " return keys
     endif
 endfunction "}}}
 
@@ -182,6 +189,7 @@ function! cmp#check_parameter_return(parameter, parameter_begin, parameter_end) 
 endfunction "}}}
 
 function! cmp#complete(failed_insert) abort "{{{
+    redraw!
     call <SID>trace_log(string(v:completed_item))
     if <SID>empty_completed_item()
         call <SID>debug_log('v:completed_item is empty')
