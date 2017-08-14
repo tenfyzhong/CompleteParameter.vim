@@ -158,8 +158,12 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
 endfunction "}}}
 
 function! s:omnicomplete(failed_insert)
-    call feedkeys("\<c-r>=cmp#complete('".a:failed_insert."')\<cr>", 'n')
-    return "\<c-x>\<c-o>"
+    if !empty(&omnifunc) && pumvisible()
+        call feedkeys("\<c-r>=cmp#complete('".a:failed_insert."')\<cr>", 'n')
+        return "\<c-x>\<c-o>"
+    endif
+    let keys = cmp#complete(a:failed_insert)
+    return keys
 endfunction
 
 " if the select item is not match with completed_word, the revert
@@ -173,8 +177,6 @@ function! cmp#check_revert_select(failed_insert, completed_word) abort "{{{
         return <SID>failed_event("\<C-p>".a:failed_insert)
     else
         return <SID>omnicomplete(a:failed_insert)
-        " let keys = cmp#complete(a:failed_insert)
-        " return keys
     endif
 endfunction "}}}
 
