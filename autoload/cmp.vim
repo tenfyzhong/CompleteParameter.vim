@@ -153,7 +153,16 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
     else
         let keys =  cmp#default_failed_insert(a:failed_insert)
     endif
-    return a:failed_insert . keys
+    let content = getline(line('.'))
+    let parameter = a:failed_insert
+    let pos = col('.') - 2
+    if pos > 0
+        if content[pos] ==# parameter[0]
+            let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
+        endif
+    endif
+
+    return parameter . keys
 endfunction "}}}
 
 " if the select item is not match with completed_word, the revert
