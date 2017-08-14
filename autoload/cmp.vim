@@ -28,9 +28,9 @@ function! cmp#init() abort "{{{
     let g:complete_parameter_use_ultisnips_mappings = get(g:, 'complete_parameter_use_ultisnips_mappings', 0)
 endfunction "}}}
 
-function! cmp#default_echos(completed_item)
+function! cmp#default_echos(completed_item) "{{{
     return []
-endfunction
+endfunction "}}}
 
 let s:ftfunc_prefix = 'cm_parser#'
 let s:ftfunc = {'ft': ''}
@@ -157,14 +157,14 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
     return a:failed_insert . keys
 endfunction "}}}
 
-function! s:omnicomplete(failed_insert)
+function! s:omnicomplete(failed_insert) "{{{
     if !empty(&omnifunc) && pumvisible()
         call feedkeys("\<c-r>=cmp#complete('".a:failed_insert."')\<cr>", 'n')
         return "\<c-x>\<c-o>"
     endif
     let keys = cmp#complete(a:failed_insert)
     return keys
-endfunction
+endfunction "}}}
 
 " if the select item is not match with completed_word, the revert
 " else call the complete function
@@ -423,14 +423,14 @@ function! cmp#next_overload_content(items, current_index, current_line, complete
     return [1, a:items[next_index], next_index, len(a:items[a:current_index])]
 endfunction "}}}
 
-function! s:timenow_us()
+function! s:timenow_us() "{{{
     let t = reltime()
     return t[0] * 1000000 + t[1]
-endfunction
+endfunction "}}}
 
-function! s:timenow_ms()
+function! s:timenow_ms() "{{{
     return <SID>timenow_us()
-endfunction
+endfunction "}}}
 
 function! cmp#overload_next(forward) abort "{{{
     let s:log_index = <SID>timenow_ms()
