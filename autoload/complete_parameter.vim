@@ -7,6 +7,12 @@
 " created: 2017-08-10 09:37:46
 "==============================================================
 
-function! complete_parameter#pre_complete(failed_inserted)
+" deprecated
+function! complete_parameter#pre_complete(failed_inserted) "{{{
     return cmp#pre_complete(a:failed_inserted)
-endfunction
+endfunction "}}}
+
+" deprecated
+function! complete_parameter#jumpable(forward) "{{{
+    return cmp#jumpable(a:forward)
+endfunction "}}}

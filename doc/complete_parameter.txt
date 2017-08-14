@@ -123,13 +123,17 @@ default: 1 >
 
 ================================================================================
 5. Functions                                        *complete-parameter-functions*
+                                                                *cmp#pre_complete*
                                                  *complete_parameter#pre_complete*
-`complete_parameter#pre_complete(failed_insert)`
+`cmp#pre_complete(failed_insert)`
+`complete_parameter#pre_complete(failed_insert)` deprecated
 call parameter completion. If failed, the parameter `failed_insert` will be
 inserted. 
 
+                                                                    *cmp#jumpable*
                                                      *complete_parameter#jumpable*
 `cmp#jumpable(forward)`
+`complete_parameter#jumpable(forward)` deprecated
 can jump to next parameter or not. 
 
                                                          *CompleteParameterFailed*
