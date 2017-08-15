@@ -162,12 +162,17 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
     let parameter = a:failed_insert
     let pos = col('.') - 2
     if pos > 0
-        if content[pos] ==# parameter[0]
+        let parameterLen = len(parameter)
+        if content[pos:pos+parameterLen-1] !=# parameter &&
+                    \content[pos] ==# parameter[0] 
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
         endif
     endif
 
-    return parameter . keys
+    let keys = parameter . keys
+    call <SID>trace_log(keys)
+
+    return keys
 endfunction "}}}
 
 " if the select item is not match with completed_word, the revert
