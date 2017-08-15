@@ -162,8 +162,8 @@ function! s:failed_event(failed_insert) abort "{{{ return the text to insert and
     let parameter = a:failed_insert
     let pos = col('.') - 2
     if pos > 0
-        let parameterLen = len(parameter)
-        if content[pos:pos+parameterLen-1] !=# parameter &&
+        let posEnd = pos + len(parameter) - 1
+        if content[pos : posEnd] !=# parameter &&
                     \content[pos] ==# parameter[0] 
             let parameter = substitute(parameter, '\m.\(.*\)', '\1', '')
         endif
