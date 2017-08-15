@@ -127,6 +127,11 @@ endfunction "}}}
 " else call the complete function
 function! cmp#pre_complete(failed_insert) abort "{{{
     let s:log_index = <SID>timenow_ms()
+
+    if !pumvisible()
+        return <SID>failed_event(a:failed_insert)
+    endif
+
     let completed_word = get(v:completed_item, 'word', '')
 
     if <SID>empty_completed_item() && pumvisible()
