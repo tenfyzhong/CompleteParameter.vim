@@ -48,6 +48,23 @@ Execute (add(a, b), omni):
   let completed_item = {'word': '(', 'menu': '', 'info': ' ', 'kind': '', 'abbr': 'add(a,b)'}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(a, b)'], result
+
+" interact(self, escape_character=chr(29),             input_filter=None,
+" output_filter=None)
+Execute (interact(self, excape_character=ch(29)):
+  let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> int):
+  let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> int"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> (int, int)):
+  let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
 "}}}
 
 " {{{ def
@@ -115,6 +132,23 @@ Execute (multi line):
   let completed_item = {'menu': 'def exec_command', 'info': "exec_command(         command,         bufsize=-1,\ntimeout=None,         get_pty=False,         environment=None)"}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(command, bufsize, timeout, get_pty, environment)'], result
+
+" interact(self, escape_character=chr(29),             input_filter=None,
+" output_filter=None)
+Execute (interact(self, excape_character=ch(29)):
+  let completed_item = {'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> int):
+  let completed_item = {'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> int"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> (int, int)):
+  let completed_item = {'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
 "}}}
 
 " {{{ deoplete
@@ -172,5 +206,22 @@ Execute (multi line):
   let completed_item = {'menu': 'def exec_command', 'info': "exec_command(         command,         bufsize=-1,\ntimeout=None,         get_pty=False,         environment=None)"}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(command, bufsize, timeout, get_pty, environment)'], result
+
+" interact(self, escape_character=chr(29),             input_filter=None,
+" output_filter=None)
+Execute (interact(self, excape_character=ch(29)):
+  let completed_item = {'word': 'interact(', 'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> int):
+  let completed_item = {'word': 'interact(', 'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> int"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> (int, int)):
+  let completed_item = {'word': 'interact(', 'menu': 'def interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character, input_filter, output_filter)'], result
 "}}}
 

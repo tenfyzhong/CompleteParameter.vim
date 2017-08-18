@@ -7,17 +7,54 @@
 " created: 2017-06-11 18:11:12
 "==============================================================
 
-function! s:parser0(info) "{{{
+" pexpect
+" interact(self, escape_character=chr(29),             input_filter=None,
+" output_filter=None)
+function! s:signature(info) "{{{
     let info_lines = split(a:info, '\n')
     let func = ''
+    let match = 0
+    let l:finish = 0
+    " there are maybe some () in the parameters
+    " if the count of `(` equal to `)` 
+    " then the parameters has finished
     for line in info_lines
-        if func =~# ')'
+        for i in range(len(line))
+            if line[i] ==# '('
+                let match += 1
+            elseif line[i] ==# ')'
+                let match -= 1
+                if match == 0
+                    let l:finish = 1
+                    break
+                endif
+            endif
+        endfor
+        if l:finish == 0
+            let func .= line
+        else
+            let func .= line[:i]
             break
         endif
-        let func .= line
     endfor
+    return func
+endfunction "}}}
 
-    let param = substitute(func, '\m[^(]*\(([^)]*)\).*', '\1', '')
+function! s:parser0(info) "{{{
+    let func = <SID>signature(a:info)
+
+    " remove function name, begin `(` and end `)`
+    let param = substitute(func, '\m[^(]*(\(.*\))[^)]*', '\1', '')
+
+    " remove `()`
+    while param =~# '(.*)'
+        let param = substitute(param, '(.*)', '', 'g')
+    endwhile
+
+    " add begin`(` and end`)`
+    let param = '(' . param . ')'
+
+    " let param = substitute(func, '\m[^(]*\(([^)]*)\).*', '\1', '')
     let param = substitute(param, '\m\s*=\s*[^,()]*', '', 'g')
     " remove self,cls
     let param = substitute(param, '\m(\s*\<self\>\s*,\?', '(', '')
