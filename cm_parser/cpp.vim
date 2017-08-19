@@ -78,3 +78,9 @@ endfunction "}}}
 function! cm_parser#cpp#parameter_end() "{{{
     return ')>'
 endfunction "}}}
+
+function! cm_parser#cpp#echos(completed_item) "{{{
+    let info = get(a:completed_item, 'info', '')
+    let decls = split(info, "\n")
+    return decls
+endfunction "}}}

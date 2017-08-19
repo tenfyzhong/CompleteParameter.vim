@@ -30,6 +30,7 @@ a function.
 - Select next overload function. 
 - Select previous overload function. 
 - Select the first item in the completion popup menu. 
+- Echo signature when select an item. (need to `set noshowmode` or `set cmdheight=2`) 
 
 
 ================================================================================
@@ -113,16 +114,26 @@ to goto next or previous parameter.
 default: 0  >
   let g:complete_parameter_use_ultisnips_mapping = 0
 <
+                                             *g:complete_parameter_echo_signature*
+* g:complete_parameter_echo_signature
+It will echo signature if this option is 1. (need to `set noshowmode` or `set cmdheight=2`) 
+default: 1 >
+  let g:complete_parameter_echo_signature = 1
+<
 
 ================================================================================
 5. Functions                                        *complete-parameter-functions*
+                                                                *cmp#pre_complete*
                                                  *complete_parameter#pre_complete*
-`complete_parameter#pre_complete(failed_insert)`
+`cmp#pre_complete(failed_insert)`
+`complete_parameter#pre_complete(failed_insert)` deprecated
 call parameter completion. If failed, the parameter `failed_insert` will be
 inserted. 
 
+                                                                    *cmp#jumpable*
                                                      *complete_parameter#jumpable*
-`complete_parameter#jumpable(forward)`
+`cmp#jumpable(forward)`
+`complete_parameter#jumpable(forward)` deprecated
 can jump to next parameter or not. 
 
                                                          *CompleteParameterFailed*
@@ -174,8 +185,12 @@ Follow the next steps. All commands below was work in this plugin directory.
    `cm_parser#filetype#parameter_end()` must be equal. Each char of them must 
    be match. For example, the the first char of begin is '(', the first of end
    must be ')'. 
+
+6) Create function `cm_parser#filetype#echos(completed_item)`
+   This function return the signatures. When the parameter completed, the
+   signature will echo to cmd window. It's optional. 
    
-6) Please write unittest for your function `cm_parser#filetype#parameters` 
+7) Please write unittest for your function `cm_parser#filetype#parameters` 
    use [vader](https://github.com/junegunn/vader.vim) test framework. And put 
    the unittest in the `vader` directory. This is optional. But if you would
    send a pull request, this is required. 

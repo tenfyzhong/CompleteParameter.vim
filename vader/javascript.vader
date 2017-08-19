@@ -38,7 +38,17 @@ Execute (fn(test: {elt: string, i: number, array: Array}, context?: ?) -> bool):
 Execute (fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
   let completed_item = {'menu': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
   let result = cm_parser#javascript#parameters(completed_item)
-  AssertEqual ['(options)'], result
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
+
+Execute (fn({compressible, extensions, register, source, type}: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'menu': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
+
+Execute (add(, omni):
+  let completed_item = {'word': 'add(', 'menu': 'a, b', 'info': '', 'kind': 'f', 'abbr': ''}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
 "}}}
 
 "{{{ deoplete
@@ -77,4 +87,14 @@ Execute (fn(test: {elt: number, i: number, array: Array}, context?: ?) -> bool):
   let completed_item = {"info": "fn(test: fn(elt: ?, i: number, array: Array) -> bool, \ncontext?: ?) -> bool"}
   let result = cm_parser#javascript#parameters(completed_item)
   AssertEqual ["(test, context)"], result
+
+Execute (fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'info': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
+
+Execute (fn({compressible, extensions, register, source, type}: {compressible: bool, extensions: [?], register: ?, source: string, type: string})):
+  let completed_item = {'info': 'fn(options: {compressible: bool, extensions: [?], register: ?, source: string, type: string})'}
+  let result = cm_parser#javascript#parameters(completed_item)
+  AssertEqual ['({compressible, extensions, register, source, type})'], result
 "}}}

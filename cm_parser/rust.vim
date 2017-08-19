@@ -59,3 +59,21 @@ endfunction "}}}
 function! cm_parser#rust#parameter_end() "{{{
     return ')'
 endfunction "}}}
+
+function! cm_parser#rust#echos(completed_item) "{{{
+    let menu = get(a:completed_item, 'menu', '')
+    let word = get(a:completed_item, 'word', '')
+    let kind = get(a:completed_item, 'kind', '')
+    let info = get(a:completed_item, 'info', '')
+    let l:abbr = get(a:completed_item, 'abbr', '')
+    if kind ==# 'f' && !empty(word) && menu =~# '(.*)' && empty(info)
+        " ycm
+        return [menu]
+    elseif kind ==# 'f' && !empty(l:abbr) && word =~# l:abbr.'(' && !empty(info)
+        return [info]
+    elseif kind ==# 'Function' && !empty(word) && info =~# '(.*)'
+        " deoplete
+        return [info]
+    endif
+    return []
+endfunction "}}}

@@ -11,40 +11,32 @@
 " {'word': 'Scan', 'menu': 'func(a ...interface{}) (n int, err error)', 'info': 'Scan func(a ...interface{}) (n int, err error) func', 'kind': 'f', 'abbr': 'Scan'}
 " completor
 " {'word': 'Scanf', 'menu': 'func(format string, a ...interface{}) (n int, err error)', 'info': '', 'kind': '', 'abbr': ''}
-function! s:parser0(menu) "{{{
-    if empty(a:menu)
-        return []
-    endif
-    let param = substitute(a:menu, '\mfunc\(([^(]*)\).*', '\1', '')
-    " remove type
-    let param = substitute(param, '\m\(\w\+\)\s*[^,)]*', '\1', 'g')
-    return [param]
-endfunction "}}}
-
 " neocomplete
 " {'word': 'Scan(', 'menu': '[O] ', 'info': 'func Scan(a ...interface{}) (n int, err error)', 'kind': '', 'abbr': 'func Scan(a ...interface{}) (n int, err error)'}
 " deoplete
 " {'word': 'Errorf', 'menu': '', 'info': 'func(format string, a ...interface{}) error', 'kind': 'func', 'abbr': 'Errorf(format string, a ...interface{}) error'}
-function! s:parser1(info, word) "{{{
+function! s:parser1(info) "{{{
     if empty(a:info)
         return []
     endif
-    let word = substitute(a:word, '\(.*\)(', '\1', '')
-    let param = substitute(a:info, '\m^func\%( \w*\)\?\(([^()]*)\).*', '\1', '')
+    let param = substitute(a:info, '\m^func\%( \w*\)\?\(.*\)', '\1', '')
+    while param =~# '\m\<func\>'
+        let param = substitute(param, '\<func\>\s*([^()]*)\s*\%(\w*|([^()]*)\)\?', '', 'g')
+    endwhile
+
+    let param = substitute(param, '\m^\(([^()]*)\).*', '\1', '')
     " remove type
     let param = substitute(param, '\m\(\w\+\)\s*[^,)]*', '\1', 'g')
     return [param]
 endfunction "}}}
 
 function! cm_parser#go#parameters(completed_item) "{{{
-    let kind = get(a:completed_item, 'kind', '')
     let menu = get(a:completed_item, 'menu', '')
     let info = get(a:completed_item, 'info', '')
-    let word = get(a:completed_item, 'word', '')
     if menu =~# '^func'
-        return <SID>parser0(menu)
+        return <SID>parser1(menu)
     elseif info =~# '^func'
-        return <SID>parser1(info, word)
+        return <SID>parser1(info)
     else
         return []
     endif
@@ -60,4 +52,15 @@ endfunction "}}}
 
 function! cm_parser#go#parameter_end() "{{{
     return ')'
+endfunction "}}}
+
+function! cm_parser#go#echos(completed_item) "{{{
+    let menu = get(a:completed_item, 'menu', '')
+    let info = get(a:completed_item, 'info', '')
+    if menu =~# '^func'
+        return [menu]
+    elseif info =~# '^func'
+        return [info]
+    endif
+    return []
 endfunction "}}}
