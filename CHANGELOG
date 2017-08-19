@@ -1,4 +1,6 @@
-0.5.1: 2017-08-11
+0.6.0: 2017-08-19
+Rename file. 
+Insert parameter if there are some content after the cursor. 
 Fix bug. 
 
 0.5.0: 2017-08-09
