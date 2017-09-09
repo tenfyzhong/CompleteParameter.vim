@@ -9,10 +9,10 @@
 
 " deprecated
 function! complete_parameter#pre_complete(failed_inserted) "{{{
-    return cmp#pre_complete(a:failed_inserted)
+  return cmp#pre_complete(a:failed_inserted)
 endfunction "}}}
 
 " deprecated
 function! complete_parameter#jumpable(forward) "{{{
-    return cmp#jumpable(a:forward)
+  return cmp#jumpable(a:forward)
 endfunction "}}}
