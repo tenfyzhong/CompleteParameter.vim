@@ -225,3 +225,7 @@ Execute (interact(self, excape_character=ch(29) -> (int, int)):
   AssertEqual ['(escape_character, input_filter, output_filter)'], result
 "}}}
 
+Execute (jedi):
+  let completed_item = {'word': 'test_func', 'menu': '[jedi] ', 'info': 'test_func(arg1, arg2)', 'kind': 'function', 'abbr': 'test_func(arg1, arg2)'} 
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(arg1, arg2)'], result

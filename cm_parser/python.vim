@@ -75,7 +75,7 @@ function! cm_parser#python#parameters(completed_item) "{{{
     let word = get(a:completed_item, 'word', '')
     let abbr = get(a:completed_item, 'abbr', '')
     let kind = get(a:completed_item, 'kind', '')
-    if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($') && !empty(info)
+    if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($' || menu =~? '\[jedi\]\s*') && !empty(info)
         return s:parser0(info)
     elseif word ==# '(' && empty(menu) && info ==# ' ' && empty(kind) && !empty(abbr)
         " ycm omni called
