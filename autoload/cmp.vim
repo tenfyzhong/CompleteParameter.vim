@@ -669,6 +669,36 @@ function! cmp#parameter_position(content, current_col, delim, border_begin, bord
       endif
     elseif a:content[pos] ==# '\'
       let pos += step
+    elseif a:content[pos] ==# '='
+      if step > 0
+        if stack.len() > 1
+          " if stack more than 1, current maybe in the nest scope, ignore it
+          let pos += step 
+          continue
+        endif
+        let pos += step
+        let pos = <SID>find_first_not_space(a:content, pos, end, step)
+        if pos == end
+          break
+        endif
+        let begin_pos = pos
+        if stack.len() == 0
+          " let = as a delim, it's the next begining
+          call stack.push(a:delim[0])
+        endif
+        continue
+      else
+        " backword
+        " if stack is empty, we need to find the first begin or delim
+        " if stack more than 1, current maybe in the nest scope, ignore it
+        if stack.len() != 1 
+          let pos += step
+          continue
+        else
+          " if stack len is 1, and current pos must be want to select
+          break
+        endif
+      endif
     elseif stridx(a:border_begin, a:content[pos]) != -1
       call stack.push(a:content[pos])
       if stack.len() == 1

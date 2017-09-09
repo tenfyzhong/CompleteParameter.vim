@@ -1,3 +1,6 @@
+Before:
+  let g:complete_parameter_py_keep_value = 0
+
 " {{{ ycm
 Execute (error menu):
   let completed_item = {'menu': 'module:func', 'info': 'func()'}
@@ -65,6 +68,12 @@ Execute (interact(self, excape_character=ch(29) -> (int, int)):
   let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(escape_character, input_filter, output_filter)'], result
+
+Execute (interact(self, excape_character=ch(29) -> (int, int)):
+  let g:complete_parameter_py_keep_value = 1
+  let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(escape_character=chr(29), input_filter=None, output_filter=None)'], result
 "}}}
 
 " {{{ def

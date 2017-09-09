@@ -1,3 +1,7 @@
+0.6.1:
+Python support keep default value and select the value only. 
+Add option g:complete_parameter_py_keep_value. 
+
 0.6.0: 2017-08-19
 Rename file. 
 Insert parameter if there are some content after the cursor. 

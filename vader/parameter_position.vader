@@ -442,3 +442,37 @@ Execute(border ) , -1):
   let result = cmp#parameter_position('hello(a, b) ', 12, ',', ')>', '(<', -1)
   AssertEqual [0, 0], result
 " }}}
+
+"{{{ has =
+Execute(=, 1, test0):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 7, ',', '(', ')', 1)
+  AssertEqual [9, 10], result
+
+Execute(=, 1, test1):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 8, ',', '(', ')', 1)
+  AssertEqual [9, 10], result
+
+Execute(=, 1, test2):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 9, ',', '(', ')', 1)
+  AssertEqual [14, 15], result
+
+Execute(=, 1, test3):
+  let result = cmp#parameter_position('hello(a=1, b=(c=1, d=2))', 9, ',', '(', ')', 1)
+  AssertEqual [14, 24], result
+
+Execute(=, -1, test0):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 14, ',', ')', '(', -1)
+  AssertEqual [9, 10], result
+
+Execute(=, -1, test1):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 11, ',', ')', '(', -1)
+  AssertEqual [9, 10], result
+
+Execute(=, -1, test2):
+  let result = cmp#parameter_position('hello(a=1, b=2)', 10, ',', ')', '(', -1)
+  AssertEqual [9, 10], result
+
+Execute(=, -1, test3):
+  let result = cmp#parameter_position('hello(a=1, b=(c=1, d=2))', 24, ',', ')', '(', -1)
+  AssertEqual [14, 24], result
+"}}}
