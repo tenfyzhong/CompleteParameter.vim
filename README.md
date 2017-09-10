@@ -133,6 +133,19 @@ default: 1
 let g:complete_parameter_echo_signature = 1
 ```
 
+### The `g:complete_parameter_py_keep_value` option
+It will keep default value if it this option is 1 for python.   
+For example, if the definition is `def foo(a=1, b=2)`, it will complete 
+`(a=1, b=2)` if its value is 1. Otherwise, it will complete `(a, b)`. 
+If there are `=` in the completion, the jump to action only select the value,
+but not parameter name. It will select `1` and then `2` in the previous
+example. 
+default: 1  
+```viml
+let g:complete_parameter_py_keep_value = 1
+```
+
+
 # Supported
 The cell mark `√` means the completion engine has supported the language by itself.
 Of course, you must install the completion engine for the language follow its document.  

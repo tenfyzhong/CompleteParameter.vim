@@ -120,6 +120,17 @@ It will echo signature if this option is 1. (need to `set noshowmode` or `set cm
 default: 1 >
   let g:complete_parameter_echo_signature = 1
 <
+                                             *g:complete_parameter_echo_signature*
+* g:complete_parameter_py_keep_value 
+It will keep default value if it this option is 1 for python.   
+For example, if the definition is `def foo(a=1, b=2)`, it will complete 
+`(a=1, b=2)` if its value is 1. Otherwise, it will complete `(a, b)`. 
+If there are `=` in the completion, the jump to action only select the value,
+but not parameter name. It will select `1` and then `2` in the previous
+example. 
+default: 1  >
+  let g:complete_parameter_py_keep_value = 1
+<
 
 ================================================================================
 5. Functions                                        *complete-parameter-functions*
