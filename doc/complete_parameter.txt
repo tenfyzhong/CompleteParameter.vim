@@ -120,7 +120,7 @@ It will echo signature if this option is 1. (need to `set noshowmode` or `set cm
 default: 1 >
   let g:complete_parameter_echo_signature = 1
 <
-                                             *g:complete_parameter_echo_signature*
+                                             *g:complete_parameter_py_keep_value*
 * g:complete_parameter_py_keep_value 
 It will keep default value if it this option is 1 for python.   
 For example, if the definition is `def foo(a=1, b=2)`, it will complete 
