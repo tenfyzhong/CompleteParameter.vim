@@ -62,11 +62,16 @@ function! s:parser0(info) "{{{
     let param = substitute(param, '\m\s*=\s*[^,()]*', '', 'g')
   endif
 
+  " remove `[` and `]`
+  let param = substitute(param, '\m\[\|\]', '', 'g')
+
   " remove self,cls
   let param = substitute(param, '\m(\s*\<self\>\s*,\?', '(', '')
   let param = substitute(param, '\m(\s*\<cls\>\s*,\?', '(', '')
   " remove space
   let param = substitute(param, '\m\s\+', ' ', 'g')
+  let param = substitute(param, '\m\s,', ',', 'g')
+
   let param = substitute(param, '\m(\s', '(', '')
   let param = substitute(param, '\m,\s*)', ')', '')
   let param = substitute(param, '\m,\(\S\)', ', \1', 'g')

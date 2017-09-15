@@ -52,6 +52,12 @@ Execute (add(a, b), omni):
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(a, b)'], result
 
+Execute (remove `[]`):
+  let g:complete_parameter_py_keep_value = 1
+  let completed_item = {'word': 'mkdir', 'menu': 'def mkdir', 'info': 'mkdir(path [, mode=0777])^@^@Create a directory.', 'kind': '', 'abbr': ''}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(path, mode=0777)'], result
+
 " interact(self, escape_character=chr(29),             input_filter=None,
 " output_filter=None)
 Execute (interact(self, excape_character=ch(29)):
