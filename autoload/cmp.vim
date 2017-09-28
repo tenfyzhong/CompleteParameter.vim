@@ -3,7 +3,7 @@
 "   brief: 
 " VIM Version: 8.0
 "  author: tenfyzhong
-"   email: tenfyzhong@qq.com
+"   email: tenfy@tenfy.cn
 " created: 2017-06-07 20:29:10
 "==============================================================
 
@@ -349,7 +349,11 @@ function! cmp#goto_next_param_keys(forward, content, current_col) abort "{{{
     endif
   else
     let keys .= "lv"
-    let right_len = word_len - 1
+    if &selection ==# 'exclusive'
+      let right_len = word_len
+    else
+      let right_len = word_len - 1
+    endif
     if right_len > 0
       let keys .= right_len
       let keys .= "l"
