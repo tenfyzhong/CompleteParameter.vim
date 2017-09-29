@@ -393,6 +393,14 @@ function! cmp#goto_next_param(forward) abort "{{{
 
   let pos = current_col - 1
 
+  let parameter_delim = ftfunc.parameter_delim()
+  if !a:forward && &selection==#'exclusive' && 
+        \(match(parameter_delim, content[pos])!=-1 || 
+        \ match(ftfunc.parameter_end(), content[pos])!=-1)
+    let current_col -= 1
+    let pos -= 1
+  endif
+
   " if the selected is an object and the cursor char is an border_end
   " go back to border_begin and it can select the item in the object. 
   if mode() == 'n' && match(border_end, content[pos]) != -1
