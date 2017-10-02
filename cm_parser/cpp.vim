@@ -7,6 +7,15 @@
 " created: 2017-06-13 08:58:09
 "==============================================================
 
+" ycm macro
+" {'word': 'CMP', 'menu': '', 'info': ' CMP( a, b )^@', 'kind': 'm', 'abbr': 'CMP( a, b )'}
+function! s:parse_macro(word, info)
+  let param = substitute(a:info, '\m\s*'.a:word.'\(([^()]*)\).*', '\1', 'g')
+  let param = substitute(param, '\m( *', '(', 'g')
+  let param = substitute(param, '\m *)', ')', 'g')
+  return [param]
+endfunction
+
 " ycm
 "
 " deoplete
@@ -55,15 +64,17 @@ function! cm_parser#cpp#parameters(completed_item) "{{{
     let info = get(a:completed_item, 'info', '')
     let l:menu = get(a:completed_item, 'menu', '')
     if kind ==# 'f'
-        return <SID>parse_function(word, info)
+      return <SID>parse_function(word, info)
     elseif kind ==# 'c'
-        return <SID>parse_class(word, info)
+      return <SID>parse_class(word, info)
     elseif kind =~# '\m^f\s.\+' && l:menu ==# '[clang] '
-        return <SID>parse_function(word, info)
+      return <SID>parse_function(word, info)
     elseif kind ==# 'p ' && !empty(word) && info =~# '\m^'.word.'<.*>'
-        return <SID>parse_class(word, info)
+      return <SID>parse_class(word, info)
+    elseif kind ==# 'm'
+      return <SID>parse_macro(word, info)
     else
-        return []
+      return []
     endif
 endfunction "}}}
 
