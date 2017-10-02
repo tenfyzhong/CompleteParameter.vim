@@ -712,6 +712,18 @@ function! cmp#parameter_position(content, current_col, delim, border_begin, bord
         endif
       endif
     elseif stridx(a:border_begin, a:content[pos]) != -1
+      if a:content[pos] ==# '>' && step < 0
+        " check if there are is a '<' or not
+        let tmppos = pos + step
+        while tmppos >= 0 && a:content[tmppos] !=# '<'
+          let tmppos += step
+        endwhile
+        if tmppos < 0
+          let pos += step
+          continue
+        endif
+      endif
+
       call stack.push(a:content[pos])
       if stack.len() == 1
         " begin
@@ -745,6 +757,18 @@ function! cmp#parameter_position(content, current_col, delim, border_begin, bord
         endif
       endif
     elseif stridx(a:border_end, a:content[pos]) != -1
+      if a:content[pos] ==# '<' && step > 0
+        " check if there are is a '>' or not
+        let tmppos = pos + step
+        while tmppos < content_len && a:content[tmppos] !=# '>'
+          let tmppos += step
+        endwhile
+        if tmppos >= content_len
+          let pos += step
+          continue
+        endif
+      endif
+
       if stack.empty()
         let begin_pos = pos
         let end_pos = pos

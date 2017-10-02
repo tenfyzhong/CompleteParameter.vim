@@ -476,3 +476,12 @@ Execute(=, -1, test3):
   let result = cmp#parameter_position('hello(a=1, b=(c=1, d=2))', 24, ',', ')', '(', -1)
   AssertEqual [14, 24], result
 "}}}
+
+" < > match
+Execute(>):
+  let result = cmp#parameter_position('a->hello(a)', 10, ',', ')>', '(<', -1)
+  AssertEqual [9, 9], result
+
+Execute(<):
+  let result = cmp#parameter_position('hello(a) < hello(b)', 9, ',', '(<', ')>', 1)
+  AssertEqual [0, 0], result
