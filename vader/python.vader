@@ -80,6 +80,11 @@ Execute (interact(self, excape_character=ch(29) -> (int, int)):
   let completed_item = {'menu': 'function:interact', 'info': "interact(self, escape_character=chr(29),             input_filter=None,\noutput_filter=None) -> (int, int)"}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(escape_character=chr(29), input_filter=None, output_filter=None)'], result
+
+Execute (no parameter):
+  let completed_item =  {'word': 'mkdir', 'menu': 'def mkdir', 'info': 'Create a directory.\n\nif dir_fd is not None, it should be a file descriptor open to a directory,\n and path should be relative; path will then be relative to that directory.\ndir_fd may not be implemented on your platform.\n If it is unavailable, using it will raise a NotImplementedError.\n\nthe mode argument is ignored on Windows.', 'kind': '', 'abbr': ''}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['()'], result
 "}}}
 
 " {{{ def
