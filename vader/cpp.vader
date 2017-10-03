@@ -53,6 +53,11 @@ Execute (std:: error_code, kind: c):
   let completed_item = {'kind': 'c', 'word': 'error_code', 'info': " error_code"}
   let result = cm_parser#cpp#parameters(completed_item)
   AssertEqual [], result
+
+Execute (CMP, kind: m):
+  let completed_item = {'word': 'CMP', 'menu': '', 'info': ' CMP( a, b )^@', 'kind': 'm', 'abbr': 'CMP( a, b )'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
 "}}}
 
 "{{{deoplete

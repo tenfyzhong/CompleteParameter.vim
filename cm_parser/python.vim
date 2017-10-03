@@ -15,6 +15,11 @@ function! s:signature(info) "{{{
   let func = ''
   let match = 0
   let l:finish = 0
+
+  if info_lines[0] !~# '('
+    return func
+  endif
+
   " there are maybe some () in the parameters
   " if the count of `(` equal to `)` 
   " then the parameters has finished
