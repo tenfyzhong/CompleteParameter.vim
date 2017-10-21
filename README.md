@@ -110,12 +110,13 @@ smap <m-u> <Plug>(complete_parameter#overload_up)
 # Options
 ### The `g:complete_parameter_log_level` option
 This option set the log level.  
+5: disable log. 
 4: only print **error** log.  
 2: print **error** and **debug** log.  
 1: print **error**, **debug**, **trace** log.  
-Default: 4  
+Default: 5  
 ```viml
-let g:complete_parameter_log_level = 4
+let g:complete_parameter_log_level = 5
 ```
 
 ### The `g:complete_parameter_use_ultisnips_mappings` option

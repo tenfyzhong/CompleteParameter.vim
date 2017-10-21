@@ -23,7 +23,7 @@ function! cmp#init() abort "{{{
   " 4 error
   " 2 error + debug
   " 1 erro + debug + trace
-  let g:complete_parameter_log_level = get(g:, 'complete_parameter_log_level', 4)
+  let g:complete_parameter_log_level = get(g:, 'complete_parameter_log_level', 5)
 
   let g:complete_parameter_use_ultisnips_mappings = get(g:, 'complete_parameter_use_ultisnips_mappings', 0)
 endfunction "}}}
@@ -828,7 +828,7 @@ function! s:find_first_not_space(content, pos, end, step) abort "{{{
 endfunction "}}}
 
 function! s:log(level, msg) abort "{{{
-  echom a:level . ':' . s:log_index . ':' a:msg
+  echo printf("[CompleteParameter][%s][%s][%d] %s", strftime("%T"), a:level, s:log_index, a:msg)
 endfunction "}}}
 
 function! s:error_log(msg) abort "{{{
