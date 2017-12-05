@@ -1,3 +1,7 @@
+0.7.1: 2017-10-21
+Format log.
+Disable log by default. 
+
 0.7.0: 2017-10-03
 Support c/c++ macro. 
 Fix '<' or '>' selected.
