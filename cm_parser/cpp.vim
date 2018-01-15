@@ -32,6 +32,7 @@ function! s:parse_function(word, info) "{{{
         while param =~# '<.*>'
             let param = substitute(param, '\m<[^<>]*>', '', 'g')
         endwhile
+        let param = substitute(param, '\m=\s*\w*\%(([^)]*)\)\?\s*', '', 'g')
         let param = substitute(param, '\m\%(\s*[^(,)]*\s\)*\s*[&*]\?\s*\(\%(\w\+\)\|\%([*&]\)\)\s*\([,)]\)', '\1\2', 'g') 
         let param = substitute(param, ',', ', ', 'g')
         call add(result, param)
