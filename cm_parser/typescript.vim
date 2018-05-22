@@ -53,7 +53,7 @@ function! cm_parser#typescript#parameters(completed_item) "{{{
     let l:menu = get(a:completed_item, 'menu', '')
     if kind ==# 'm' &&  l:abbr =~# '\m^'.word.'\s*(method)'
         return <SID>parser0(word, l:abbr)
-    elseif kind  ==# 'M' && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
+    elseif (kind ==# 'm' || kind ==# 'M') && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
         return <SID>parser1(word, info)
     elseif empty(kind) && l:menu =~# '\m^(method).*'.word
         return <SID>parser1(word, l:menu)
