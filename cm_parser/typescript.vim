@@ -83,7 +83,7 @@ function! cm_parser#typescript#echos(completed_item) "{{{
 
     if kind ==# 'm' &&  l:abbr =~# '\m^'.word.'\s*(method)'
         return [l:abbr]
-    elseif kind  ==# 'M' && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
+    elseif (kind ==# 'm' || kind ==# 'M') && info =~# '\m\<'.word.'\>\%(<[^<>()]*>\)\?('
         return [info]
     elseif empty(kind) && l:menu =~# '\m^(method).*'.word
         return [l:menu]
