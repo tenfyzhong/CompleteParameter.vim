@@ -43,14 +43,9 @@ YouCompleteMe: 369fdad
 
 
 # Issue Details
-* What did you do?
-> 
-
-* What did you expect to happend?
-> 
-
-* What actually happened?
->
+<!--
+What happended and what do you expect to happend?
+-->
 
 # Messages
 <!--

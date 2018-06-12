@@ -828,7 +828,7 @@ function! s:find_first_not_space(content, pos, end, step) abort "{{{
 endfunction "}}}
 
 function! s:log(level, msg) abort "{{{
-  echo printf("[CompleteParameter][%s][%s][%d] %s", strftime("%T"), a:level, s:log_index, a:msg)
+  echom printf("[CompleteParameter][%s][%s][%d] %s", strftime("%T"), a:level, s:log_index, a:msg)
 endfunction "}}}
 
 function! s:error_log(msg) abort "{{{
