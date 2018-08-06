@@ -2,6 +2,9 @@
 Add option g:complete_parameter_py_remove_default. 
 Suppoert remove python default parameter. 
 
+0.7.2:2018-06-12
+Modify c and ts parameters. 
+
 0.7.1: 2017-10-21
 Format log.
 Disable log by default. 
