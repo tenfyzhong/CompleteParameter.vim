@@ -58,6 +58,16 @@ Execute (CMP, kind: m):
   let completed_item = {'word': 'CMP', 'menu': '', 'info': ' CMP( a, b )^@', 'kind': 'm', 'abbr': 'CMP( a, b )'}
   let result = cm_parser#cpp#parameters(completed_item)
   AssertEqual ['(a, b)'], result
+
+Execute (include default func value):
+  let completed_item = {'word': 'test', 'menu': 'void', 'info': 'void test(int a, int b = func() )', 'kind': 'f', 'abbr': 'test( int a, int b = func() )'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (include default value):
+  let completed_item = {'word': 'test1', 'menu': 'void', 'info': 'void test1( int a, int b = 1 )', 'kind': 'f', 'abbr': 'test1( int a, int b = 1 )'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
 "}}}
 
 "{{{deoplete

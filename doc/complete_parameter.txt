@@ -133,6 +133,15 @@ default: 1  >
   let g:complete_parameter_py_keep_value = 1
 <
 
+                                             *g:complete_parameter_py_remove_default*
+* g:complete_parameter_py_remove_default
+It will remove default parametrs if this option is 1 for python.  
+For example, if the definition is `def foo(a, b=1)`, it will complete 
+`(a)` if its value is 1. Otherwise, it will complete `(a, b)`. 
+default: 1 >
+let g:complete_parameter_py_remove_default = 1
+<
+
 ================================================================================
 5. Functions                                        *complete-parameter-functions*
                                                                 *cmp#pre_complete*

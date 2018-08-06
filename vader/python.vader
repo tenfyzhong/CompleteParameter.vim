@@ -1,5 +1,6 @@
 Before:
   let g:complete_parameter_py_keep_value = 0
+  let g:complete_parameter_py_remove_default = 0
 
 " {{{ ycm
 Execute (error menu):
@@ -57,6 +58,14 @@ Execute (remove `[]`):
   let completed_item = {'word': 'mkdir', 'menu': 'def mkdir', 'info': 'mkdir(path [, mode=0777])^@^@Create a directory.', 'kind': '', 'abbr': ''}
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(path, mode=0777)'], result
+
+Execute (remove default 1):
+  let g:complete_parameter_py_keep_value = 0
+  let g:complete_parameter_py_remove_default = 1
+  let completed_item = {'word': 'mkdir', 'menu': 'def mkdir', 'info': 'mkdir(path , mode=0777)^@^@Create a directory.', 'kind': '', 'abbr': ''}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(path)'], result
+  let g:complete_parameter_py_remove_default = 0
 
 " interact(self, escape_character=chr(29),             input_filter=None,
 " output_filter=None)

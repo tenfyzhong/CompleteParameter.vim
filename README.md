@@ -135,7 +135,7 @@ let g:complete_parameter_echo_signature = 1
 ```
 
 ### The `g:complete_parameter_py_keep_value` option
-It will keep default value if it this option is 1 for python.   
+It will keep default value if this option is 1 for python.   
 For example, if the definition is `def foo(a=1, b=2)`, it will complete 
 `(a=1, b=2)` if its value is 1. Otherwise, it will complete `(a, b)`. 
 If there are `=` in the completion, the jump to action only select the value,
@@ -145,6 +145,16 @@ default: 1
 ```viml
 let g:complete_parameter_py_keep_value = 1
 ```
+
+### The `g:complete_parameter_py_remove_default` option
+It will remove default parametrs if this option is 1 for python.  
+For example, if the definition is `def foo(a, b=1)`, it will complete 
+`(a)` if its value is 1. Otherwise, it will complete `(a, b)`.   
+default: 1
+```viml
+let g:complete_parameter_py_remove_default = 1
+```
+
 
 
 # Supported
