@@ -274,6 +274,8 @@ function! cmp#complete(failed_insert) abort "{{{
 endfunction "}}}
 
 function! cmp#goto_first_param(parameter, content, current_col) abort "{{{
+  let old_ei = &ei
+  set ei=InsertLeave,InsertEnter,TextChanged
   if s:complete_parameter['success']
     call <SID>trace_log(printf('content:[%s] current_col:%d, left:[%s], right:[%s]', a:content, a:current_col, a:content[:a:current_col-1], a:content[a:current_col:]))
     let content = a:content[:a:current_col-1] . a:parameter . a:content[a:current_col:]
@@ -289,8 +291,10 @@ function! cmp#goto_first_param(parameter, content, current_col) abort "{{{
     if len(s:complete_parameter['echos']) > index && s:complete_parameter['echos'][index] !=# ''
       echon s:complete_parameter['echos'][index]
     endif
+    let &ei=old_ei
     return keys
   else
+    let &ei=old_ei
     return a:parameter
   endif
 endfunction "}}}

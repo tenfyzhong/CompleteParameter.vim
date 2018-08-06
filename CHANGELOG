@@ -1,3 +1,7 @@
+0.8.0: 2018-08-06
+Add option g:complete_parameter_py_remove_default. 
+Suppoert remove python default parameter. 
+
 0.7.1: 2017-10-21
 Format log.
 Disable log by default. 

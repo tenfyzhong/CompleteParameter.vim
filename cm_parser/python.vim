@@ -52,6 +52,7 @@ function! s:parser0(info) "{{{
   let param = substitute(func, '\m[^(]*(\(.*\))[^)]*', '\1', '')
 
   let keep_default_value = get(g:, 'complete_parameter_py_keep_value', 1)
+  let remove_default_parameter = get(g:, 'complete_parameter_py_remove_default', 1)
 
   if !keep_default_value
     " remove `()`
@@ -63,7 +64,11 @@ function! s:parser0(info) "{{{
   " add begin`(` and end`)`
   let param = '(' . param . ')'
 
-  if !keep_default_value
+  if remove_default_parameter
+    let param = substitute(param, '\m\s*,\?\s*\w*\s*=.*', ')', '')
+    let param = substitute(param, '\m\s*,\?\s*\.\.\..*', ')', '')
+    let param = substitute(param, '\m\s*,\?\s*\*args.*', ')', '')
+  elseif !keep_default_value
     let param = substitute(param, '\m\s*=\s*[^,()]*', '', 'g')
   endif
 
