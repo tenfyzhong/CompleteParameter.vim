@@ -258,3 +258,20 @@ Execute (jedi):
   let completed_item = {'word': 'test_func', 'menu': '[jedi] ', 'info': 'test_func(arg1, arg2)', 'kind': 'function', 'abbr': 'test_func(arg1, arg2)'} 
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(arg1, arg2)'], result
+
+
+" echos
+Execute (echos, foo):
+  let completed_item = {'menu': 'function:foo', 'info': "foo()\nfoo function"}
+  let result = cm_parser#python#echos(completed_item)
+  AssertEqual ['foo()'], result
+
+Execute (echos, foo(a) -> int):
+  let completed_item = {'menu': 'function:foo', 'info': "foo(a) -> int \nfoo function"}
+  let result = cm_parser#python#echos(completed_item)
+  AssertEqual ['foo(a)'], result
+
+Execute (echos, foo(a, b = []) -> int):
+  let completed_item = {'menu': 'function:foo', 'info': "foo(a, b = []) -> int \nfoo function"}
+  let result = cm_parser#python#echos(completed_item)
+  AssertEqual ['foo(a, b = [])'], result
