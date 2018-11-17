@@ -117,3 +117,19 @@ endfunction "}}}
 function! cm_parser#python#parameter_end() "{{{
   return ')'
 endfunction "}}}
+
+function! cm_parser#python#echos(completed_item)  "{{{
+  let menu = get(a:completed_item, 'menu', '')
+  let info = get(a:completed_item, 'info', '')
+  let word = get(a:completed_item, 'word', '')
+  let abbr = get(a:completed_item, 'abbr', '')
+  let kind = get(a:completed_item, 'kind', '')
+  if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($' || menu =~? '\[jedi\]\s*') && !empty(info)
+    return [s:signature(info)]
+  elseif word ==# '(' && empty(menu) && info ==# ' ' && empty(kind) && !empty(abbr)
+    " ycm omni called
+    " {'word': '(', 'menu': '', 'info': ' ', 'kind': '', 'abbr': 'add(a,b)'}
+    return [s:signature(abbr)]
+  endif
+  return []
+endfunction "}}}
