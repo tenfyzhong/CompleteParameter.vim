@@ -30,13 +30,13 @@ function! s:parser0(word, abbr) "{{{
 endfunction "}}}
 
 " neocomplete
-" {'word': 'concat', 'menu': '(method) Array<number>.concat(...items: number[][]): number[] (+1 overload)', 'info': '', 'kind': '', 'abbr': ''}
+" {'word': 'concat', 'menu': '(method) Array<number>.concat<number>(...items: number[][]): number[] (+1 overload)', 'info': '', 'kind': '', 'abbr': ''}
 
 " deoplete
-" {'word': 'concat', 'menu': 'TS Array<number>.concat(...i..(+1 overload)', 'info': 'Array<number>.concat(...items: number[][]): number[] (+1 overload)^@Combines two or more arrays.', 'kind': 'M', 'abbr': 'concat'}
+" {'word': 'concat', 'menu': 'TS Array<number>.concat<number>(...i..(+1 overload)', 'info': 'Array<number>.concat<number>(...items: number[][]): number[] (+1 overload)^@Combines two or more arrays.', 'kind': 'M', 'abbr': 'concat'}
 function! s:parser1(word, info) "{{{
     let param = split(a:info, '\n')[0]
-    let pattern = printf('\m^.*%s\%%(<[^()<>]>\)\?(\(.*\)', a:word)
+    let pattern = printf('\m^.*%s[^(]*(\(.*\)', a:word)
     let param = substitute(param, pattern, '\1', '')
     let param = substitute(param, '\m([^()]*)', '', 'g')
     let param = substitute(param, '\m\[[^\[\]]*\]', '', 'g')
