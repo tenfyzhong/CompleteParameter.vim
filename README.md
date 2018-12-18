@@ -172,6 +172,7 @@ The plugin in the cell was supported with the completion engine.
 | **javascript** | √                           | [deoplete-ternjs][]         | [tern_for_vim][]            |                    |
 | **typescript** | √                           | [nvim-typescript][]         | [tsuquyomi][]               |                    |
 | **erlang**     | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] | [vim-erlang-omnicomplete][] |                    |
+| **lua**        | [vim-lua-ftplugin][]        | [vim-lua-ftplugin][]        | [vim-lua-ftplugin][]        |                    |
 
 ## Setting for completion plugins
 ### `vim-racer`
@@ -253,3 +254,4 @@ MIT License Copyright (c) 2017 tenfyzhong
 [vim-racer]: https://github.com/racer-rust/vim-racer
 [tern_for_vim]: https://github.com/ternjs/tern_for_vim
 [tsuquyomi]: https://github.com/Quramy/tsuquyomi
+[vim-lua-ftplugin]: https://github.com/xolox/vim-lua-ftplugin

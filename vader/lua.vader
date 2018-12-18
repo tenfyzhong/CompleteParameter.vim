@@ -1,0 +1,25 @@
+Execute (func()):
+  let completed_item = {'menu': 'func()', 'kind': 'f'}
+  let result = cm_parser#lua#parameters(completed_item)
+  AssertEqual ['()'], result
+
+Execute (func(a, b)):
+  let completed_item = {'menu': 'func(a, b)', 'kind': 'f'}
+  let result = cm_parser#lua#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (func(a, b [, c])):
+  let completed_item = {'menu': 'func(a, b [, c])', 'kind': 'f'}
+  let result = cm_parser#lua#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+Execute (func(a, b [, c, d])):
+  let completed_item = {'menu': 'func(a, b [, c, d])', 'kind': 'f'}
+  let result = cm_parser#lua#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+
+
+Execute (func(a, b, ...)):
+  let completed_item = {'menu': 'func(a, b, ...)', 'kind': 'f'}
+  let result = cm_parser#lua#parameters(completed_item)
+  AssertEqual ['(a, b, ...)'], result

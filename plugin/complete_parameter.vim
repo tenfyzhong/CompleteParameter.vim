@@ -13,7 +13,7 @@ if (!has('nvim')&&version < 704) ||
       \exists('g:complete_parameter_version') 
   finish
 endif
-let g:complete_parameter_version = "0.8.2"
+let g:complete_parameter_version = "0.9.0"
 lockvar g:complete_parameter_version
 
 let save_cpo = &cpo
