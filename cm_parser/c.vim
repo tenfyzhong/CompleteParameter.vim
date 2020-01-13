@@ -18,7 +18,7 @@ endfunction
 
 
 function! s:parse(abbr) "{{{
-    let param = substitute(a:abbr, '\m\%(\w\+\s*\)\?\w\+\((.*)\)', '\1', '') " get parameters
+    let param = substitute(a:abbr, '\m\%(\w\+\s*\)\?\w\+\((.*)\).*', '\1', '') " get parameters
     let param = substitute(param, '\m\([(,]\)\s*\%(\w\+\s\+\)*\s*\(\w\+\s*\)\s*\(\**\)\(\s*[,)]\)', '\1\2 \3\2\4', 'g')
     let param = substitute(param, '\m\s*\%(\w\+\s\+\)*\s*\**\s*\(\%(\w\+\)\s*[,)]\)', '\1', 'g')
     let param = substitute(param, '\s\+', '', 'g')
