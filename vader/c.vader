@@ -127,4 +127,9 @@ Execute (fun( const struct tm *restrict, char *restrict  )):
   let completed_item = {'kind': 'f', 'menu': 'void fun( const struct tm *restrict, char *restrict  )', 'word': 'fun', 'abbr': 'fun'}
   let result = cm_parser#c#parameters(completed_item)
   AssertEqual ['(restrict, restrict)'], result
+
+Execute (coc.nvim + ccls):
+  let completed_item = {'word': 'fun', 'menu': '[LS]', 'user_data': '{"cid":1578967270,"source":"languageserver.ccls","index":0}', 'info': '', 'kind': 'f', 'abbr': 'fun(int x, int y) -> int~'}
+  let result = cm_parser#c#parameters(completed_item)
+  AssertEqual ['(x, y)'], result
 "}}}

@@ -259,6 +259,10 @@ Execute (jedi):
   let result = cm_parser#python#parameters(completed_item)
   AssertEqual ['(arg1, arg2)'], result
 
+Execute (coc.nvim + coc-pyhon[MPLS]):
+  let completed_item = {'word': 'fun', 'menu': '[LS]', 'user_data': '{"cid":1578967439,"source":"python","index":8}', 'info': '```\nfun(x, y)\n```', 'kind': 'v', 'abbr': 'fun'}
+  let result = cm_parser#python#parameters(completed_item)
+  AssertEqual ['(x, y)'], result
 
 " echos
 Execute (echos, foo):

@@ -17,7 +17,9 @@ function! s:signature(info) "{{{
   let l:finish = 0
 
   if info_lines[0] !~# '('
-    return func
+    if info_lines[0] !~# '```' || len(info_lines) == 1 || info_lines[1] !~# '('
+      return func
+    endif
   endif
 
   " there are maybe some () in the parameters
@@ -97,6 +99,9 @@ function! cm_parser#python#parameters(completed_item) "{{{
   let abbr = get(a:completed_item, 'abbr', '')
   let kind = get(a:completed_item, 'kind', '')
   if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($' || menu =~? '\[jedi\]\s*') && !empty(info)
+    return s:parser0(info)
+  " From language server.
+  elseif  menu =~? '\[LS\]' && !empty(info)
     return s:parser0(info)
   elseif word ==# '(' && empty(menu) && info ==# ' ' && empty(kind) && !empty(abbr)
     " ycm omni called
