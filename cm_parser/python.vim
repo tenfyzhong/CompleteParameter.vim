@@ -16,6 +16,12 @@ function! s:signature(info) "{{{
   let match = 0
   let l:finish = 0
 
+  if info_lines[0] !~# '('
+    if info_lines[0] !~# '```' || len(info_lines) == 1 || info_lines[1] !~# '('
+      return func
+    endif
+  endif
+
   " there are maybe some () in the parameters
   " if the count of `(` equal to `)` 
   " then the parameters has finished
@@ -92,7 +98,10 @@ function! cm_parser#python#parameters(completed_item) "{{{
   let word = get(a:completed_item, 'word', '')
   let abbr = get(a:completed_item, 'abbr', '')
   let kind = get(a:completed_item, 'kind', '')
-  if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($' || menu =~? '\[jedi\]\s*') || !empty(info)
+  if (menu =~# '\m^\%(function:\|def \)' || word =~# '\m^\w\+($' || menu =~? '\[jedi\]\s*') && !empty(info)
+    return s:parser0(info)
+  " From language server.
+  elseif  menu =~? '\[LS\]' && !empty(info)
     return s:parser0(info)
   elseif word ==# '(' && empty(menu) && info ==# ' ' && empty(kind) && !empty(abbr)
     " ycm omni called
