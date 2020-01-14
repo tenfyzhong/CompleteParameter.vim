@@ -1,6 +1,6 @@
 "==============================================================
 "    file: go.vim
-"   brief: 
+"   brief:
 " VIM Version: 8.0
 "  author: tenfyzhong
 "   email: tenfy@tenfy.cn
@@ -30,13 +30,37 @@ function! s:parser1(info) "{{{
     return [param]
 endfunction "}}}
 
+function! s:parser_gopls(info) "{{{
+    if empty(a:info)
+        return []
+    endif
+    let param = substitute(a:info, '\m^\w*\%( \w*\)\?\(.*\)', '\1', '')
+    while param =~# '\m\<func\>'
+        let param = substitute(param, '\<func\>\s*([^()]*)\s*\%(\w*|([^()]*)\)\?', '', 'g')
+    endwhile
+
+    let param = substitute(param, '\m^\(([^()]*)\).*', '\1', '')
+    " remove type
+    let param = substitute(param, '\m\(\w\+\)\s*[^,)]*', '\1', 'g')
+    return [param]
+endfunction "}}}
+
+
 function! cm_parser#go#parameters(completed_item) "{{{
     let menu = get(a:completed_item, 'menu', '')
     let info = get(a:completed_item, 'info', '')
+    let kind = get(a:completed_item, 'kind', '')
+    " echom menu
+    " echom info
+    " echom kind
     if menu =~# '^func'
         return <SID>parser1(menu)
     elseif info =~# '^func'
         return <SID>parser1(info)
+    elseif kind =~# '^m$'
+        return <SID>parser_gopls(info)
+    elseif kind =~# '^f$'
+        return <SID>parser_gopls(info)
     else
         return []
     endif
