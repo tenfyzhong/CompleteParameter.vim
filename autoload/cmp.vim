@@ -554,12 +554,14 @@ function! s:stack.str() abort dict "{{{
   return str
 endfunction "}}}
 
-function! s:in_scope(content, pos, border, step, end) abort "{{{
-  " echom printf('content: %s, pos: %d, border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:step, a:end)
+function! s:in_scope(content, pos, border, break_border, step, end) abort "{{{
+  " echom printf('content: %s, pos: %d, border: %s, break_border: %s, step: %d, end: %d', a:content, a:pos, a:border, a:break_border, a:step, a:end)
   let i = a:pos
   while i != a:end
     if a:content[i] =~# '\m['.a:border.']'
       return 1
+    elseif a:content[i] =~# '\m['.a:break_border.']'
+      return 0
     endif
     let i += a:step
   endwhile
@@ -581,6 +583,7 @@ function! cmp#jumpable(forward) abort "{{{ can jump to next parameter or not
 
   let delim = ftfunc.parameter_delim()
   let border = a:forward > 0 ? ftfunc.parameter_begin() : ftfunc.parameter_end()
+  let break_border = a:forward <= 0 ? ftfunc.parameter_begin() : ftfunc.parameter_end()
   let step = a:forward > 0 ? -1 : 1
 
   let lnum = line('.')
@@ -588,7 +591,7 @@ function! cmp#jumpable(forward) abort "{{{ can jump to next parameter or not
   let current_pos = col('.') - 1
 
   let end = a:forward > 0 ? -1 : len(content)
-  return <SID>in_scope(content, current_pos, border, step, end)
+  return <SID>in_scope(content, current_pos, border, break_border, step, end)
 endfunction "}}}
 
 " content: string, the content to parse
@@ -620,8 +623,8 @@ function! cmp#parameter_position(content, current_col, delim, border_begin, bord
 
   " check current pos is in the scope or not
   let scope_end = step > 0 ? -1 : content_len
-  if !<SID>in_scope(a:content, current_pos, a:border_begin, -step, scope_end)
-    call <SID>trace_log(printf("no in scope, content: %s, current_pos: %d, a:border_begin: %s, step: %d, scope_end: %d", a:content, current_pos, a:border_begin, -step, scope_end))
+  if !<SID>in_scope(a:content, current_pos, a:border_begin, a:border_end, -step, scope_end)
+    call <SID>trace_log(printf("no in scope, content: %s, current_pos: %d, a:border_begin: %s, a:border_end: %s, step: %d, scope_end: %d", a:content, current_pos, a:border_begin, a:border_end, -step, scope_end))
     retur [0, 0]
   endif
 
