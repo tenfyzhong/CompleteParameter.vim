@@ -116,3 +116,25 @@ Execute (std:: error_code, kind: p):
   let result = cm_parser#cpp#parameters(completed_item)
   AssertEqual [], result
 "}}}
+
+"{{{coc.nvim
+Execute (ccls, kind: f):
+  let completed_item = {'word': 'fun', 'menu': '[LS]', 'user_data': '{"cid":1578967270,"source":"languageserver.ccls","index":0}', 'info': '', 'kind': 'f', 'abbr': 'fun(int x, int y) -> int~'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(x, y)'], result
+
+Execute (clangd, kind: f):
+  let completed_item = {'word': 'fun', 'menu': 'void [LS]', 'user_data': '{"cid":1587074277,"source":"clangd","index":0}', 'info': '', 'kind': 'f', 'abbr': 'fun(int x, int y)~'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(x, y)'], result
+
+Execute (vector<typename _Tp, typename _Alloc>, kind: C):
+  let completed_item = {'word': 'vector', 'menu': ' <vector> [LS]', 'user_data': '{"cid":1587079915,"source":"clangd","index":0}', 'info': '....', 'kind': 'C', 'abbr': 'vector<typename _Tp, typename _Alloc>~'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['<_Tp, _Alloc>'], result
+
+Execute (CMP, kind: v):
+  let completed_item = {'word': 'CMP', 'menu': '[LS]', 'user_data': '{"cid":1587080756,"source":"clangd","index":0}', 'info': '', 'kind': 'v', 'abbr': 'CMP(a, b)~'}
+  let result = cm_parser#cpp#parameters(completed_item)
+  AssertEqual ['(a, b)'], result
+"}}}
