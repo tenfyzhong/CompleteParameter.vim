@@ -64,7 +64,8 @@ function! cm_parser#cpp#parameters(completed_item) "{{{
     let word = get(a:completed_item, 'word', '')
     let info = get(a:completed_item, 'info', '')
     let l:menu = get(a:completed_item, 'menu', '')
-    if kind ==# 'f'
+    let l:abbr = get(a:completed_item, 'abbr', '')
+    if kind ==# 'f' && !empty(info)
       return <SID>parse_function(word, info)
     elseif kind ==# 'c'
       return <SID>parse_class(word, info)
@@ -74,6 +75,12 @@ function! cm_parser#cpp#parameters(completed_item) "{{{
       return <SID>parse_class(word, info)
     elseif kind ==# 'm'
       return <SID>parse_macro(word, info)
+    elseif kind ==# 'f'
+        return <SID>parse_function(word, l:abbr)
+    elseif kind ==# 'C'
+        return <SID>parse_class(word, l:abbr)
+    elseif kind ==# 'v'
+        return <SID>parse_macro(word, l:abbr)
     else
       return []
     endif
